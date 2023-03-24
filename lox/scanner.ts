@@ -1,4 +1,4 @@
-export const TokenTypes = {
+export const TokenType = {
   LEFT_PAREN: 1,
   RIGHT_PAREN: 2,
   LEFT_BRACE: 3,
@@ -44,6 +44,34 @@ export const TokenTypes = {
   EOF: 39,
 };
 
-export function add(): Number {
-  return 123;
-}
+export const TokenLiterals = {
+  "(": TokenType.LEFT_PAREN,
+  ")": TokenType.RIGHT_PAREN,
+  "{": TokenType.LEFT_BRACE,
+  "}": TokenType.RIGHT_BRACE,
+  ",": TokenType.COMMA,
+  ".": TokenType.DOT,
+  "-": TokenType.MINUS,
+  "+": TokenType.PLUS,
+  ";": TokenType.SEMICOLON,
+  "*": TokenType.STAR,
+};
+
+export const ReservedKeywords = {
+  and: TokenType.AND,
+  class: TokenType.CLASS,
+  else: TokenType.ELSE,
+  false: TokenType.FALSE,
+  for: TokenType.FOR,
+  fun: TokenType.FUN,
+  if: TokenType.IF,
+  nil: TokenType.NIL,
+  or: TokenType.OR,
+  print: TokenType.PRINT,
+  return: TokenType.RETURN,
+  super: TokenType.SUPER,
+  this: TokenType.THIS,
+  true: TokenType.TRUE,
+  var: TokenType.VAR,
+  while: TokenType.WHILE,
+};
