@@ -44,7 +44,11 @@ export const TokenType = {
   EOF: 39,
 };
 
-export const TokenLiterals = {
+type ITokenLiterals = {
+  [key: string]: number;
+};
+
+export const TokenLiterals: ITokenLiterals = {
   "(": TokenType.LEFT_PAREN,
   ")": TokenType.RIGHT_PAREN,
   "{": TokenType.LEFT_BRACE,
@@ -110,6 +114,74 @@ class Scanner {
     }
   }
 
+  #scanNext(): void {
+    let c = this.#advance();
+
+    // Match single char literals
+    if (c in TokenLiterals) {
+      const tokenType = TokenLiterals[c];
+      this.#addToken(tokenType);
+      return;
+    }
+
+    // Match operators
+    else if (c === "!") {
+      this.#addToken(this.#match("=") ? TokenType.BANG_EQUAL : TokenType.BANG);
+    } else if (c === "=") {
+      this.#addToken(
+        this.#match("=") ? TokenType.EQUAL_EQUAL : TokenType.EQUAL
+      );
+    } else if (c === "<") {
+      this.#addToken(this.#match("=") ? TokenType.LESS_EQUAL : TokenType.LESS);
+    } else if (c === ">") {
+      this.#addToken(
+        this.#match("=") ? TokenType.GREATER_EQUAL : TokenType.GREATER
+      );
+    }
+
+    // Match slash and comments
+    else if (c === "/") {
+      if (this.#match("/")) {
+        while (this.#peek() !== "\n" && !this.#is_at_end()) {
+          this.#advance();
+        }
+      } else {
+        this.#addToken(TokenType.SLASH);
+      }
+    }
+
+    // Match white spaces
+    else if (c === " " || c === "\r" || c === "\t") {
+      return;
+    } else if (c === "\n") {
+      this.#line += 1;
+      return;
+    }
+
+    // Match string literals
+    else if (c === '"') {
+      while (this.#peek() !== '"' && !this.#is_at_end()) {
+        if (this.#peek() === "\n") {
+          this.#line += 1;
+        }
+        this.#advance();
+      }
+
+      if (this.#is_at_end()) {
+        this.#addError("Unterminated string");
+        return;
+      }
+
+      // The closing "
+      this.#advance();
+      const stringValue = this.source.slice(this.#start + 1, this.#current - 1);
+      this.#addToken(TokenType.STRING, stringValue);
+    } else {
+      // If the character can't be handled by the above logic, it must be unexpected
+      this.#addError("Unexpected char");
+    }
+  }
+
   /**
    * Helper method to determine if we've scanned all source string into tokens
    */
@@ -152,12 +224,12 @@ class Scanner {
     return this.source[this.#current];
   }
 
-  #addToken(tokenType: number, literal: string | undefined): void {
+  #addToken(tokenType: number, literal?: string): void {
     const lexeme = this.source.slice(this.#start, this.#current);
     this.#tokens.push(new Token(tokenType, lexeme, literal, this.#line));
   }
 
-  #addError() {
+  #addError(message?: string) {
     let error = "Unexpected character";
     // TODO: Create an error class and include contextual info
     this.#errors.push(error);
