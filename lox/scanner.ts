@@ -112,6 +112,13 @@ class Scanner {
     if (!this.source) {
       return this.#tokens;
     }
+
+    while (!this.#is_at_end()) {
+      this.#start = this.#current;
+      this.#scanNext();
+    }
+
+    return this.#tokens;
   }
 
   #scanNext(): void {
