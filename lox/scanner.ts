@@ -151,4 +151,15 @@ class Scanner {
 
     return this.source[this.#current];
   }
+
+  #addToken(tokenType: number, literal: string | undefined): void {
+    const lexeme = this.source.slice(this.#start, this.#current);
+    this.#tokens.push(new Token(tokenType, lexeme, literal, this.#line));
+  }
+
+  #addError() {
+    let error = "Unexpected character";
+    // TODO: Create an error class and include contextual info
+    this.#errors.push(error);
+  }
 }
