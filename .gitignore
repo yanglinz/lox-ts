@@ -1,3 +1,6 @@
+# Project
+lox/*.js
+
 # Logs
 logs
 *.log
