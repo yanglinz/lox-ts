@@ -75,3 +75,17 @@ export const ReservedKeywords = {
   var: TokenType.VAR,
   while: TokenType.WHILE,
 };
+
+class Token {
+  type: number;
+  lexeme: string;
+  literal: string;
+  line: number;
+
+  constructor(type: number, lexeme: string, literal: string, line: number) {
+    this.type = type;
+    this.lexeme = lexeme;
+    this.literal = literal;
+    this.line = line;
+  }
+}
