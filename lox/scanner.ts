@@ -89,3 +89,66 @@ class Token {
     this.line = line;
   }
 }
+
+class Scanner {
+  source: string;
+
+  #start: number = 0;
+  #current: number = 0;
+  #line: number = 1;
+
+  #tokens: Token[];
+  #errors: any[];
+
+  constructor(source: string) {
+    this.source = source;
+  }
+
+  scan(): Token[] {
+    if (!this.source) {
+      return this.#tokens;
+    }
+  }
+
+  /**
+   * Helper method to determine if we've scanned all source string into tokens
+   */
+  #is_at_end(): boolean {
+    return this.#current >= this.source.length;
+  }
+
+  /**
+   * Helper method to return the current token and advance the current cursor
+   */
+  #advance(): string | undefined {
+    const char = this.source[this.#current];
+    this.#current += 1;
+    return char;
+  }
+
+  /**
+   * Helper method to conditionally advance if the current char is what we expect
+   */
+  #match(expected: string): string | undefined {
+    if (this.#is_at_end()) {
+      return;
+    }
+
+    if (this.source[this.#current] !== expected) {
+      return;
+    }
+
+    return this.#advance();
+  }
+
+  /**
+   * Helper method to return the next char without advancing
+   */
+  #peek(): string | undefined {
+    if (this.#is_at_end()) {
+      return;
+    }
+
+    return this.source[this.#current];
+  }
+}
