@@ -94,15 +94,15 @@ class Token {
   }
 }
 
-class Scanner {
+export class Scanner {
   source: string;
 
   #start: number = 0;
   #current: number = 0;
   #line: number = 1;
 
-  #tokens: Token[];
-  #errors: any[];
+  #tokens: Token[] = [];
+  #errors: any[] = [];
 
   constructor(source: string) {
     this.source = source;

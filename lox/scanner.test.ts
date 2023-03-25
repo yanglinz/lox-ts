@@ -1,5 +1,12 @@
-import { add } from "./scanner";
+import { Scanner, TokenType } from "./scanner";
 
-test("fake", () => {
-  expect(add()).toEqual(1);
+function getTokens(source: string): number[] {
+  return new Scanner(source).scan().map(t => t.type);
+}
+
+test("Scanner basic scenarios", () => {
+  expect(getTokens("()")).toEqual([
+    TokenType.LEFT_PAREN,
+    TokenType.RIGHT_PAREN,
+  ]);
 });
