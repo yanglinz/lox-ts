@@ -110,7 +110,7 @@ export class Scanner {
 
   scan(): Token[] {
     if (this.source) {
-      while (!this.#is_at_end()) {
+      while (!this.#isAtEnd()) {
         this.#start = this.#current;
         this.#scanNext();
       }
@@ -148,7 +148,7 @@ export class Scanner {
     // Match slash and comments
     else if (c === "/") {
       if (this.#match("/")) {
-        while (this.#peek() !== "\n" && !this.#is_at_end()) {
+        while (this.#peek() !== "\n" && !this.#isAtEnd()) {
           this.#advance();
         }
       } else {
@@ -166,14 +166,14 @@ export class Scanner {
 
     // Match string literals
     else if (c === '"') {
-      while (this.#peek() !== '"' && !this.#is_at_end()) {
+      while (this.#peek() !== '"' && !this.#isAtEnd()) {
         if (this.#peek() === "\n") {
           this.#line += 1;
         }
         this.#advance();
       }
 
-      if (this.#is_at_end()) {
+      if (this.#isAtEnd()) {
         this.#addError("Unterminated string");
         return;
       }
@@ -191,7 +191,7 @@ export class Scanner {
   /**
    * Helper method to determine if we've scanned all source string into tokens
    */
-  #is_at_end(): boolean {
+  #isAtEnd(): boolean {
     return this.#current >= this.source.length;
   }
 
@@ -208,7 +208,7 @@ export class Scanner {
    * Helper method to conditionally advance if the current char is what we expect
    */
   #match(expected: string): string | undefined {
-    if (this.#is_at_end()) {
+    if (this.#isAtEnd()) {
       return;
     }
 
@@ -223,7 +223,7 @@ export class Scanner {
    * Helper method to return the next char without advancing
    */
   #peek(): string | undefined {
-    if (this.#is_at_end()) {
+    if (this.#isAtEnd()) {
       return;
     }
 
