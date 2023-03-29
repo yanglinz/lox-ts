@@ -127,7 +127,6 @@ export class Scanner {
     if (c in TokenLiterals) {
       const tokenType = TokenLiterals[c];
       this.#addToken(tokenType);
-      return;
     }
 
     // Match operators
@@ -158,10 +157,9 @@ export class Scanner {
 
     // Match white spaces
     else if (c === " " || c === "\r" || c === "\t") {
-      return;
+      // These white spaces can be ignored
     } else if (c === "\n") {
       this.#line += 1;
-      return;
     }
 
     // Match string literals
@@ -175,7 +173,6 @@ export class Scanner {
 
       if (this.#isAtEnd()) {
         this.#addError("Unterminated string");
-        return;
       }
 
       // The closing "
