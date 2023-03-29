@@ -1,4 +1,10 @@
-export const TokenType = {
+export type TokenTypeConstant = number;
+
+type _TokenType = {
+  [key: string]: TokenTypeConstant;
+};
+
+export const TokenType: _TokenType = {
   LEFT_PAREN: 1,
   RIGHT_PAREN: 2,
   LEFT_BRACE: 3,
@@ -44,11 +50,11 @@ export const TokenType = {
   EOF: 39,
 };
 
-type ITokenLiterals = {
+type _TokenLiterals = {
   [key: string]: number;
 };
 
-export const TokenLiterals: ITokenLiterals = {
+export const TokenLiterals: _TokenLiterals = {
   "(": TokenType.LEFT_PAREN,
   ")": TokenType.RIGHT_PAREN,
   "{": TokenType.LEFT_BRACE,

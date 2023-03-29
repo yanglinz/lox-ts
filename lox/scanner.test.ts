@@ -1,8 +1,6 @@
-import { Scanner, TokenType } from "./scanner";
+import { Scanner, TokenType, TokenTypeConstant } from "./scanner";
 
-// TODO: Use a better type than number
-
-function getTokens(source: string): number[] {
+function getTokens(source: string): TokenTypeConstant[] {
   const tokens = new Scanner(source).scan().map((t) => t.type);
   expect(tokens.length).toBeGreaterThan(0);
   // Strip the EOF to avoid having to specify it as a part of every test
