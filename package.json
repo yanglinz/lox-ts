@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest .",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles .",
     "type": "tsc .",
     "format": "prettier --write ./**/*.{ts,js}"
   },
