@@ -58,4 +58,19 @@ describe("Scanner", () => {
 
     expect(getTokens('"hello world!"')).toEqual([TokenType.STRING]);
   });
+
+  test("should get valid token types for numbers", () => {
+    expect(getTokens("123")).toEqual([TokenType.NUMBER]);
+    expect(getTokens("123.123")).toEqual([TokenType.NUMBER]);
+    expect(getTokens("123;123.123")).toEqual([
+      TokenType.NUMBER,
+      TokenType.SEMICOLON,
+      TokenType.NUMBER,
+    ]);
+  });
+
+  // Detecting unclosed strings
+  // Test for string lexeme and literals
+  // Test for number lexeme and literals
+  // Test for line count
 });

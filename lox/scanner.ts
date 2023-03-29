@@ -100,6 +100,45 @@ class Token {
   }
 }
 
+const digits = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
+
+function isDigit(char: string) {
+  return digits.has(char);
+}
+
+const alphas = new Set([
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+]);
+
+function isAlpha(char: string) {
+  return alphas.has(char);
+}
+
 export class Scanner {
   source: string;
 
@@ -170,25 +209,48 @@ export class Scanner {
 
     // Match string literals
     else if (c === '"') {
-      while (this.#peek() !== '"' && !this.#isAtEnd()) {
-        if (this.#peek() === "\n") {
-          this.#line += 1;
-        }
-        this.#advance();
-      }
-
-      if (this.#isAtEnd()) {
-        this.#addError("Unterminated string");
-      }
-
-      // The closing "
-      this.#advance();
-      const stringValue = this.source.slice(this.#start + 1, this.#current - 1);
-      this.#addToken(TokenType.STRING, stringValue);
+      this.#scanString();
     } else {
+      if (isDigit(c)) {
+        this.#scanNumber();
+      }
       // If the character can't be handled by the above logic, it must be unexpected
       this.#addError("Unexpected char");
     }
+  }
+
+  #scanString() {
+    while (this.#peek() !== '"' && !this.#isAtEnd()) {
+      if (this.#peek() === "\n") {
+        this.#line += 1;
+      }
+      this.#advance();
+    }
+
+    if (this.#isAtEnd()) {
+      this.#addError("Unterminated string");
+    }
+
+    // The closing "
+    this.#advance();
+    const stringValue = this.source.slice(this.#start + 1, this.#current - 1);
+    this.#addToken(TokenType.STRING, stringValue);
+  }
+
+  #scanNumber() {
+    while (isDigit(this.#peek())) {
+      this.#advance();
+    }
+
+    if (this.#peek() === "." && isDigit(this.#peekNext())) {
+      this.#advance();
+      while (isDigit(this.#peek())) {
+        this.#advance();
+      }
+    }
+
+    const numberValue = this.source.slice(this.#start, this.#current);
+    this.#addToken(TokenType.NUMBER, numberValue);
   }
 
   /**
@@ -231,6 +293,14 @@ export class Scanner {
     }
 
     return this.source[this.#current];
+  }
+
+  #peekNext(): string | undefined {
+    if (this.#current + 1 >= this.source.length) {
+      return;
+    }
+
+    return this.source[this.#current + 1];
   }
 
   #addToken(tokenType: number, literal?: string): void {
