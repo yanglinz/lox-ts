@@ -109,15 +109,14 @@ export class Scanner {
   }
 
   scan(): Token[] {
-    if (!this.source) {
-      return this.#tokens;
+    if (this.source) {
+      while (!this.#is_at_end()) {
+        this.#start = this.#current;
+        this.#scanNext();
+      }
     }
 
-    while (!this.#is_at_end()) {
-      this.#start = this.#current;
-      this.#scanNext();
-    }
-
+    this.#addToken(TokenType.EOF);
     return this.#tokens;
   }
 
