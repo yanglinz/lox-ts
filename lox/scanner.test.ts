@@ -55,8 +55,26 @@ describe("Scanner", () => {
 
   test("should get valid token types for strings", () => {
     expect(getTokens('"hello world!"')).toEqual([TokenType.STRING]);
+  });
 
-    expect(getTokens('"hello world!"')).toEqual([TokenType.STRING]);
+  test("should get lexeme and literals for strings", () => {
+    const tokens = new Scanner('"hello world!"').scan();
+    expect(tokens).toMatchInlineSnapshot(`
+      [
+        Token {
+          "lexeme": ""hello world!"",
+          "line": 1,
+          "literal": "",
+          "type": 21,
+        },
+        Token {
+          "lexeme": "",
+          "line": 1,
+          "literal": "",
+          "type": 39,
+        },
+      ]
+    `);
   });
 
   test("should get valid token types for numbers", () => {
@@ -69,8 +87,25 @@ describe("Scanner", () => {
     ]);
   });
 
-  // Detecting unclosed strings
-  // Test for string lexeme and literals
-  // Test for number lexeme and literals
-  // Test for line count
+  test("should get lexeme and literals for numbers", () => {
+    const tokens = new Scanner("123.123").scan();
+    expect(tokens).toMatchInlineSnapshot(`
+      [
+        Token {
+          "lexeme": "123.123",
+          "line": 1,
+          "literal": "",
+          "type": 22,
+        },
+        Token {
+          "lexeme": "",
+          "line": 1,
+          "literal": "",
+          "type": 39,
+        },
+      ]
+    `);
+  });
+
+  // TODO: Detecting unclosed strings
 });

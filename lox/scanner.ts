@@ -89,14 +89,16 @@ export const ReservedKeywords = {
 class Token {
   type: number;
   lexeme: string;
-  literal: string;
+  literal: string | number;
   line: number;
 
-  constructor(type: number, lexeme: string, literal: string, line: number) {
+  constructor(type: number, lexeme: string, line: number) {
     this.type = type;
     this.lexeme = lexeme;
-    this.literal = literal;
     this.line = line;
+
+    // TODO: Conditionally calculate literal
+    this.literal = "";
   }
 }
 
@@ -233,8 +235,7 @@ export class Scanner {
 
     // The closing "
     this.#advance();
-    const stringValue = this.source.slice(this.#start + 1, this.#current - 1);
-    this.#addToken(TokenType.STRING, stringValue);
+    this.#addToken(TokenType.STRING);
   }
 
   #scanNumber() {
@@ -249,8 +250,7 @@ export class Scanner {
       }
     }
 
-    const numberValue = this.source.slice(this.#start, this.#current);
-    this.#addToken(TokenType.NUMBER, numberValue);
+    this.#addToken(TokenType.NUMBER);
   }
 
   /**
@@ -303,9 +303,10 @@ export class Scanner {
     return this.source[this.#current + 1];
   }
 
-  #addToken(tokenType: number, literal?: string): void {
+  #addToken(tokenType: number): void {
     const lexeme = this.source.slice(this.#start, this.#current);
-    this.#tokens.push(new Token(tokenType, lexeme, literal, this.#line));
+    this.#start = this.#current;
+    this.#tokens.push(new Token(tokenType, lexeme, this.#line));
   }
 
   #addError(message?: string) {
