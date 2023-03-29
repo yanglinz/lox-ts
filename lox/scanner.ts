@@ -1,4 +1,10 @@
-export const TokenType = {
+export type TokenTypeConstant = number;
+
+type _TokenType = {
+  [key: string]: TokenTypeConstant;
+};
+
+export const TokenType: _TokenType = {
   LEFT_PAREN: 1,
   RIGHT_PAREN: 2,
   LEFT_BRACE: 3,
@@ -44,11 +50,11 @@ export const TokenType = {
   EOF: 39,
 };
 
-type ITokenLiterals = {
+type _TokenLiterals = {
   [key: string]: number;
 };
 
-export const TokenLiterals: ITokenLiterals = {
+export const TokenLiterals: _TokenLiterals = {
   "(": TokenType.LEFT_PAREN,
   ")": TokenType.RIGHT_PAREN,
   "{": TokenType.LEFT_BRACE,
@@ -127,7 +133,6 @@ export class Scanner {
     if (c in TokenLiterals) {
       const tokenType = TokenLiterals[c];
       this.#addToken(tokenType);
-      return;
     }
 
     // Match operators
@@ -158,10 +163,9 @@ export class Scanner {
 
     // Match white spaces
     else if (c === " " || c === "\r" || c === "\t") {
-      return;
+      // These white spaces can be ignored
     } else if (c === "\n") {
       this.#line += 1;
-      return;
     }
 
     // Match string literals
@@ -175,7 +179,6 @@ export class Scanner {
 
       if (this.#isAtEnd()) {
         this.#addError("Unterminated string");
-        return;
       }
 
       // The closing "
