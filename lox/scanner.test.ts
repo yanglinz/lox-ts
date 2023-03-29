@@ -5,13 +5,14 @@ function getTokens(source: string): number[] {
 }
 
 test("Scanner should return valid token types", () => {
-  expect(getTokens("")).toEqual([]);
+  expect(getTokens("")).toEqual([TokenType.EOF]);
 
-  expect(getTokens("// this is some comment")).toEqual([]);
+  expect(getTokens("// this is some comment")).toEqual([TokenType.EOF]);
 
   expect(getTokens("()")).toEqual([
     TokenType.LEFT_PAREN,
     TokenType.RIGHT_PAREN,
+    TokenType.EOF,
   ]);
 
   expect(getTokens("() == ()")).toEqual([
@@ -20,6 +21,7 @@ test("Scanner should return valid token types", () => {
     TokenType.EQUAL_EQUAL,
     TokenType.LEFT_PAREN,
     TokenType.RIGHT_PAREN,
+    TokenType.EOF,
   ]);
 
   expect(getTokens("(( )){}")).toEqual([
@@ -29,7 +31,11 @@ test("Scanner should return valid token types", () => {
     TokenType.RIGHT_PAREN,
     TokenType.LEFT_BRACE,
     TokenType.RIGHT_BRACE,
+    TokenType.EOF,
   ]);
 
-  expect(getTokens('"hello world!"')).toEqual([TokenType.STRING]);
+  expect(getTokens('"hello world!"')).toEqual([
+    TokenType.STRING,
+    TokenType.EOF,
+  ]);
 });
