@@ -1,57 +1,57 @@
-export type TokenTypeConstant = number;
+export type TokenTypeConstant = Symbol;
 
 type _TokenType = {
   [key: string]: TokenTypeConstant;
 };
 
 export const TokenType: _TokenType = {
-  LEFT_PAREN: 1,
-  RIGHT_PAREN: 2,
-  LEFT_BRACE: 3,
-  RIGHT_BRACE: 4,
-  COMMA: 5,
-  DOT: 6,
-  MINUS: 7,
-  PLUS: 8,
-  SEMICOLON: 9,
-  SLASH: 10,
-  STAR: 11,
+  LEFT_PAREN: Symbol("LEFT_PAREN"),
+  RIGHT_PAREN: Symbol("RIGHT_PAREN"),
+  LEFT_BRACE: Symbol("LEFT_BRACE"),
+  RIGHT_BRACE: Symbol("RIGHT_BRACE"),
+  COMMA: Symbol("COMMA"),
+  DOT: Symbol("DOT"),
+  MINUS: Symbol("MINUS"),
+  PLUS: Symbol("PLUS"),
+  SEMICOLON: Symbol("SEMICOLON"),
+  SLASH: Symbol("SLASH"),
+  STAR: Symbol("STAR"),
 
   // One or two character tokens.
-  BANG: 12,
-  BANG_EQUAL: 13,
-  EQUAL: 14,
-  EQUAL_EQUAL: 15,
-  GREATER: 16,
-  GREATER_EQUAL: 17,
-  LESS: 18,
-  LESS_EQUAL: 19,
-  IDENTIFIER: 20,
-  STRING: 21,
-  NUMBER: 22,
+  BANG: Symbol("BANG"),
+  BANG_EQUAL: Symbol("BANG_EQUAL"),
+  EQUAL: Symbol("EQUAL"),
+  EQUAL_EQUAL: Symbol("EQUAL_EQUAL"),
+  GREATER: Symbol("GREATER"),
+  GREATER_EQUAL: Symbol("GREATER_EQUAL"),
+  LESS: Symbol("LESS"),
+  LESS_EQUAL: Symbol("LESS_EQUAL"),
+  IDENTIFIER: Symbol("IDENTIFIER"),
+  STRING: Symbol("STRING"),
+  NUMBER: Symbol("NUMBER"),
 
   // Keywords.
-  AND: 23,
-  CLASS: 24,
-  ELSE: 25,
-  FALSE: 26,
-  FUN: 27,
-  FOR: 28,
-  IF: 29,
-  NIL: 30,
-  OR: 31,
-  PRINT: 32,
-  RETURN: 33,
-  SUPER: 34,
-  THIS: 35,
-  TRUE: 36,
-  VAR: 37,
-  WHILE: 38,
-  EOF: 39,
+  AND: Symbol("AND"),
+  CLASS: Symbol("CLASS"),
+  ELSE: Symbol("ELSE"),
+  FALSE: Symbol("FALSE"),
+  FUN: Symbol("FUN"),
+  FOR: Symbol("FOR"),
+  IF: Symbol("IF"),
+  NIL: Symbol("NIL"),
+  OR: Symbol("OR"),
+  PRINT: Symbol("PRINT"),
+  RETURN: Symbol("RETURN"),
+  SUPER: Symbol("SUPER"),
+  THIS: Symbol("THIS"),
+  TRUE: Symbol("TRUE"),
+  VAR: Symbol("VAR"),
+  WHILE: Symbol("WHILE"),
+  EOF: Symbol("EOF"),
 };
 
 type _TokenLiterals = {
-  [key: string]: number;
+  [key: string]: TokenTypeConstant;
 };
 
 export const TokenLiterals: _TokenLiterals = {
@@ -87,12 +87,12 @@ export const ReservedKeywords = {
 };
 
 class Token {
-  type: number;
+  type: TokenTypeConstant;
   lexeme: string;
   literal: string | number;
   line: number;
 
-  constructor(type: number, lexeme: string, line: number) {
+  constructor(type: TokenTypeConstant, lexeme: string, line: number) {
     this.type = type;
     this.lexeme = lexeme;
     this.line = line;
@@ -303,7 +303,7 @@ export class Scanner {
     return this.source[this.#current + 1];
   }
 
-  #addToken(tokenType: number): void {
+  #addToken(tokenType: TokenTypeConstant): void {
     const lexeme = this.source.slice(this.#start, this.#current);
     this.#start = this.#current;
     this.#tokens.push(new Token(tokenType, lexeme, this.#line));
