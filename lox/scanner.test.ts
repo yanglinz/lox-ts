@@ -65,13 +65,13 @@ describe("Scanner", () => {
           "lexeme": ""hello world!"",
           "line": 1,
           "literal": "",
-          "type": 21,
+          "type": Symbol(STRING),
         },
         Token {
           "lexeme": "",
           "line": 1,
           "literal": "",
-          "type": 39,
+          "type": Symbol(EOF),
         },
       ]
     `);
@@ -95,13 +95,13 @@ describe("Scanner", () => {
           "lexeme": "123.123",
           "line": 1,
           "literal": "",
-          "type": 22,
+          "type": Symbol(NUMBER),
         },
         Token {
           "lexeme": "",
           "line": 1,
           "literal": "",
-          "type": 39,
+          "type": Symbol(EOF),
         },
       ]
     `);
