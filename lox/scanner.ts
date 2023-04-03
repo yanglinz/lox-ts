@@ -67,7 +67,11 @@ export const TokenLiterals: _TokenLiterals = {
   "*": TokenType.STAR,
 };
 
-export const ReservedKeywords = {
+type _ReservedKeywords = {
+  [key: string]: TokenTypeConstant;
+};
+
+export const ReservedKeywords: _ReservedKeywords = {
   and: TokenType.AND,
   class: TokenType.CLASS,
   else: TokenType.ELSE,
@@ -138,7 +142,11 @@ const alphas = new Set([
 ]);
 
 function isAlpha(char: string) {
-  return alphas.has(char);
+  if (!char) {
+    return false;
+  }
+
+  return char === "_" || alphas.has(char) || alphas.has(char.toLowerCase());
 }
 
 export class Scanner {
@@ -215,6 +223,8 @@ export class Scanner {
     } else {
       if (isDigit(c)) {
         this.#scanNumber();
+      } else if (isAlpha(c)) {
+        this.#scanIdentifier();
       }
       // If the character can't be handled by the above logic, it must be unexpected
       this.#addError("Unexpected char");
@@ -251,6 +261,19 @@ export class Scanner {
     }
 
     this.#addToken(TokenType.NUMBER);
+  }
+
+  #scanIdentifier() {
+    while (isAlpha(this.#peek())) {
+      this.#advance();
+    }
+
+    const text = this.source.slice(this.#start, this.#current);
+    let tokenType = TokenType.IDENTIFIER;
+    if (text in ReservedKeywords) {
+      tokenType = ReservedKeywords[text];
+    }
+    this.#addToken(tokenType);
   }
 
   /**

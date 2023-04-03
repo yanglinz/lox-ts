@@ -107,5 +107,102 @@ describe("Scanner", () => {
     `);
   });
 
+  test("should get valid token types for reserved keywrods", () => {
+    expect(getTokens("false == false")).toEqual([
+      TokenType.FALSE,
+      TokenType.EQUAL_EQUAL,
+      TokenType.FALSE,
+    ]);
+    expect(getTokens('1.1 or "something"')).toEqual([
+      TokenType.NUMBER,
+      TokenType.OR,
+      TokenType.STRING,
+    ]);
+    expect(getTokens("true and nil")).toEqual([
+      TokenType.TRUE,
+      TokenType.AND,
+      TokenType.NIL,
+    ]);
+  });
+
+  test("should get valid token types for reserved keywrods", () => {
+    expect(getTokens("falsey == falsey")).toEqual([
+      TokenType.IDENTIFIER,
+      TokenType.EQUAL_EQUAL,
+      TokenType.IDENTIFIER,
+    ]);
+    expect(getTokens("true_and_false")).toEqual([TokenType.IDENTIFIER]);
+  });
+
+  test("should get lexeme and valid token types for reserved keywords", () => {
+    const tokens = new Scanner("false or true").scan();
+    expect(tokens).toMatchInlineSnapshot(`
+      [
+        Token {
+          "lexeme": "false",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(FALSE),
+        },
+        Token {
+          "lexeme": "or",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(OR),
+        },
+        Token {
+          "lexeme": "true",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(TRUE),
+        },
+        Token {
+          "lexeme": "",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(EOF),
+        },
+      ]
+    `);
+  });
+
+  test("should get lexeme and valid token types for identifiers", () => {
+    const tokens = new Scanner('var true_or_false = "12345"').scan();
+    expect(tokens).toMatchInlineSnapshot(`
+      [
+        Token {
+          "lexeme": "var",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(VAR),
+        },
+        Token {
+          "lexeme": "true_or_false",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(IDENTIFIER),
+        },
+        Token {
+          "lexeme": "=",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(EQUAL),
+        },
+        Token {
+          "lexeme": ""12345"",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(STRING),
+        },
+        Token {
+          "lexeme": "",
+          "line": 1,
+          "literal": "",
+          "type": Symbol(EOF),
+        },
+      ]
+    `);
+  });
+
   // TODO: Detecting unclosed strings
 });
