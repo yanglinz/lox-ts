@@ -106,6 +106,16 @@ class Token {
   }
 }
 
+class ScanningError {
+  message: string;
+  line: number;
+
+  constructor(message: string, line: number) {
+    this.message = message;
+    this.line = line;
+  }
+}
+
 const digits = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
 
 function isDigit(char: string) {
@@ -157,7 +167,7 @@ export class Scanner {
   #line: number = 1;
 
   #tokens: Token[] = [];
-  #errors: any[] = [];
+  errors: any[] = [];
 
   constructor(source: string) {
     this.source = source;
@@ -332,9 +342,7 @@ export class Scanner {
     this.#tokens.push(new Token(tokenType, lexeme, this.#line));
   }
 
-  #addError(message?: string) {
-    let error = "Unexpected character";
-    // TODO: Create an error class and include contextual info
-    this.#errors.push(error);
+  #addError(message: string) {
+    this.errors.push(new ScanningError(message, this.#line));
   }
 }
