@@ -10,26 +10,26 @@ function getTokens(source: string): TokenTypeConstant[] {
 }
 
 describe("Scanner", () => {
-  test("should get valid token types for literals", () => {
+  test("token types for literals", () => {
     expect(getTokens(";")).toEqual([TokenType.SEMICOLON]);
     expect(getTokens(",")).toEqual([TokenType.COMMA]);
     expect(getTokens("-")).toEqual([TokenType.MINUS]);
     expect(getTokens(".")).toEqual([TokenType.DOT]);
   });
 
-  test("should get valid token types for slashes", () => {
+  test("token types for slashes", () => {
     expect(getTokens("/")).toEqual([TokenType.SLASH]);
     expect(getTokens("// this is some comment")).toEqual([]);
   });
 
-  test("should get valid token types for white spaces", () => {
+  test("token types for white spaces", () => {
     expect(getTokens("")).toEqual([]);
     expect(getTokens(" ")).toEqual([]);
     expect(getTokens("\t")).toEqual([]);
     expect(getTokens("\n")).toEqual([]);
   });
 
-  test("should get valid token types for parens", () => {
+  test("token types for parens", () => {
     expect(getTokens("()")).toEqual([
       TokenType.LEFT_PAREN,
       TokenType.RIGHT_PAREN,
@@ -53,11 +53,11 @@ describe("Scanner", () => {
     ]);
   });
 
-  test("should get valid token types for strings", () => {
+  test("token types for strings", () => {
     expect(getTokens('"hello world!"')).toEqual([TokenType.STRING]);
   });
 
-  test("should get lexeme and literals for strings", () => {
+  test("tokens for strings", () => {
     const tokens = new Scanner('"hello world!"').scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
@@ -77,7 +77,7 @@ describe("Scanner", () => {
     `);
   });
 
-  test("should get error for invalid strings", () => {
+  test("errors for invalid strings", () => {
     const scanner = new Scanner('"Hello world!');
     scanner.scan();
     expect(scanner.errors.map((e) => e.message)).toEqual([
@@ -85,7 +85,7 @@ describe("Scanner", () => {
     ]);
   });
 
-  test("should get valid token types for numbers", () => {
+  test("token types for numbers", () => {
     expect(getTokens("123")).toEqual([TokenType.NUMBER]);
     expect(getTokens("123.123")).toEqual([TokenType.NUMBER]);
     expect(getTokens("123;123.123")).toEqual([
@@ -95,7 +95,7 @@ describe("Scanner", () => {
     ]);
   });
 
-  test("should get lexeme and literals for numbers", () => {
+  test("tokens for numbers", () => {
     const tokens = new Scanner("123.123").scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
@@ -115,7 +115,7 @@ describe("Scanner", () => {
     `);
   });
 
-  test("should get valid token types for reserved keywrods", () => {
+  test("token types for reserved keywords", () => {
     expect(getTokens("false == false")).toEqual([
       TokenType.FALSE,
       TokenType.EQUAL_EQUAL,
@@ -133,7 +133,7 @@ describe("Scanner", () => {
     ]);
   });
 
-  test("should get valid token types for reserved keywrods", () => {
+  test("token types for reserved keywords", () => {
     expect(getTokens("falsey == falsey")).toEqual([
       TokenType.IDENTIFIER,
       TokenType.EQUAL_EQUAL,
@@ -142,7 +142,7 @@ describe("Scanner", () => {
     expect(getTokens("true_and_false")).toEqual([TokenType.IDENTIFIER]);
   });
 
-  test("should get lexeme and valid token types for reserved keywords", () => {
+  test("tokens for reserved keywords", () => {
     const tokens = new Scanner("false or true").scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
@@ -174,7 +174,7 @@ describe("Scanner", () => {
     `);
   });
 
-  test("should get lexeme and valid token types for identifiers", () => {
+  test("tokens for identifiers", () => {
     const tokens = new Scanner('var true_or_false = "12345"').scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
@@ -211,6 +211,4 @@ describe("Scanner", () => {
       ]
     `);
   });
-
-  // TODO: Detecting unclosed strings
 });
