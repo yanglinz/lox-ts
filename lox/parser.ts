@@ -1,4 +1,4 @@
-import { Token, TokenType } from "./scanner";
+import { Token, TokenType, TokenTypeConstant } from "./scanner";
 import * as ast from "./ast";
 
 export class Parser {
@@ -15,7 +15,7 @@ export class Parser {
     // TODO: error handling
   }
 
-  #match(...tokenTypes: number[]): boolean {
+  #match(...tokenTypes: TokenTypeConstant[]): boolean {
     tokenTypes.forEach((t) => {
       if (this.#check(t)) {
         this.#advance();
@@ -26,7 +26,7 @@ export class Parser {
     return false;
   }
 
-  #check(type: number): boolean {
+  #check(type: TokenTypeConstant): boolean {
     if (this.#isAtEnd()) {
       return false;
     }
