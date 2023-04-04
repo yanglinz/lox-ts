@@ -77,6 +77,14 @@ describe("Scanner", () => {
     `);
   });
 
+  test("should get error for invalid strings", () => {
+    const scanner = new Scanner('"Hello world!');
+    scanner.scan();
+    expect(scanner.errors.map((e) => e.message)).toEqual([
+      "Unterminated string",
+    ]);
+  });
+
   test("should get valid token types for numbers", () => {
     expect(getTokens("123")).toEqual([TokenType.NUMBER]);
     expect(getTokens("123.123")).toEqual([TokenType.NUMBER]);
