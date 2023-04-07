@@ -90,7 +90,7 @@ export const ReservedKeywords: _ReservedKeywords = {
   while: TokenType.WHILE,
 };
 
-class Token {
+export class Token {
   type: TokenTypeConstant;
   lexeme: string;
   literal: string | number;
