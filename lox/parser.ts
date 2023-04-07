@@ -3,7 +3,8 @@ import * as ast from "./ast";
 
 export class Parser {
   tokens: Token[];
-  current: number;
+
+  private current: number;
 
   constructor(tokens: Token[]) {
     this.tokens = tokens;
@@ -11,71 +12,68 @@ export class Parser {
   }
 
   parse(): ast.Expr {
-    return this.#expression();
-    // TODO: error handling
+    return this.expression();
   }
 
-  #match(...tokenTypes: TokenTypeConstant[]): boolean {
-    tokenTypes.forEach((t) => {
-      if (this.#check(t)) {
-        this.#advance();
+  private match(...tokenTypes: TokenTypeConstant[]): boolean {
+    for (let t of tokenTypes) {
+      if (this.check(t)) {
+        this.advance();
         return true;
       }
-    });
+    }
 
     return false;
   }
 
-  #check(type: TokenTypeConstant): boolean {
-    if (this.#isAtEnd()) {
+  private check(type: TokenTypeConstant): boolean {
+    if (this.isAtEnd()) {
       return false;
     }
 
-    return this.#peek().type == type;
+    return this.peek().type == type;
   }
 
-  #isAtEnd() {
-    return this.#peek().type == TokenType.EOF;
+  private isAtEnd() {
+    return this.peek().type == TokenType.EOF;
   }
 
-  #peek(): Token {
+  private peek(): Token {
     return this.tokens[this.current];
   }
 
-  #previous(): Token {
+  private previous(): Token {
     return this.tokens[this.current - 1];
   }
 
-  #advance() {
-    if (this.#isAtEnd) {
+  private advance() {
+    if (this.isAtEnd) {
       this.current += 1;
     }
-    return this.#previous();
+    return this.previous();
   }
 
-  #expression(): ast.Expr {
-    return this.#equality();
+  private expression(): ast.Expr {
+    return this.equality();
   }
 
-  #equality(): ast.Expr {
-    let expr = this.#comparison();
+  private equality(): ast.Expr {
+    let expr = this.comparison();
 
-    console.log(expr);
-
-    while (this.#match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
-      let operator = this.#previous();
-      let right = this.#comparison();
+    while (this.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
+      let operator = this.previous();
+      let right = this.comparison();
       expr = new ast.ExprBinary(expr, operator, right);
     }
 
     return expr;
   }
 
-  #comparison(): ast.Expr {
+  private comparison(): ast.Expr {
     // TODO: This is the wrong implementation
     debugger;
 
-    if (this.#match(TokenType.FALSE)) {
+    if (this.match(TokenType.FALSE)) {
       return new ast.ExprLiteral(false);
     }
   }
