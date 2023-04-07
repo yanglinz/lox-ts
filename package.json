@@ -9,7 +9,8 @@
     "test": "jest .",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles .",
     "type": "tsc .",
-    "format": "prettier --write ./**/*.{ts,js}"
+    "format": "prettier --write ./**/*.{ts,js}",
+    "format:check": "prettier --check ./**/*.{ts,js}"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
