@@ -6,7 +6,7 @@ import { Token } from "./scanner";
 type TODO = any;
 
 export class Expr {
-  accept(visitor: TODO) {}
+  accept(visitor: TODO): TODO {}
 }
 
 export class ExprBinary extends Expr {
@@ -21,7 +21,7 @@ export class ExprBinary extends Expr {
     this.right = right;
   }
 
-  accept(visitor) {
+  accept(visitor: TODO): TODO {
     return visitor.visitExprBinary(this);
   }
 }
@@ -34,7 +34,7 @@ export class ExprGrouping extends Expr {
     this.expression = expression;
   }
 
-  accept(visitor) {
+  accept(visitor: TODO): TODO {
     return visitor.visitExprGrouping(this);
   }
 }
@@ -49,7 +49,7 @@ export class ExprLiteral extends Expr {
     this.value = value;
   }
 
-  accept(visitor) {
+  accept(visitor: TODO): TODO {
     return visitor.visitExprLiteral(this);
   }
 }
@@ -64,7 +64,7 @@ export class ExprUnary extends Expr {
     this.right = right;
   }
 
-  accept(visitor) {
+  accept(visitor: TODO): TODO {
     return visitor.visitExprUnary(this);
   }
 }
