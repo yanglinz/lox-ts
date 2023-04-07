@@ -1,7 +1,7 @@
 // This file is generated from tools/generator.ts
 // See https://craftinginterpreters.com/representing-code.html#metaprogramming-the-trees
 
-import { Token, TokenTypeConstant } from "./scanner";
+import { Token } from "./scanner";
 
 export class Expr {}
 
@@ -19,7 +19,12 @@ export class ExprBinary extends Expr {
 }
 
 export class ExprGrouping extends Expr {
-  // Something goes here!
+  inner: Expr;
+
+  constructor(inner: Expr) {
+    super();
+    this.inner = inner;
+  }
 }
 
 type ExprLiteralValue = boolean | number | string | null;

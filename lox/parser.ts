@@ -53,6 +53,19 @@ export class Parser {
     return this.previous();
   }
 
+  private consume(type: TokenTypeConstant, message: string) {
+    if (this.check(type)) {
+      return this.advance();
+    }
+
+    throw this.error(this.peek(), message);
+  }
+
+  private error(token: Token, message: string) {
+    // TODO: Finish error handling implementation
+    return new Error(message);
+  }
+
   private expression(): ast.Expr {
     return this.equality();
   }
@@ -129,6 +142,16 @@ export class Parser {
       return new ast.ExprLiteral(true);
     } else if (this.match(TokenType.NIL)) {
       return new ast.ExprLiteral(null);
+    }
+
+    if (this.match(TokenType.NUMBER, TokenType.STRING)) {
+      return new ast.ExprLiteral(this.previous().literal);
+    }
+
+    if (this.match(TokenType.LEFT_PAREN)) {
+      let expr = this.expression();
+      this.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
+      return new ast.ExprGrouping(expr);
     }
   }
 }
