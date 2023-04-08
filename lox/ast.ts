@@ -3,10 +3,28 @@
 
 import { Token } from "./scanner";
 
-type TODO = any;
+type VisitorOutput = any;
+
+export class Visitor {
+  visitExprBinary(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitExprGrouping(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitExprLiteral(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitExprUnary(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+}
 
 export class Expr {
-  accept(visitor: TODO): TODO {}
+  accept(_: Visitor): VisitorOutput {}
 }
 
 export class ExprBinary extends Expr {
@@ -21,7 +39,7 @@ export class ExprBinary extends Expr {
     this.right = right;
   }
 
-  accept(visitor: TODO): TODO {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprBinary(this);
   }
 }
@@ -34,7 +52,7 @@ export class ExprGrouping extends Expr {
     this.expression = expression;
   }
 
-  accept(visitor: TODO): TODO {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprGrouping(this);
   }
 }
@@ -49,7 +67,7 @@ export class ExprLiteral extends Expr {
     this.value = value;
   }
 
-  accept(visitor: TODO): TODO {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprLiteral(this);
   }
 }
@@ -64,7 +82,7 @@ export class ExprUnary extends Expr {
     this.right = right;
   }
 
-  accept(visitor: TODO): TODO {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprUnary(this);
   }
 }

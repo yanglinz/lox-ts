@@ -1,7 +1,6 @@
 import * as ast from "./ast";
 
-// TODO: Create a visitor interface type
-export class AstPrinter {
+export class AstPrinter extends ast.Visitor {
   print(expr: ast.Expr): string {
     return expr.accept(this);
   }
