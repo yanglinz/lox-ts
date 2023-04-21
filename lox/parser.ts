@@ -1,5 +1,5 @@
-import { Token, TokenType, TokenTypeConstant } from "./scanner";
-import * as ast from "./ast";
+import { Token, TokenType, TokenTypeConstant } from "./Scanner";
+import * as ast from "./Ast";
 
 export class Parser {
   tokens: Token[];

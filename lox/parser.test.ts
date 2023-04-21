@@ -1,5 +1,5 @@
-import { Scanner } from "./scanner";
-import { Parser } from "./parser";
+import { Scanner } from "./Scanner";
+import { Parser } from "./Parser";
 
 function getParsed(source: string): any {
   let tokens = new Scanner(source).scan();
