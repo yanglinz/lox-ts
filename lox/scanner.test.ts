@@ -1,4 +1,4 @@
-import { Scanner, TokenType, TokenTypeConstant } from "./scanner";
+import { Scanner, TokenType, TokenTypeConstant } from "./Scanner";
 
 function getTokens(source: string): TokenTypeConstant[] {
   const tokens = new Scanner(source).scan().map((t) => t.type);

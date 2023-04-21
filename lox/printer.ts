@@ -1,4 +1,4 @@
-import * as ast from "./ast";
+import * as ast from "./Ast";
 
 export class AstPrinter extends ast.Visitor {
   print(expr: ast.Expr): string {
