@@ -57,7 +57,7 @@ export class ExprGrouping extends Expr {
   }
 }
 
-type ExprLiteralValue = boolean | number | string | null;
+export type ExprLiteralValue = boolean | number | string | null;
 
 export class ExprLiteral extends Expr {
   value: ExprLiteralValue;
