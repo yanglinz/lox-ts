@@ -102,7 +102,7 @@ describe("Scanner", () => {
         Token {
           "lexeme": "123.123",
           "line": 1,
-          "literal": "",
+          "literal": 123.123,
           "type": Symbol(NUMBER),
         },
         Token {
