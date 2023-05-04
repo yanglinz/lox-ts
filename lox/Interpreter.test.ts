@@ -10,8 +10,17 @@ function getInterpretedResult(source: string): any {
 }
 
 describe("Interpreting expressions", () => {
-  test("comparison", () => {
-    let source = '!false';
-    expect(getInterpretedResult(source)).toEqual(true);
+  test("simple unary expressions", () => {
+    // minus operator
+    expect(getInterpretedResult('-1')).toEqual(-1);
+    expect(getInterpretedResult('-123')).toEqual(-123);
+    expect(getInterpretedResult('-(-1)')).toEqual(1);
+    expect(getInterpretedResult('-(-(-1))')).toEqual(-1);
+
+    // bang operator
+    expect(getInterpretedResult('!false')).toEqual(true);
+    expect(getInterpretedResult('!true')).toEqual(false);
+    expect(getInterpretedResult('!!true')).toEqual(true);
+    expect(getInterpretedResult('!!false')).toEqual(false);
   });
 });
