@@ -33,5 +33,11 @@ describe("Interpreting expressions", () => {
     expect(getInterpretedResult('1 / 1')).toEqual(1);
     expect(getInterpretedResult('10 / 1')).toEqual(10);
     expect(getInterpretedResult('10 / 5')).toEqual(2);
+
+    // star operator
+    expect(getInterpretedResult('1 * 1')).toEqual(1);
+    expect(getInterpretedResult('1 * 0')).toEqual(0);
+    expect(getInterpretedResult('0 * 1')).toEqual(0);
+    expect(getInterpretedResult('10 * 5')).toEqual(50);
   });
 });
