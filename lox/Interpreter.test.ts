@@ -23,4 +23,15 @@ describe("Interpreting expressions", () => {
     expect(getInterpretedResult('!!true')).toEqual(true);
     expect(getInterpretedResult('!!false')).toEqual(false);
   });
+
+  test("simple binary expressions", () => {
+    // minus operator 
+    expect(getInterpretedResult('1 - 1')).toEqual(0);
+    expect(getInterpretedResult('123 - 124')).toEqual(-1);
+
+    // slash operator
+    expect(getInterpretedResult('1 / 1')).toEqual(1);
+    expect(getInterpretedResult('10 / 1')).toEqual(10);
+    expect(getInterpretedResult('10 / 5')).toEqual(2);
+  });
 });
