@@ -100,9 +100,20 @@ export class Token {
     this.type = type;
     this.lexeme = lexeme;
     this.line = line;
+    this.literal = this._getLiteral();
+  }
 
-    // TODO: Conditionally calculate literal
-    this.literal = "";
+  _getLiteral(): string | number {
+    if (this.type === TokenType.NUMBER) {
+      return parseFloat(this.lexeme);
+    }
+
+    if (this.type === TokenType.STRING) {
+      // Strip the '"' prefix and postfix
+      return this.lexeme.slice(1, this.lexeme.length - 1);
+    }
+
+    return "";
   }
 }
 

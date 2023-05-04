@@ -64,7 +64,7 @@ describe("Scanner", () => {
         Token {
           "lexeme": ""hello world!"",
           "line": 1,
-          "literal": "",
+          "literal": "hello world!",
           "type": Symbol(STRING),
         },
         Token {
@@ -102,7 +102,7 @@ describe("Scanner", () => {
         Token {
           "lexeme": "123.123",
           "line": 1,
-          "literal": "",
+          "literal": 123.123,
           "type": Symbol(NUMBER),
         },
         Token {
@@ -199,7 +199,7 @@ describe("Scanner", () => {
         Token {
           "lexeme": ""12345"",
           "line": 1,
-          "literal": "",
+          "literal": "12345",
           "type": Symbol(STRING),
         },
         Token {
