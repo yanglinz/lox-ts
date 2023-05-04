@@ -44,5 +44,18 @@ describe("Interpreting expressions", () => {
     expect(getInterpretedResult('1 + 1')).toEqual(2);
     expect(getInterpretedResult('1 + (-1)')).toEqual(0);
     expect(getInterpretedResult('"foo" + "bar"')).toEqual('foobar');
+
+    // comparison operators
+    expect(getInterpretedResult('1 < 1')).toEqual(false);
+    expect(getInterpretedResult('1 < 123')).toEqual(true);
+    expect(getInterpretedResult('123 < 1')).toEqual(false);
+    expect(getInterpretedResult('1 <= 1')).toEqual(true);
+    expect(getInterpretedResult('1 <= 123')).toEqual(true);
+
+    expect(getInterpretedResult('1 > 1')).toEqual(false);
+    expect(getInterpretedResult('1 > 123')).toEqual(false);
+    expect(getInterpretedResult('123 > 1')).toEqual(true);
+    expect(getInterpretedResult('1 >= 1')).toEqual(true);
+    expect(getInterpretedResult('123 >= 1')).toEqual(true);
   });
 });

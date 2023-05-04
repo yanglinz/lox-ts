@@ -34,6 +34,14 @@ export class Interpreter extends ast.Visitor {
       else if (typeof left === 'string' && typeof right === 'string') {
         return left + right;
       }
+    } else if (type === TokenType.GREATER) {
+      return left > right;
+    } else if (type === TokenType.GREATER_EQUAL) {
+      return left >= right;
+    } else if (type === TokenType.LESS) {
+      return left < right;
+    } else if (type === TokenType.LESS_EQUAL) {
+      return left <= right;
     }
 
     // Unreachable
