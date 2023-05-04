@@ -113,7 +113,7 @@ export class Token {
       return this.lexeme.slice(1, this.lexeme.length - 1);
     }
 
-    return ""
+    return "";
   }
 }
 
