@@ -12,7 +12,7 @@ export class Interpreter extends ast.Visitor {
 
   isTruthy(object: TODO): boolean {
     if (object == null) return false;
-    if (object instanceof Boolean) return Boolean(object);
+    if (typeof object === 'boolean') return object;
     return true;
   }
 
