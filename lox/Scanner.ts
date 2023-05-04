@@ -108,6 +108,11 @@ export class Token {
       return parseFloat(this.lexeme);
     }
 
+    if (this.type === TokenType.STRING) {
+      // Strip the '"' prefix and postfix
+      return this.lexeme.slice(1, this.lexeme.length - 1);
+    }
+
     return ""
   }
 }

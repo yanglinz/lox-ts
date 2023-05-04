@@ -31,7 +31,6 @@ export class Interpreter extends ast.Visitor {
       if (typeof left === 'number' && typeof right === 'number') {
         return left + right;
       }
-
       else if (typeof left === 'string' && typeof right === 'string') {
         return left + right;
       }
