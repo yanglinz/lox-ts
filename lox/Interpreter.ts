@@ -27,6 +27,14 @@ export class Interpreter extends ast.Visitor {
         return left / right;
     } else if (type === TokenType.STAR) {
         return left * right;
+    } else if (type === TokenType.PLUS) {
+      if (typeof left === 'number' && typeof right === 'number') {
+        return left + right;
+      }
+
+      else if (typeof left === 'string' && typeof right === 'string') {
+        return left + right;
+      }
     }
 
     // Unreachable
