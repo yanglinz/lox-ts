@@ -1,5 +1,5 @@
 import * as ast from "./Ast";
-import { TokenType } from './Scanner';
+import { TokenType } from "./Scanner";
 
 // TODO: Does returning a ast.ExprLiteralValue make sense here?
 
@@ -12,8 +12,15 @@ export class Interpreter extends ast.Visitor {
 
   isTruthy(object: TODO): boolean {
     if (object == null) return false;
-    if (typeof object === 'boolean') return object;
+    if (typeof object === "boolean") return object;
     return true;
+  }
+
+  isEqual(a: TODO, b: TODO): boolean {
+    if (a === null && b === null) return true;
+    if (a === null) return false;
+
+    return a == b;
   }
 
   visitExprBinary(expr: ast.ExprBinary): ast.ExprLiteralValue {
@@ -22,16 +29,15 @@ export class Interpreter extends ast.Visitor {
 
     let type = expr.operator.type;
     if (type === TokenType.MINUS) {
-        return left - right;
+      return left - right;
     } else if (type === TokenType.SLASH) {
-        return left / right;
+      return left / right;
     } else if (type === TokenType.STAR) {
-        return left * right;
+      return left * right;
     } else if (type === TokenType.PLUS) {
-      if (typeof left === 'number' && typeof right === 'number') {
+      if (typeof left === "number" && typeof right === "number") {
         return left + right;
-      }
-      else if (typeof left === 'string' && typeof right === 'string') {
+      } else if (typeof left === "string" && typeof right === "string") {
         return left + right;
       }
     } else if (type === TokenType.GREATER) {
@@ -42,6 +48,10 @@ export class Interpreter extends ast.Visitor {
       return left < right;
     } else if (type === TokenType.LESS_EQUAL) {
       return left <= right;
+    } else if (type === TokenType.BANG_EQUAL) {
+      return !this.isEqual(left, right);
+    } else if (type === TokenType.EQUAL_EQUAL) {
+      return this.isEqual(left, right);
     }
 
     // Unreachable
@@ -53,7 +63,7 @@ export class Interpreter extends ast.Visitor {
   }
 
   visitExprLiteral(expr: ast.ExprLiteral): ast.ExprLiteralValue {
-    return expr.value
+    return expr.value;
   }
 
   visitExprUnary(expr: ast.ExprUnary): ast.ExprLiteralValue {
@@ -61,9 +71,9 @@ export class Interpreter extends ast.Visitor {
 
     let type = expr.operator.type;
     if (type === TokenType.MINUS) {
-        return -1 * right;
+      return -1 * right;
     } else if (type === TokenType.BANG) {
-        return !this.isTruthy(right);
+      return !this.isTruthy(right);
     }
 
     // Unreachable

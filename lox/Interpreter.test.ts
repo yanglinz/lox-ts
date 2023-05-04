@@ -57,5 +57,16 @@ describe("Interpreting expressions", () => {
     expect(getInterpretedResult("123 > 1")).toEqual(true);
     expect(getInterpretedResult("1 >= 1")).toEqual(true);
     expect(getInterpretedResult("123 >= 1")).toEqual(true);
+
+    // equality operators
+    // expect(getInterpretedResult("null == null")).toEqual(true);
+    // expect(getInterpretedResult("null == 1")).toEqual(false);
+    expect(getInterpretedResult("1 == 1")).toEqual(true);
+    expect(getInterpretedResult("123 == 1")).toEqual(false);
+    expect(getInterpretedResult("true == true")).toEqual(true);
+    expect(getInterpretedResult("false == false")).toEqual(true);
+    expect(getInterpretedResult("true == false")).toEqual(false);
+    expect(getInterpretedResult('"foo" == "foo"')).toEqual(true);
+    expect(getInterpretedResult('"foo" == "bar"')).toEqual(false);
   });
 });
