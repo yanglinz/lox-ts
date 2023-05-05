@@ -1,11 +1,12 @@
-import * as ast from "./Ast";
+import * as ast from "./Expr";
 import { TokenType } from "./Scanner";
 
-// TODO: Does returning a ast.ExprLiteralValue make sense here?
+// TODO: Implement RuntimeErrors
+// https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
 
 type TODO = any;
 
-export class Interpreter extends ast.Visitor {
+export class Interpreter extends ast.ExprVisitor {
   evaluate(expr: ast.Expr): ast.ExprLiteralValue {
     return expr.accept(this);
   }

@@ -5,7 +5,7 @@ import { Token } from "./Scanner";
 
 type VisitorOutput = any;
 
-export class Visitor {
+export class ExprVisitor {
   visitExprBinary(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
@@ -24,7 +24,7 @@ export class Visitor {
 }
 
 export class Expr {
-  accept(_: Visitor): VisitorOutput {}
+  accept(_: ExprVisitor): VisitorOutput {}
 }
 
 export class ExprBinary extends Expr {
@@ -39,7 +39,7 @@ export class ExprBinary extends Expr {
     this.right = right;
   }
 
-  accept(visitor: Visitor): VisitorOutput {
+  accept(visitor: ExprVisitor): VisitorOutput {
     return visitor.visitExprBinary(this);
   }
 }
@@ -52,7 +52,7 @@ export class ExprGrouping extends Expr {
     this.expression = expression;
   }
 
-  accept(visitor: Visitor): VisitorOutput {
+  accept(visitor: ExprVisitor): VisitorOutput {
     return visitor.visitExprGrouping(this);
   }
 }
@@ -67,7 +67,7 @@ export class ExprLiteral extends Expr {
     this.value = value;
   }
 
-  accept(visitor: Visitor): VisitorOutput {
+  accept(visitor: ExprVisitor): VisitorOutput {
     return visitor.visitExprLiteral(this);
   }
 }
@@ -82,7 +82,7 @@ export class ExprUnary extends Expr {
     this.right = right;
   }
 
-  accept(visitor: Visitor): VisitorOutput {
+  accept(visitor: ExprVisitor): VisitorOutput {
     return visitor.visitExprUnary(this);
   }
 }

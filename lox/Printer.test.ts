@@ -1,4 +1,4 @@
-import * as ast from "./Ast";
+import * as ast from "./Expr";
 import { Token, TokenType } from "./Scanner";
 import { AstPrinter } from "./Printer";
 

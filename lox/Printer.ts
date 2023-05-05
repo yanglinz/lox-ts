@@ -1,6 +1,6 @@
-import * as ast from "./Ast";
+import * as ast from "./Expr";
 
-export class AstPrinter extends ast.Visitor {
+export class AstPrinter extends ast.ExprVisitor {
   print(expr: ast.Expr): string {
     return expr.accept(this);
   }
