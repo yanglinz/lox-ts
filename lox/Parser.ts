@@ -1,6 +1,6 @@
 import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import { Expr, ExprBinary, ExprGrouping, ExprLiteral, ExprUnary } from "./Expr";
-import { Stmt, StmtPrint, StmtExpression } from './Stmt';
+import { Stmt, StmtPrint, StmtExpression } from "./Stmt";
 
 export class Parser {
   tokens: Token[];
@@ -12,9 +12,12 @@ export class Parser {
     this.current = 0;
   }
 
-  parse(): Expr {
-    // TODO: Convert to the statement version
-    return this.expression();
+  parse(): Stmt[] {
+    let statements = [];
+    while (!this.isAtEnd()) {
+      statements.push(this.statement());
+    }
+    return statements;
   }
 
   private match(...tokenTypes: TokenTypeConstant[]): boolean {
@@ -70,12 +73,12 @@ export class Parser {
 
   /**
    * Statement grammar rules
-   * 
+   *
    * program   -> statement* EOF ;
    * statement -> exprStmt | printStmt ;
    * exprStmt  -> expression ";" ;
    * printStmt -> "print" expression ";" ;
-   * 
+   *
    */
 
   private statement(): Stmt {
@@ -97,14 +100,14 @@ export class Parser {
 
   /**
    * Expression grammar rules
-   * 
+   *
    * expression     -> literal | unary | binary | grouping ;
    * literal        -> NUMBER | STRING | "true" | "false" | "nil" ;
    * grouping       -> "(" expression ")" ;
    * unary          -> ( "-" | "!" ) expression ;
    * binary         -> expression operator expression ;
-   * operator       -> "==" | "!=" | "<" | "<=" | ">" | ">=" | "+"  | "-"  | "*" | "/" ; 
-   * 
+   * operator       -> "==" | "!=" | "<" | "<=" | ">" | ">=" | "+"  | "-"  | "*" | "/" ;
+   *
    */
   private expression(): Expr {
     return this.equality();
