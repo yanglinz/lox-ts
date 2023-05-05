@@ -1,4 +1,5 @@
 import { Token } from "./Scanner";
+import { Expr } from "./Expr";
 
 type VisitorOutput = any;
 
@@ -22,4 +23,17 @@ export class StmtVisitor {
 
 export class Stmt {
   accept(_: StmtVisitor): VisitorOutput {}
+}
+
+export class StmtExpression extends Stmt {
+  expression: Expr;
+
+  constructor(expression: Expr) {
+    super();
+    this.expression = expression;
+  }
+
+  accept(visitor: StmtVisitor): VisitorOutput {
+    // return visitor.visitExpressionStmt(this);
+  }
 }
