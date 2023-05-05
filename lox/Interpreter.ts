@@ -1,7 +1,8 @@
 import * as ast from "./Ast";
 import { TokenType } from "./Scanner";
 
-// TODO: Does returning a ast.ExprLiteralValue make sense here?
+// TODO: Implement RuntimeErrors
+// https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
 
 type TODO = any;
 
