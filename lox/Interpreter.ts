@@ -1,4 +1,12 @@
-import * as ast from "./Expr";
+import {
+  Expr,
+  ExprBinary,
+  ExprGrouping,
+  ExprLiteral,
+  ExprLiteralValue,
+  ExprUnary,
+  ExprVisitor,
+} from "./Expr";
 import { TokenType } from "./Scanner";
 
 // TODO: Implement RuntimeErrors
@@ -6,8 +14,8 @@ import { TokenType } from "./Scanner";
 
 type TODO = any;
 
-export class Interpreter extends ast.ExprVisitor {
-  evaluate(expr: ast.Expr): ast.ExprLiteralValue {
+export class Interpreter extends ExprVisitor {
+  evaluate(expr: Expr): ExprLiteralValue {
     return expr.accept(this);
   }
 
@@ -24,7 +32,7 @@ export class Interpreter extends ast.ExprVisitor {
     return a == b;
   }
 
-  visitExprBinary(expr: ast.ExprBinary): ast.ExprLiteralValue {
+  visitExprBinary(expr: ExprBinary): ExprLiteralValue {
     let right: TODO = this.evaluate(expr.right);
     let left: TODO = this.evaluate(expr.left);
 
@@ -59,15 +67,15 @@ export class Interpreter extends ast.ExprVisitor {
     return null;
   }
 
-  visitExprGrouping(expr: ast.ExprGrouping): ast.ExprLiteralValue {
+  visitExprGrouping(expr: ExprGrouping): ExprLiteralValue {
     return this.evaluate(expr.expression);
   }
 
-  visitExprLiteral(expr: ast.ExprLiteral): ast.ExprLiteralValue {
+  visitExprLiteral(expr: ExprLiteral): ExprLiteralValue {
     return expr.value;
   }
 
-  visitExprUnary(expr: ast.ExprUnary): ast.ExprLiteralValue {
+  visitExprUnary(expr: ExprUnary): ExprLiteralValue {
     let right: TODO = this.evaluate(expr.right);
 
     let type = expr.operator.type;
