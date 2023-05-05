@@ -4,19 +4,11 @@ import { Expr } from "./Expr";
 type VisitorOutput = any;
 
 export class StmtVisitor {
-  visitExprBinary(_: Stmt): VisitorOutput {
+  visitExpressionStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 
-  visitExprGrouping(_: Stmt): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-
-  visitExprLiteral(_: Stmt): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-
-  visitExprUnary(_: Stmt): VisitorOutput {
+  visitPrintStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 }
@@ -34,7 +26,7 @@ export class StmtExpression extends Stmt {
   }
 
   accept(visitor: StmtVisitor): VisitorOutput {
-    // return visitor.visitExpressionStmt(this);
+    return visitor.visitExpressionStmt(this);
   }
 }
 
@@ -47,6 +39,6 @@ export class StmtPrint extends Stmt {
   }
 
   accept(visitor: StmtVisitor): VisitorOutput {
-    // return visitor.visitPrintStmt(this);
+    return visitor.visitPrintStmt(this);
   }
 }
