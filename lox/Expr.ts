@@ -1,6 +1,3 @@
-// This file is generated from tools/generator.ts
-// See https://craftinginterpreters.com/representing-code.html#metaprogramming-the-trees
-
 import { Token } from "./Scanner";
 
 type VisitorOutput = any;
