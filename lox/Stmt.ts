@@ -37,3 +37,16 @@ export class StmtExpression extends Stmt {
     // return visitor.visitExpressionStmt(this);
   }
 }
+
+export class StmtPrint extends Stmt {
+  expression: Expr;
+
+  constructor(expression: Expr) {
+    super();
+    this.expression = expression;
+  }
+
+  accept(visitor: StmtVisitor): VisitorOutput {
+    // return visitor.visitPrintStmt(this);
+  }
+}
