@@ -1,28 +1,35 @@
-import * as ast from "./Expr";
+import {
+  Expr,
+  ExprBinary,
+  ExprGrouping,
+  ExprLiteral,
+  ExprUnary,
+  ExprVisitor,
+} from "./Expr";
 
-export class AstPrinter extends ast.ExprVisitor {
-  print(expr: ast.Expr): string {
+export class AstPrinter extends ExprVisitor {
+  print(expr: Expr): string {
     return expr.accept(this);
   }
 
-  visitExprBinary(expr: ast.ExprBinary): string {
+  visitExprBinary(expr: ExprBinary): string {
     return this.parenthesize(expr.operator.lexeme, expr.left, expr.right);
   }
 
-  visitExprGrouping(expr: ast.ExprGrouping): string {
+  visitExprGrouping(expr: ExprGrouping): string {
     return this.parenthesize("group", expr.expression);
   }
 
-  visitExprLiteral(expr: ast.ExprLiteral): string {
+  visitExprLiteral(expr: ExprLiteral): string {
     if (expr.value == null) return "nil";
     return expr.value.toString();
   }
 
-  visitExprUnary(expr: ast.ExprUnary): string {
+  visitExprUnary(expr: ExprUnary): string {
     return this.parenthesize(expr.operator.lexeme, expr.right);
   }
 
-  private parenthesize(name: string, ...exprs: ast.Expr[]) {
+  private parenthesize(name: string, ...exprs: Expr[]) {
     let out = `(${name}`;
     for (let e of exprs) {
       out += ` ${e.accept(this)}`;

@@ -1,4 +1,3 @@
-import { Token } from "./Scanner";
 import { Expr } from "./Expr";
 
 type VisitorOutput = any;
