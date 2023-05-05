@@ -6,7 +6,7 @@ import { TokenType } from "./Scanner";
 
 type TODO = any;
 
-export class Interpreter extends ast.Visitor {
+export class Interpreter extends ast.ExprVisitor {
   evaluate(expr: ast.Expr): ast.ExprLiteralValue {
     return expr.accept(this);
   }
