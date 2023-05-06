@@ -5,16 +5,29 @@ import {
   ExprLiteral,
   ExprLiteralValue,
   ExprUnary,
-  ExprVisitor,
 } from "./Expr";
+import { Stmt, StmtExpression, StmtPrint } from "./Stmt";
+import { Visitor } from "./Visitor";
 import { TokenType } from "./Scanner";
-
-// TODO: Implement RuntimeErrors
-// https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
 
 type TODO = any;
 
-export class Interpreter extends ExprVisitor {
+export class Interpreter extends Visitor {
+  interpret(statements: Stmt[]) {
+    try {
+      for (let s of statements) {
+        this.execute(s);
+      }
+    } catch (error) {
+      // TODO: Implement RuntimeErrors
+      // https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
+    }
+  }
+
+  execute(statement: Stmt): ExprLiteralValue {
+    return statement.accept(this);
+  }
+
   evaluate(expr: Expr): ExprLiteralValue {
     return expr.accept(this);
   }
@@ -30,6 +43,16 @@ export class Interpreter extends ExprVisitor {
     if (a === null) return false;
 
     return a == b;
+  }
+
+  visitExpressionStmt(stmt: StmtExpression): void {
+    this.evaluate(stmt.expression);
+  }
+
+  visitPrintStmt(stmt: StmtPrint): void {
+    let value = this.evaluate(stmt.expression);
+    // TODO: stringify value
+    console.log(value);
   }
 
   visitExprBinary(expr: ExprBinary): ExprLiteralValue {
