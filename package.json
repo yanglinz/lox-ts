@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "generate": "ts-node tools/generator.ts",
+    "run": "ts-node tools/run.ts",
     "test": "jest .",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles .",
     "type": "tsc .",
