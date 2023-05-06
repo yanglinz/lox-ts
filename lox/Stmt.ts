@@ -1,19 +1,8 @@
 import { Expr } from "./Expr";
-
-type VisitorOutput = any;
-
-export class StmtVisitor {
-  visitExpressionStmt(_: Stmt): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-
-  visitPrintStmt(_: Stmt): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-}
+import { Visitor, VisitorOutput } from "./Visitor";
 
 export class Stmt {
-  accept(_: StmtVisitor): VisitorOutput {}
+  accept(_: Visitor): VisitorOutput {}
 }
 
 export class StmtExpression extends Stmt {
@@ -24,7 +13,7 @@ export class StmtExpression extends Stmt {
     this.expression = expression;
   }
 
-  accept(visitor: StmtVisitor): VisitorOutput {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExpressionStmt(this);
   }
 }
@@ -37,7 +26,7 @@ export class StmtPrint extends Stmt {
     this.expression = expression;
   }
 
-  accept(visitor: StmtVisitor): VisitorOutput {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitPrintStmt(this);
   }
 }
