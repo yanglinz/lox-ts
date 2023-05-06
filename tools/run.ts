@@ -21,7 +21,8 @@ function runFile() {
     process.exit(2);
   }
 
-  console.log(filePath);
+  const lox = new Lox();
+  lox.runFile(filePath).catch(console.error);
 }
 
 runFile();
