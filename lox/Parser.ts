@@ -1,13 +1,15 @@
+import { LoxInstance } from "./Instance";
 import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import { Expr, ExprBinary, ExprGrouping, ExprLiteral, ExprUnary } from "./Expr";
 import { Stmt, StmtPrint, StmtExpression } from "./Stmt";
 
 export class Parser {
+  lox: LoxInstance;
   tokens: Token[];
 
   private current: number;
 
-  constructor(tokens: Token[]) {
+  constructor(lox: LoxInstance, tokens: Token[]) {
     this.tokens = tokens;
     this.current = 0;
   }

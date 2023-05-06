@@ -1,3 +1,5 @@
+import { LoxInstance } from "./Instance";
+
 export type TokenTypeConstant = Symbol;
 
 type _TokenType = {
@@ -171,6 +173,7 @@ function isAlpha(char: string) {
 }
 
 export class Scanner {
+  lox: LoxInstance;
   source: string;
 
   #start: number = 0;
@@ -180,7 +183,8 @@ export class Scanner {
   #tokens: Token[] = [];
   errors: any[] = [];
 
-  constructor(source: string) {
+  constructor(lox: LoxInstance, source: string) {
+    this.lox = lox;
     this.source = source;
   }
 
