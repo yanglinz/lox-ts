@@ -1,9 +1,11 @@
+import { LoxInstance } from "./Instance";
 import { Scanner } from "./Scanner";
 import { Parser } from "./Parser";
 
 function getParsedExpr(source: string): any {
-  let tokens = new Scanner(source).scan();
-  let parser = new Parser(tokens);
+  let lox = new LoxInstance();
+  let tokens = new Scanner(lox, source).scan();
+  let parser = new Parser(lox, tokens);
   return parser.parseExpression();
 }
 

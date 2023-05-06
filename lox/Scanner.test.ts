@@ -1,7 +1,9 @@
+import { LoxInstance } from "./Instance";
 import { Scanner, TokenType, TokenTypeConstant } from "./Scanner";
 
 function getTokens(source: string): TokenTypeConstant[] {
-  const tokens = new Scanner(source).scan().map((t) => t.type);
+  const lox = new LoxInstance();
+  const tokens = new Scanner(lox, source).scan().map((t) => t.type);
   expect(tokens.length).toBeGreaterThan(0);
   // Strip the EOF to avoid having to specify it as a part of every test
   expect(tokens.at(-1)).toEqual(TokenType.EOF);
@@ -58,7 +60,7 @@ describe("Scanner", () => {
   });
 
   test("tokens for strings", () => {
-    const tokens = new Scanner('"hello world!"').scan();
+    const tokens = new Scanner(new LoxInstance(), '"hello world!"').scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
         Token {
@@ -78,7 +80,7 @@ describe("Scanner", () => {
   });
 
   test("errors for invalid strings", () => {
-    const scanner = new Scanner('"Hello world!');
+    const scanner = new Scanner(new LoxInstance(), '"Hello world!');
     scanner.scan();
     expect(scanner.errors.map((e) => e.message)).toEqual([
       "Unterminated string",
@@ -96,7 +98,7 @@ describe("Scanner", () => {
   });
 
   test("tokens for numbers", () => {
-    const tokens = new Scanner("123.123").scan();
+    const tokens = new Scanner(new LoxInstance(), "123.123").scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
         Token {
@@ -143,7 +145,7 @@ describe("Scanner", () => {
   });
 
   test("tokens for reserved keywords", () => {
-    const tokens = new Scanner("false or true").scan();
+    const tokens = new Scanner(new LoxInstance(), "false or true").scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
         Token {
@@ -175,7 +177,10 @@ describe("Scanner", () => {
   });
 
   test("tokens for identifiers", () => {
-    const tokens = new Scanner('var true_or_false = "12345"').scan();
+    const tokens = new Scanner(
+      new LoxInstance(),
+      'var true_or_false = "12345"'
+    ).scan();
     expect(tokens).toMatchInlineSnapshot(`
       [
         Token {

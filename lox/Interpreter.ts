@@ -1,3 +1,4 @@
+import { LoxInstance } from "./Instance";
 import {
   Expr,
   ExprBinary,
@@ -13,6 +14,13 @@ import { TokenType } from "./Scanner";
 type TODO = any;
 
 export class Interpreter extends Visitor {
+  lox: LoxInstance;
+
+  constructor(lox: LoxInstance) {
+    super();
+    this.lox = lox;
+  }
+
   interpret(statements: Stmt[]) {
     try {
       for (let s of statements) {

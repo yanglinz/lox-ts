@@ -1,11 +1,13 @@
+import { LoxInstance } from "./Instance";
 import { Scanner } from "./Scanner";
 import { Parser } from "./Parser";
 import { Interpreter } from "./Interpreter";
 
 function interpret(source: string): any {
-  let interpreter = new Interpreter();
-  let tokens = new Scanner(source).scan();
-  let parser = new Parser(tokens);
+  let lox = new LoxInstance();
+  let interpreter = new Interpreter(lox);
+  let tokens = new Scanner(lox, source).scan();
+  let parser = new Parser(lox, tokens);
   return interpreter.evaluate(parser.parseExpression());
 }
 
