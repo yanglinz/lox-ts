@@ -14,3 +14,4 @@ jobs:
       - uses: volta-cli/action@v3
       - run: yarn install
       - run: yarn format:check
+      - run: yarn test
