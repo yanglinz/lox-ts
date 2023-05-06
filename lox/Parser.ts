@@ -20,6 +20,10 @@ export class Parser {
     return statements;
   }
 
+  parseExpression(): Expr {
+    return this.expression();
+  }
+
   private match(...tokenTypes: TokenTypeConstant[]): boolean {
     for (let t of tokenTypes) {
       if (this.check(t)) {
