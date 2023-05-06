@@ -1,13 +1,7 @@
-import {
-  Expr,
-  ExprBinary,
-  ExprGrouping,
-  ExprLiteral,
-  ExprUnary,
-  ExprVisitor,
-} from "./Expr";
+import { Expr, ExprBinary, ExprGrouping, ExprLiteral, ExprUnary } from "./Expr";
+import { Visitor } from "./Visitor";
 
-export class AstPrinter extends ExprVisitor {
+export class AstPrinter extends Visitor {
   print(expr: Expr): string {
     return expr.accept(this);
   }
