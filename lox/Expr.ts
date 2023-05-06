@@ -1,30 +1,8 @@
-// This file is generated from tools/generator.ts
-// See https://craftinginterpreters.com/representing-code.html#metaprogramming-the-trees
-
 import { Token } from "./Scanner";
-
-type VisitorOutput = any;
-
-export class ExprVisitor {
-  visitExprBinary(_: Expr): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-
-  visitExprGrouping(_: Expr): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-
-  visitExprLiteral(_: Expr): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-
-  visitExprUnary(_: Expr): VisitorOutput {
-    throw new Error("NotImplementedError");
-  }
-}
+import { Visitor, VisitorOutput } from "./Visitor";
 
 export class Expr {
-  accept(_: ExprVisitor): VisitorOutput {}
+  accept(_: Visitor): VisitorOutput {}
 }
 
 export class ExprBinary extends Expr {
@@ -39,7 +17,7 @@ export class ExprBinary extends Expr {
     this.right = right;
   }
 
-  accept(visitor: ExprVisitor): VisitorOutput {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprBinary(this);
   }
 }
@@ -52,7 +30,7 @@ export class ExprGrouping extends Expr {
     this.expression = expression;
   }
 
-  accept(visitor: ExprVisitor): VisitorOutput {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprGrouping(this);
   }
 }
@@ -67,7 +45,7 @@ export class ExprLiteral extends Expr {
     this.value = value;
   }
 
-  accept(visitor: ExprVisitor): VisitorOutput {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprLiteral(this);
   }
 }
@@ -82,7 +60,7 @@ export class ExprUnary extends Expr {
     this.right = right;
   }
 
-  accept(visitor: ExprVisitor): VisitorOutput {
+  accept(visitor: Visitor): VisitorOutput {
     return visitor.visitExprUnary(this);
   }
 }

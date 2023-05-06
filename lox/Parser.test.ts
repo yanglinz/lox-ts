@@ -1,15 +1,15 @@
 import { Scanner } from "./Scanner";
 import { Parser } from "./Parser";
 
-function getParsed(source: string): any {
+function getParsedExpr(source: string): any {
   let tokens = new Scanner(source).scan();
   let parser = new Parser(tokens);
-  return parser.parse();
+  return parser.parseExpression();
 }
 
 describe("Parser should parse expressions", () => {
   test("unary", () => {
-    expect(getParsed("-123")).toMatchInlineSnapshot(`
+    expect(getParsedExpr("-123")).toMatchInlineSnapshot(`
       ExprUnary {
         "operator": Token {
           "lexeme": "-",
@@ -25,7 +25,7 @@ describe("Parser should parse expressions", () => {
   });
 
   test("comparison", () => {
-    expect(getParsed("false == false")).toMatchInlineSnapshot(`
+    expect(getParsedExpr("false == false")).toMatchInlineSnapshot(`
       ExprBinary {
         "left": ExprLiteral {
           "value": false,

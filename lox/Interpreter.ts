@@ -1,13 +1,34 @@
-import * as ast from "./Expr";
+import {
+  Expr,
+  ExprBinary,
+  ExprGrouping,
+  ExprLiteral,
+  ExprLiteralValue,
+  ExprUnary,
+} from "./Expr";
+import { Stmt, StmtExpression, StmtPrint } from "./Stmt";
+import { Visitor } from "./Visitor";
 import { TokenType } from "./Scanner";
-
-// TODO: Implement RuntimeErrors
-// https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
 
 type TODO = any;
 
-export class Interpreter extends ast.ExprVisitor {
-  evaluate(expr: ast.Expr): ast.ExprLiteralValue {
+export class Interpreter extends Visitor {
+  interpret(statements: Stmt[]) {
+    try {
+      for (let s of statements) {
+        this.execute(s);
+      }
+    } catch (error) {
+      // TODO: Implement RuntimeErrors
+      // https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
+    }
+  }
+
+  execute(statement: Stmt): ExprLiteralValue {
+    return statement.accept(this);
+  }
+
+  evaluate(expr: Expr): ExprLiteralValue {
     return expr.accept(this);
   }
 
@@ -24,7 +45,17 @@ export class Interpreter extends ast.ExprVisitor {
     return a == b;
   }
 
-  visitExprBinary(expr: ast.ExprBinary): ast.ExprLiteralValue {
+  visitExpressionStmt(stmt: StmtExpression): void {
+    this.evaluate(stmt.expression);
+  }
+
+  visitPrintStmt(stmt: StmtPrint): void {
+    let value = this.evaluate(stmt.expression);
+    // TODO: stringify value
+    console.log(value);
+  }
+
+  visitExprBinary(expr: ExprBinary): ExprLiteralValue {
     let right: TODO = this.evaluate(expr.right);
     let left: TODO = this.evaluate(expr.left);
 
@@ -59,15 +90,15 @@ export class Interpreter extends ast.ExprVisitor {
     return null;
   }
 
-  visitExprGrouping(expr: ast.ExprGrouping): ast.ExprLiteralValue {
+  visitExprGrouping(expr: ExprGrouping): ExprLiteralValue {
     return this.evaluate(expr.expression);
   }
 
-  visitExprLiteral(expr: ast.ExprLiteral): ast.ExprLiteralValue {
+  visitExprLiteral(expr: ExprLiteral): ExprLiteralValue {
     return expr.value;
   }
 
-  visitExprUnary(expr: ast.ExprUnary): ast.ExprLiteralValue {
+  visitExprUnary(expr: ExprUnary): ExprLiteralValue {
     let right: TODO = this.evaluate(expr.right);
 
     let type = expr.operator.type;

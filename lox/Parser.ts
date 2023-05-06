@@ -1,5 +1,6 @@
 import { Token, TokenType, TokenTypeConstant } from "./Scanner";
-import * as ast from "./Expr";
+import { Expr, ExprBinary, ExprGrouping, ExprLiteral, ExprUnary } from "./Expr";
+import { Stmt, StmtPrint, StmtExpression } from "./Stmt";
 
 export class Parser {
   tokens: Token[];
@@ -11,7 +12,15 @@ export class Parser {
     this.current = 0;
   }
 
-  parse(): ast.Expr {
+  parse(): Stmt[] {
+    let statements = [];
+    while (!this.isAtEnd()) {
+      statements.push(this.statement());
+    }
+    return statements;
+  }
+
+  parseExpression(): Expr {
     return this.expression();
   }
 
@@ -66,23 +75,61 @@ export class Parser {
     return new Error(message);
   }
 
-  private expression(): ast.Expr {
+  /**
+   * Statement grammar rules
+   *
+   * program   -> statement* EOF ;
+   * statement -> exprStmt | printStmt ;
+   * exprStmt  -> expression ";" ;
+   * printStmt -> "print" expression ";" ;
+   *
+   */
+
+  private statement(): Stmt {
+    if (this.match(TokenType.PRINT)) return this.printStatement();
+    return this.expressionStatement();
+  }
+
+  private printStatement(): Stmt {
+    let value = this.expression();
+    this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
+    return new StmtPrint(value);
+  }
+
+  private expressionStatement(): Stmt {
+    let value = this.expression();
+    this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
+    return new StmtExpression(value);
+  }
+
+  /**
+   * Expression grammar rules
+   *
+   * expression     -> literal | unary | binary | grouping ;
+   * literal        -> NUMBER | STRING | "true" | "false" | "nil" ;
+   * grouping       -> "(" expression ")" ;
+   * unary          -> ( "-" | "!" ) expression ;
+   * binary         -> expression operator expression ;
+   * operator       -> "==" | "!=" | "<" | "<=" | ">" | ">=" | "+"  | "-"  | "*" | "/" ;
+   *
+   */
+  private expression(): Expr {
     return this.equality();
   }
 
-  private equality(): ast.Expr {
+  private equality(): Expr {
     let expr = this.comparison();
 
     while (this.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
       let operator = this.previous();
       let right = this.comparison();
-      expr = new ast.ExprBinary(expr, operator, right);
+      expr = new ExprBinary(expr, operator, right);
     }
 
     return expr;
   }
 
-  private comparison(): ast.Expr {
+  private comparison(): Expr {
     let expr = this.term();
 
     while (
@@ -95,63 +142,63 @@ export class Parser {
     ) {
       let operator = this.previous();
       let right = this.term();
-      expr = new ast.ExprBinary(expr, operator, right);
+      expr = new ExprBinary(expr, operator, right);
     }
 
     return expr;
   }
 
-  private term(): ast.Expr {
+  private term(): Expr {
     let expr = this.factor();
 
     while (this.match(TokenType.MINUS, TokenType.PLUS)) {
       let operator = this.previous();
       let right = this.factor();
-      expr = new ast.ExprBinary(expr, operator, right);
+      expr = new ExprBinary(expr, operator, right);
     }
 
     return expr;
   }
 
-  private factor(): ast.Expr {
+  private factor(): Expr {
     let expr = this.unary();
 
     while (this.match(TokenType.SLASH, TokenType.STAR)) {
       let operator = this.previous();
       let right = this.unary();
-      expr = new ast.ExprBinary(expr, operator, right);
+      expr = new ExprBinary(expr, operator, right);
     }
 
     return expr;
   }
 
-  private unary(): ast.Expr {
+  private unary(): Expr {
     if (this.match(TokenType.BANG, TokenType.MINUS)) {
       let operator = this.previous();
       let right = this.unary();
-      return new ast.ExprUnary(operator, right);
+      return new ExprUnary(operator, right);
     }
 
     return this.primary();
   }
 
-  private primary(): ast.Expr {
+  private primary(): Expr {
     if (this.match(TokenType.FALSE)) {
-      return new ast.ExprLiteral(false);
+      return new ExprLiteral(false);
     } else if (this.match(TokenType.TRUE)) {
-      return new ast.ExprLiteral(true);
+      return new ExprLiteral(true);
     } else if (this.match(TokenType.NIL)) {
-      return new ast.ExprLiteral(null);
+      return new ExprLiteral(null);
     }
 
     if (this.match(TokenType.NUMBER, TokenType.STRING)) {
-      return new ast.ExprLiteral(this.previous().literal);
+      return new ExprLiteral(this.previous().literal);
     }
 
     if (this.match(TokenType.LEFT_PAREN)) {
       let expr = this.expression();
       this.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
-      return new ast.ExprGrouping(expr);
+      return new ExprGrouping(expr);
     }
   }
 }
