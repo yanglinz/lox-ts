@@ -4,19 +4,19 @@ import { Stmt } from "./Stmt";
 export type VisitorOutput = any;
 
 export class Visitor {
-  visitExprBinary(_: Expr): VisitorOutput {
+  visitBinaryExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 
-  visitExprGrouping(_: Expr): VisitorOutput {
+  visitGroupingExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 
-  visitExprLiteral(_: Expr): VisitorOutput {
+  visitLiteralExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 
-  visitExprUnary(_: Expr): VisitorOutput {
+  visitUnaryExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 
