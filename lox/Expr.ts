@@ -61,6 +61,19 @@ export class ExprUnary extends Expr {
   }
 
   accept(visitor: Visitor): VisitorOutput {
-    return visitor.visitExprUnary(this);
+    return visitor.visitUnaryExpr(this);
+  }
+}
+
+export class ExprVariable extends Expr {
+  name: Token;
+
+  constructor(name: Token) {
+    super();
+    this.name = name;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitVariableExpr(this);
   }
 }
