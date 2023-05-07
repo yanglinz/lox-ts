@@ -1,7 +1,14 @@
 import { LoxInstance } from "./Instance";
 import { Token, TokenType, TokenTypeConstant } from "./Scanner";
-import { Expr, ExprBinary, ExprGrouping, ExprLiteral, ExprUnary } from "./Expr";
-import { Stmt, StmtPrint, StmtExpression } from "./Stmt";
+import {
+  Expr,
+  ExprBinary,
+  ExprGrouping,
+  ExprLiteral,
+  ExprUnary,
+  ExprVariable,
+} from "./Expr";
+import { Stmt, StmtVar, StmtPrint, StmtExpression } from "./Stmt";
 
 export class Parser {
   lox: LoxInstance;
@@ -17,7 +24,7 @@ export class Parser {
   parse(): Stmt[] {
     let statements = [];
     while (!this.isAtEnd()) {
-      statements.push(this.statement());
+      statements.push(this.declaration());
     }
     return statements;
   }
@@ -87,9 +94,34 @@ export class Parser {
    *
    */
 
+  private declaration(): Stmt {
+    try {
+      if (this.match(TokenType.VAR)) return this.varDeclaration();
+
+      return this.statement();
+    } catch (error) {
+      // TODO: Implement error recovery
+      // https://craftinginterpreters.com/statements-and-state.html#parsing-variables
+      // synchronize();
+      return null;
+    }
+  }
+
   private statement(): Stmt {
     if (this.match(TokenType.PRINT)) return this.printStatement();
     return this.expressionStatement();
+  }
+
+  private varDeclaration(): Stmt {
+    let name = this.consume(TokenType.IDENTIFIER, "Expect variable name.");
+
+    let initializer = null;
+    if (this.match(TokenType.EQUAL)) {
+      initializer = this.expression();
+    }
+
+    this.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+    return new StmtVar(name, initializer);
   }
 
   private printStatement(): Stmt {
@@ -191,13 +223,11 @@ export class Parser {
       return new ExprLiteral(true);
     } else if (this.match(TokenType.NIL)) {
       return new ExprLiteral(null);
-    }
-
-    if (this.match(TokenType.NUMBER, TokenType.STRING)) {
+    } else if (this.match(TokenType.NUMBER, TokenType.STRING)) {
       return new ExprLiteral(this.previous().literal);
-    }
-
-    if (this.match(TokenType.LEFT_PAREN)) {
+    } else if (this.match(TokenType.IDENTIFIER)) {
+      return new ExprVariable(this.previous());
+    } else if (this.match(TokenType.LEFT_PAREN)) {
       let expr = this.expression();
       this.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
       return new ExprGrouping(expr);

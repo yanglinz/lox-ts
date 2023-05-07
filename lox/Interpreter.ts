@@ -63,7 +63,7 @@ export class Interpreter extends Visitor {
     console.log(value);
   }
 
-  visitExprBinary(expr: ExprBinary): ExprLiteralValue {
+  visitBinaryExpr(expr: ExprBinary): ExprLiteralValue {
     let right: TODO = this.evaluate(expr.right);
     let left: TODO = this.evaluate(expr.left);
 
@@ -98,15 +98,15 @@ export class Interpreter extends Visitor {
     return null;
   }
 
-  visitExprGrouping(expr: ExprGrouping): ExprLiteralValue {
+  visitGroupingExpr(expr: ExprGrouping): ExprLiteralValue {
     return this.evaluate(expr.expression);
   }
 
-  visitExprLiteral(expr: ExprLiteral): ExprLiteralValue {
+  visitLiteralExpr(expr: ExprLiteral): ExprLiteralValue {
     return expr.value;
   }
 
-  visitExprUnary(expr: ExprUnary): ExprLiteralValue {
+  visitUnaryExpr(expr: ExprUnary): ExprLiteralValue {
     let right: TODO = this.evaluate(expr.right);
 
     let type = expr.operator.type;

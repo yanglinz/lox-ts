@@ -6,20 +6,20 @@ export class AstPrinter extends Visitor {
     return expr.accept(this);
   }
 
-  visitExprBinary(expr: ExprBinary): string {
+  visitBinaryExpr(expr: ExprBinary): string {
     return this.parenthesize(expr.operator.lexeme, expr.left, expr.right);
   }
 
-  visitExprGrouping(expr: ExprGrouping): string {
+  visitGroupingExpr(expr: ExprGrouping): string {
     return this.parenthesize("group", expr.expression);
   }
 
-  visitExprLiteral(expr: ExprLiteral): string {
+  visitLiteralExpr(expr: ExprLiteral): string {
     if (expr.value == null) return "nil";
     return expr.value.toString();
   }
 
-  visitExprUnary(expr: ExprUnary): string {
+  visitUnaryExpr(expr: ExprUnary): string {
     return this.parenthesize(expr.operator.lexeme, expr.right);
   }
 

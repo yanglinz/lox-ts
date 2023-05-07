@@ -18,7 +18,7 @@ export class ExprBinary extends Expr {
   }
 
   accept(visitor: Visitor): VisitorOutput {
-    return visitor.visitExprBinary(this);
+    return visitor.visitBinaryExpr(this);
   }
 }
 
@@ -31,7 +31,7 @@ export class ExprGrouping extends Expr {
   }
 
   accept(visitor: Visitor): VisitorOutput {
-    return visitor.visitExprGrouping(this);
+    return visitor.visitGroupingExpr(this);
   }
 }
 
@@ -46,7 +46,7 @@ export class ExprLiteral extends Expr {
   }
 
   accept(visitor: Visitor): VisitorOutput {
-    return visitor.visitExprLiteral(this);
+    return visitor.visitLiteralExpr(this);
   }
 }
 
@@ -61,6 +61,19 @@ export class ExprUnary extends Expr {
   }
 
   accept(visitor: Visitor): VisitorOutput {
-    return visitor.visitExprUnary(this);
+    return visitor.visitUnaryExpr(this);
+  }
+}
+
+export class ExprVariable extends Expr {
+  name: Token;
+
+  constructor(name: Token) {
+    super();
+    this.name = name;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitVariableExpr(this);
   }
 }
