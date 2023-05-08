@@ -1,4 +1,5 @@
 import { LoxInstance } from "./Instance";
+import { Environment } from "./Environment";
 import {
   Expr,
   ExprBinary,
@@ -6,8 +7,9 @@ import {
   ExprLiteral,
   ExprLiteralValue,
   ExprUnary,
+  ExprVariable,
 } from "./Expr";
-import { Stmt, StmtExpression, StmtPrint } from "./Stmt";
+import { Stmt, StmtExpression, StmtPrint, StmtVar } from "./Stmt";
 import { Visitor } from "./Visitor";
 import { TokenType } from "./Scanner";
 
@@ -15,10 +17,12 @@ type TODO = any;
 
 export class Interpreter extends Visitor {
   lox: LoxInstance;
+  environment: Environment;
 
   constructor(lox: LoxInstance) {
     super();
     this.lox = lox;
+    this.environment = new Environment();
   }
 
   interpret(statements: Stmt[]) {
@@ -61,6 +65,15 @@ export class Interpreter extends Visitor {
     let value = this.evaluate(stmt.expression);
     // TODO: stringify value
     console.log(value);
+  }
+
+  visitVarStmt(stmt: StmtVar): void {
+    let value = null;
+    if (stmt.initializer != null) {
+      value = this.evaluate(stmt.initializer);
+    }
+
+    this.environment.define(stmt.name.lexeme, value);
   }
 
   visitBinaryExpr(expr: ExprBinary): ExprLiteralValue {
@@ -118,5 +131,9 @@ export class Interpreter extends Visitor {
 
     // Unreachable
     return null;
+  }
+
+  visitVariableExpr(expr: ExprVariable): ExprLiteralValue {
+    return this.environment.get(expr.name);
   }
 }
