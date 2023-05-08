@@ -2,6 +2,7 @@ import { LoxInstance } from "./Instance";
 import { Environment } from "./Environment";
 import {
   Expr,
+  ExprAssign,
   ExprBinary,
   ExprGrouping,
   ExprLiteral,
@@ -135,5 +136,11 @@ export class Interpreter extends Visitor {
 
   visitVariableExpr(expr: ExprVariable): ExprLiteralValue {
     return this.environment.get(expr.name);
+  }
+
+  visitAssignExpr(expr: ExprAssign): ExprLiteralValue {
+    let value = this.evaluate(expr.value);
+    this.environment.assign(expr.name, value);
+    return value;
   }
 }

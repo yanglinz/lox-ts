@@ -2,6 +2,7 @@ import { LoxInstance } from "./Instance";
 import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import {
   Expr,
+  ExprAssign,
   ExprBinary,
   ExprGrouping,
   ExprLiteral,
@@ -148,7 +149,25 @@ export class Parser {
    *
    */
   private expression(): Expr {
-    return this.equality();
+    return this.assignment();
+  }
+
+  private assignment(): Expr {
+    let expr = this.equality();
+
+    if (this.match(TokenType.EQUAL)) {
+      let equals = this.previous();
+      let value = this.assignment();
+
+      if (expr instanceof ExprVariable) {
+        let name = expr.name;
+        return new ExprAssign(name, value);
+      }
+
+      this.error(equals, "Invalid assignment target.");
+    }
+
+    return expr;
   }
 
   private equality(): Expr {

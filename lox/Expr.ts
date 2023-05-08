@@ -5,6 +5,21 @@ export class Expr {
   accept(_: Visitor): VisitorOutput {}
 }
 
+export class ExprAssign extends Expr {
+  name: Token;
+  value: Expr;
+
+  constructor(name: Token, value: Expr) {
+    super();
+    this.name = name;
+    this.value = value;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitAssignExpr(this);
+  }
+}
+
 export class ExprBinary extends Expr {
   left: Expr;
   operator: Token;
