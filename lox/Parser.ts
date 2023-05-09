@@ -9,7 +9,7 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
-import { Stmt, StmtVar, StmtPrint, StmtExpression } from "./Stmt";
+import { Stmt, StmtVar, StmtPrint, StmtExpression, StmtBlock } from "./Stmt";
 
 export class Parser {
   lox: LoxInstance;
@@ -110,7 +110,20 @@ export class Parser {
 
   private statement(): Stmt {
     if (this.match(TokenType.PRINT)) return this.printStatement();
+    if (this.match(TokenType.LEFT_BRACE)) return new StmtBlock(this.block());
+
     return this.expressionStatement();
+  }
+
+  private block(): Stmt[] {
+    let statements = [];
+
+    while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+      statements.push(this.declaration());
+    }
+
+    this.consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+    return statements;
   }
 
   private varDeclaration(): Stmt {

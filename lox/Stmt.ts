@@ -46,3 +46,16 @@ export class StmtVar extends Stmt {
     return visitor.visitVarStmt(this);
   }
 }
+
+export class StmtBlock extends Stmt {
+  statements: Stmt[];
+
+  constructor(statements: Stmt[]) {
+    super();
+    this.statements = statements;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitBlockStmt(this);
+  }
+}
