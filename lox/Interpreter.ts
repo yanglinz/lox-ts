@@ -10,7 +10,7 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
-import { Stmt, StmtExpression, StmtPrint, StmtVar } from "./Stmt";
+import { Stmt, StmtExpression, StmtPrint, StmtVar, StmtBlock } from "./Stmt";
 import { Visitor } from "./Visitor";
 import { TokenType } from "./Scanner";
 
@@ -41,6 +41,18 @@ export class Interpreter extends Visitor {
     return statement.accept(this);
   }
 
+  executeBlock(statements: Stmt[], environment: Environment): void {
+    let previous = this.environment;
+    try {
+      this.environment = environment;
+      for (let statement of statements) {
+        this.execute(statement);
+      }
+    } finally {
+      this.environment = previous;
+    }
+  }
+
   evaluate(expr: Expr): ExprLiteralValue {
     return expr.accept(this);
   }
@@ -66,6 +78,10 @@ export class Interpreter extends Visitor {
     let value = this.evaluate(stmt.expression);
     // TODO: stringify value
     console.log(value);
+  }
+
+  visitBlockStmt(stmt: StmtBlock): void {
+    this.executeBlock(stmt.statements, new Environment(this.environment));
   }
 
   visitVarStmt(stmt: StmtVar): void {
