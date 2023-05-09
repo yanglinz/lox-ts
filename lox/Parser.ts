@@ -2,13 +2,14 @@ import { LoxInstance } from "./Instance";
 import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import {
   Expr,
+  ExprAssign,
   ExprBinary,
   ExprGrouping,
   ExprLiteral,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
-import { Stmt, StmtVar, StmtPrint, StmtExpression } from "./Stmt";
+import { Stmt, StmtVar, StmtPrint, StmtExpression, StmtBlock } from "./Stmt";
 
 export class Parser {
   lox: LoxInstance;
@@ -109,7 +110,20 @@ export class Parser {
 
   private statement(): Stmt {
     if (this.match(TokenType.PRINT)) return this.printStatement();
+    if (this.match(TokenType.LEFT_BRACE)) return new StmtBlock(this.block());
+
     return this.expressionStatement();
+  }
+
+  private block(): Stmt[] {
+    let statements = [];
+
+    while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+      statements.push(this.declaration());
+    }
+
+    this.consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+    return statements;
   }
 
   private varDeclaration(): Stmt {
@@ -148,7 +162,25 @@ export class Parser {
    *
    */
   private expression(): Expr {
-    return this.equality();
+    return this.assignment();
+  }
+
+  private assignment(): Expr {
+    let expr = this.equality();
+
+    if (this.match(TokenType.EQUAL)) {
+      let equals = this.previous();
+      let value = this.assignment();
+
+      if (expr instanceof ExprVariable) {
+        let name = expr.name;
+        return new ExprAssign(name, value);
+      }
+
+      this.error(equals, "Invalid assignment target.");
+    }
+
+    return expr;
   }
 
   private equality(): Expr {

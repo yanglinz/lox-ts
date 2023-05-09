@@ -4,6 +4,10 @@ import { Stmt } from "./Stmt";
 export type VisitorOutput = any;
 
 export class Visitor {
+  visitAssignExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
   visitBinaryExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
@@ -33,6 +37,10 @@ export class Visitor {
   }
 
   visitVarStmt(_: Stmt): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitBlockStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 }
