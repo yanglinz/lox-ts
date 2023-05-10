@@ -62,8 +62,8 @@ describe("Interpreting statements", () => {
     expect(interpret("123 >= 1;")).toEqual(true);
 
     // equality operators
-    // expect(interpret("null == null;")).toEqual(true);
-    // expect(interpret("null == 1;")).toEqual(false);
+    expect(interpret("nil == nil;")).toEqual(true);
+    expect(interpret("nil == 1;")).toEqual(false);
     expect(interpret("1 == 1;")).toEqual(true);
     expect(interpret("123 == 1;")).toEqual(false);
     expect(interpret("true == true;")).toEqual(true);
