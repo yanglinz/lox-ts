@@ -27,9 +27,15 @@ export class Interpreter extends Visitor {
   }
 
   interpret(statements: Stmt[]) {
+    const lastIndex = statements.length - 1;
     try {
-      for (let s of statements) {
-        this.execute(s);
+      for (let [i, s] of statements.entries()) {
+        if (i === lastIndex) {
+          // Return the output of the last statement
+          return this.execute(s);
+        } else {
+          this.execute(s);
+        }
       }
     } catch (error) {
       // TODO: Implement RuntimeErrors
@@ -70,8 +76,8 @@ export class Interpreter extends Visitor {
     return a == b;
   }
 
-  visitExpressionStmt(stmt: StmtExpression): void {
-    this.evaluate(stmt.expression);
+  visitExpressionStmt(stmt: StmtExpression): ExprLiteralValue {
+    return this.evaluate(stmt.expression);
   }
 
   visitPrintStmt(stmt: StmtPrint): void {
