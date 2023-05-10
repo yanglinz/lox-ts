@@ -82,8 +82,8 @@ export class Interpreter extends Visitor {
 
   visitPrintStmt(stmt: StmtPrint): void {
     let value = this.evaluate(stmt.expression);
-    // TODO: stringify value
-    console.log(value);
+    // TODO: Implement stringify method
+    this.lox.logger.log(value as string);
   }
 
   visitBlockStmt(stmt: StmtBlock): void {

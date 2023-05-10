@@ -18,6 +18,7 @@ export class Parser {
   private current: number;
 
   constructor(lox: LoxInstance, tokens: Token[]) {
+    this.lox = lox;
     this.tokens = tokens;
     this.current = 0;
   }

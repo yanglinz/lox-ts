@@ -2,16 +2,17 @@ import { LoxInstance } from "./Instance";
 import { Scanner } from "./Scanner";
 import { Parser } from "./Parser";
 import { Interpreter } from "./Interpreter";
+import { RecordedLogger } from "./Instance";
 
-function interpret(source: string): any {
-  let lox = new LoxInstance();
+function interpret(source: string, logger?: RecordedLogger): any {
+  let lox = new LoxInstance(logger);
   let interpreter = new Interpreter(lox);
   let tokens = new Scanner(lox, source).scan();
   let parser = new Parser(lox, tokens);
   return interpreter.interpret(parser.parse());
 }
 
-describe("Interpreting expressions", () => {
+describe("Interpreting statements", () => {
   test("simple unary expressions", () => {
     // minus operator
     expect(interpret("-1;")).toEqual(-1);
@@ -70,5 +71,54 @@ describe("Interpreting expressions", () => {
     expect(interpret("true == false;")).toEqual(false);
     expect(interpret('"foo" == "foo";')).toEqual(true);
     expect(interpret('"foo" == "bar";')).toEqual(false);
+  });
+
+  test("variable declarations", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      var a = 1;
+      var b = 2;
+      b = 3;
+      print a + b;
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([4]);
+  });
+
+  test("variable scoping", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      var a = "global a";
+      var b = "global b";
+      var c = "global c";
+      {
+        var a = "outer a";
+        var b = "outer b";
+        {
+          var a = "inner a";
+          print a;
+          print b;
+          print c;
+        }
+        print a;
+        print b;
+        print c;
+      }
+      print a;
+      print b;
+      print c;
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([
+      "inner a",
+      "outer b",
+      "global c",
+      "outer a",
+      "outer b",
+      "global c",
+      "global a",
+      "global b",
+      "global c",
+    ]);
   });
 });
