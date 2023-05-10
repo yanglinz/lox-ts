@@ -30,10 +30,6 @@ export class Parser {
     return statements;
   }
 
-  parseExpression(): Expr {
-    return this.expression();
-  }
-
   private match(...tokenTypes: TokenTypeConstant[]): boolean {
     for (let t of tokenTypes) {
       if (this.check(t)) {
@@ -98,7 +94,6 @@ export class Parser {
   private declaration(): Stmt {
     try {
       if (this.match(TokenType.VAR)) return this.varDeclaration();
-
       return this.statement();
     } catch (error) {
       // TODO: Implement error recovery
