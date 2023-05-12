@@ -158,4 +158,15 @@ describe("Interpreting statements", () => {
     interpret(source, logger);
     expect(logger.messages).toEqual([0, 1, 2, 3, 4]);
   });
+
+  test("for loop", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      for (var i = 0; i < 5; i = i + 1) {
+        print i;
+      }
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([0, 1, 2, 3, 4]);
+  });
 });
