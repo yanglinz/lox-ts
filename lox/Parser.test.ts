@@ -140,4 +140,25 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("while loop", () => {
+    expect(getParsedExpr("while(true) { print 1; }")).toMatchInlineSnapshot(`
+      [
+        StmtWhile {
+          "body": StmtBlock {
+            "statements": [
+              StmtPrint {
+                "expression": ExprLiteral {
+                  "value": 1,
+                },
+              },
+            ],
+          },
+          "condition": ExprLiteral {
+            "value": true,
+          },
+        },
+      ]
+    `);
+  });
 });

@@ -14,6 +14,7 @@ import {
   Stmt,
   StmtVar,
   StmtIf,
+  StmtWhile,
   StmtPrint,
   StmtExpression,
   StmtBlock,
@@ -115,6 +116,7 @@ export class Parser {
   private statement(): Stmt {
     if (this.match(TokenType.IF)) return this.ifStatement();
     if (this.match(TokenType.PRINT)) return this.printStatement();
+    if (this.match(TokenType.WHILE)) return this.whileStatement();
     if (this.match(TokenType.LEFT_BRACE)) return new StmtBlock(this.block());
 
     return this.expressionStatement();
@@ -155,6 +157,14 @@ export class Parser {
     }
 
     return new StmtIf(condition, thenBranch, elseBranch);
+  }
+
+  private whileStatement(): Stmt {
+    this.consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
+    const condition = this.expression();
+    this.consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.");
+    const body = this.statement();
+    return new StmtWhile(condition, body);
   }
 
   private printStatement(): Stmt {
