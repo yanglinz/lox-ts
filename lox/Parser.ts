@@ -171,9 +171,18 @@ export class Parser {
     this.consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
 
     let body = this.statement();
+
     if (increment !== null) {
       body = new StmtBlock([body, new StmtExpression(increment)]);
     }
+
+    if (condition == null) condition = new ExprLiteral(true);
+    body = new StmtWhile(condition, body);
+
+    if (initializer != null) {
+      body = new StmtBlock([initializer, body]);
+    }
+
     return body;
   }
 
