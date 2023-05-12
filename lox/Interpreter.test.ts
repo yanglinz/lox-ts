@@ -133,4 +133,16 @@ describe("Interpreting statements", () => {
     interpret(source, logger);
     expect(logger.messages).toEqual([1, 3, 6]);
   });
+
+  test("logical expressions", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      print 1 or 2;
+      print 0 or 3;
+      print 0 and 4;
+      print 5 and 6;
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([1, 3, 0, 6]);
+  });
 });

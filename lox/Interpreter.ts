@@ -7,6 +7,7 @@ import {
   ExprGrouping,
   ExprLiteral,
   ExprLiteralValue,
+  ExprLogical,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -73,6 +74,7 @@ export class Interpreter extends Visitor {
   isTruthy(object: TODO): boolean {
     if (object == null) return false;
     if (typeof object === "boolean") return object;
+    if (typeof object === "number") return !(object === 0);
     return true;
   }
 
@@ -156,6 +158,18 @@ export class Interpreter extends Visitor {
 
   visitLiteralExpr(expr: ExprLiteral): ExprLiteralValue {
     return expr.value;
+  }
+
+  visitLogicalExpr(expr: ExprLogical): ExprLiteralValue {
+    const left = this.evaluate(expr.left);
+
+    if (expr.operator.type == TokenType.OR) {
+      if (this.isTruthy(left)) return left;
+    } else {
+      if (!this.isTruthy(left)) return left;
+    }
+
+    return this.evaluate(expr.right);
   }
 
   visitUnaryExpr(expr: ExprUnary): ExprLiteralValue {
