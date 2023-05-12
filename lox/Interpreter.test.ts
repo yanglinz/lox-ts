@@ -145,4 +145,17 @@ describe("Interpreting statements", () => {
     interpret(source, logger);
     expect(logger.messages).toEqual([1, 3, 0, 6]);
   });
+
+  test("while loop", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      var i = 0;
+      while (i < 5) {
+        print i;
+        i = i + 1;
+      }
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([0, 1, 2, 3, 4]);
+  });
 });
