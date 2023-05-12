@@ -10,7 +10,14 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
-import { Stmt, StmtExpression, StmtPrint, StmtVar, StmtBlock } from "./Stmt";
+import {
+  Stmt,
+  StmtExpression,
+  StmtPrint,
+  StmtVar,
+  StmtBlock,
+  StmtIf,
+} from "./Stmt";
 import { Visitor } from "./Visitor";
 import { TokenType } from "./Scanner";
 
@@ -78,6 +85,15 @@ export class Interpreter extends Visitor {
 
   visitExpressionStmt(stmt: StmtExpression): ExprLiteralValue {
     return this.evaluate(stmt.expression);
+  }
+
+  visitIfStmt(stmt: StmtIf): void {
+    if (this.isTruthy(this.evaluate(stmt.condition))) {
+      this.execute(stmt.thenBranch);
+    } else if (stmt.elseBranch != null) {
+      this.execute(stmt.elseBranch);
+    }
+    return null;
   }
 
   visitPrintStmt(stmt: StmtPrint): void {
