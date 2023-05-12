@@ -19,6 +19,23 @@ export class StmtExpression extends Stmt {
   }
 }
 
+export class StmtIf extends Stmt {
+  condition: Expr;
+  thenBranch: Stmt;
+  elseBranch: Stmt;
+
+  constructor(condition: Expr, thenBranch: Stmt, elseBranch: Stmt) {
+    super();
+    this.condition = condition;
+    this.thenBranch = thenBranch;
+    this.elseBranch = elseBranch;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitIfStmt(this);
+  }
+}
+
 export class StmtPrint extends Stmt {
   expression: Expr;
 
