@@ -20,6 +20,10 @@ export class Visitor {
     throw new Error("NotImplementedError");
   }
 
+  visitLogicalExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
   visitUnaryExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }

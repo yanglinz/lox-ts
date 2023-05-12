@@ -94,4 +94,50 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("logical or", () => {
+    expect(getParsedExpr("false or true;")).toMatchInlineSnapshot(`
+      [
+        StmtExpression {
+          "expression": ExprLogical {
+            "left": ExprLiteral {
+              "value": false,
+            },
+            "operator": Token {
+              "lexeme": "or",
+              "line": 1,
+              "literal": "",
+              "type": Symbol(OR),
+            },
+            "right": ExprLiteral {
+              "value": true,
+            },
+          },
+        },
+      ]
+    `);
+  });
+
+  test("logical and", () => {
+    expect(getParsedExpr("true and false;")).toMatchInlineSnapshot(`
+      [
+        StmtExpression {
+          "expression": ExprLogical {
+            "left": ExprLiteral {
+              "value": true,
+            },
+            "operator": Token {
+              "lexeme": "and",
+              "line": 1,
+              "literal": "",
+              "type": Symbol(AND),
+            },
+            "right": ExprLiteral {
+              "value": false,
+            },
+          },
+        },
+      ]
+    `);
+  });
 });
