@@ -72,4 +72,26 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("if conditional", () => {
+    expect(getParsedExpr("if (true) { print 123; }")).toMatchInlineSnapshot(`
+      [
+        StmtIf {
+          "condition": ExprLiteral {
+            "value": true,
+          },
+          "elseBranch": null,
+          "thenBranch": StmtBlock {
+            "statements": [
+              StmtPrint {
+                "expression": ExprLiteral {
+                  "value": 123,
+                },
+              },
+            ],
+          },
+        },
+      ]
+    `);
+  });
 });

@@ -121,4 +121,16 @@ describe("Interpreting statements", () => {
       "global c",
     ]);
   });
+
+  test("if statements", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      if (true) { print 1; }
+      if (false) { print 2; }
+      if (true) { print 3; } else { print 4; }
+      if (false) { print 5; } else { print 6; }
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([1, 3, 6]);
+  });
 });
