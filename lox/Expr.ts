@@ -51,7 +51,7 @@ export class ExprCall extends Expr {
   }
 
   accept(visitor: Visitor): VisitorOutput {
-    return visitor.visitBinaryExpr(this);
+    return visitor.visitCallExpr(this);
   }
 }
 

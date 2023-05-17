@@ -34,7 +34,7 @@ class GlobalFnClock extends LoxCallable {
   }
 
   call(interpreter: Interpreter, args: TODO[]) {
-    return 123;
+    return Date.now();
   }
 
   toString() {
@@ -199,7 +199,7 @@ export class Interpreter extends Visitor {
       );
     }
 
-    // return function.call(this, arguments);
+    return func.call(this, args);
   }
 
   visitGroupingExpr(expr: ExprGrouping): ExprLiteralValue {

@@ -176,6 +176,6 @@ describe("Interpreting statements", () => {
       print clock();
     `;
     interpret(source, logger);
-    expect(logger.messages).toEqual([1]);
+    expect(logger.messages).toEqual([Date.now()]);
   });
 });
