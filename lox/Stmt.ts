@@ -19,6 +19,23 @@ export class StmtExpression extends Stmt {
   }
 }
 
+export class StmtFunction extends Stmt {
+  name: Token;
+  params: Token[];
+  body: Stmt[];
+
+  constructor(name: Token, params: Token[], body: Stmt[]) {
+    super();
+    this.name = name;
+    this.params = params;
+    this.body = body;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitFunctionStmt(this);
+  }
+}
+
 export class StmtIf extends Stmt {
   condition: Expr;
   thenBranch: Stmt;
