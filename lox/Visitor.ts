@@ -12,6 +12,10 @@ export class Visitor {
     throw new Error("NotImplementedError");
   }
 
+  visitCallExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
   visitGroupingExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
