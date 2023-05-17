@@ -19,6 +19,7 @@ import {
   StmtPrint,
   StmtExpression,
   StmtBlock,
+  StmtFunction,
 } from "./Stmt";
 
 export class Parser {
@@ -104,6 +105,7 @@ export class Parser {
 
   private declaration(): Stmt {
     try {
+      if (this.match(TokenType.FUN)) return this.function("function");
       if (this.match(TokenType.VAR)) return this.varDeclaration();
       return this.statement();
     } catch (error) {
@@ -219,6 +221,29 @@ export class Parser {
     let value = this.expression();
     this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
     return new StmtExpression(value);
+  }
+
+  private function(kind: string): Stmt {
+    const name = this.consume(TokenType.IDENTIFIER, `Expect ${kind} name.`);
+
+    this.consume(TokenType.LEFT_PAREN, `Expect '(' after ${kind} name.`);
+    let parameters = [];
+    if (!this.check(TokenType.RIGHT_PAREN)) {
+      do {
+        if (parameters.length >= 255) {
+          this.error(this.peek(), "Can't have more than 255 parameters.");
+        }
+
+        parameters.push(
+          this.consume(TokenType.IDENTIFIER, "Expect parameter name.")
+        );
+      } while (this.match(TokenType.COMMA));
+    }
+    this.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
+    this.consume(TokenType.LEFT_BRACE, `Expect '{' before ${kind} body.`);
+
+    let body = this.block();
+    return new StmtFunction(name, parameters, body);
   }
 
   /**
