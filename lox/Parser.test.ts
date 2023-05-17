@@ -284,4 +284,89 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("function declaration", () => {
+    expect(
+      getParsedExpr(`
+      fun add(a, b, c) {
+        print a + b + c;
+      }
+    `)
+    ).toMatchInlineSnapshot(`
+      [
+        StmtFunction {
+          "body": [
+            StmtPrint {
+              "expression": ExprBinary {
+                "left": ExprBinary {
+                  "left": ExprVariable {
+                    "name": Token {
+                      "lexeme": "a",
+                      "line": 3,
+                      "literal": "",
+                      "type": Symbol(IDENTIFIER),
+                    },
+                  },
+                  "operator": Token {
+                    "lexeme": "+",
+                    "line": 3,
+                    "literal": "",
+                    "type": Symbol(PLUS),
+                  },
+                  "right": ExprVariable {
+                    "name": Token {
+                      "lexeme": "b",
+                      "line": 3,
+                      "literal": "",
+                      "type": Symbol(IDENTIFIER),
+                    },
+                  },
+                },
+                "operator": Token {
+                  "lexeme": "+",
+                  "line": 3,
+                  "literal": "",
+                  "type": Symbol(PLUS),
+                },
+                "right": ExprVariable {
+                  "name": Token {
+                    "lexeme": "c",
+                    "line": 3,
+                    "literal": "",
+                    "type": Symbol(IDENTIFIER),
+                  },
+                },
+              },
+            },
+          ],
+          "name": Token {
+            "lexeme": "add",
+            "line": 2,
+            "literal": "",
+            "type": Symbol(IDENTIFIER),
+          },
+          "params": [
+            Token {
+              "lexeme": "a",
+              "line": 2,
+              "literal": "",
+              "type": Symbol(IDENTIFIER),
+            },
+            Token {
+              "lexeme": "b",
+              "line": 2,
+              "literal": "",
+              "type": Symbol(IDENTIFIER),
+            },
+            Token {
+              "lexeme": "c",
+              "line": 2,
+              "literal": "",
+              "type": Symbol(IDENTIFIER),
+            },
+          ],
+        },
+      ]
+    `);
+  });
 });
