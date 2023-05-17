@@ -64,6 +64,21 @@ export class StmtVar extends Stmt {
   }
 }
 
+export class StmtWhile extends Stmt {
+  condition: Expr;
+  body: Stmt;
+
+  constructor(condition: Expr, body: Stmt) {
+    super();
+    this.condition = condition;
+    this.body = body;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitWhileStmt(this);
+  }
+}
+
 export class StmtBlock extends Stmt {
   statements: Stmt[];
 

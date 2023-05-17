@@ -140,4 +140,112 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("while loop", () => {
+    expect(getParsedExpr("while(true) { print 1; }")).toMatchInlineSnapshot(`
+      [
+        StmtWhile {
+          "body": StmtBlock {
+            "statements": [
+              StmtPrint {
+                "expression": ExprLiteral {
+                  "value": 1,
+                },
+              },
+            ],
+          },
+          "condition": ExprLiteral {
+            "value": true,
+          },
+        },
+      ]
+    `);
+  });
+
+  test("for loop", () => {
+    expect(getParsedExpr("for (var i = 0; i < 10; i = i + 1) print i;"))
+      .toMatchInlineSnapshot(`
+      [
+        StmtBlock {
+          "statements": [
+            StmtVar {
+              "initializer": ExprLiteral {
+                "value": 0,
+              },
+              "name": Token {
+                "lexeme": "i",
+                "line": 1,
+                "literal": "",
+                "type": Symbol(IDENTIFIER),
+              },
+            },
+            StmtWhile {
+              "body": StmtBlock {
+                "statements": [
+                  StmtPrint {
+                    "expression": ExprVariable {
+                      "name": Token {
+                        "lexeme": "i",
+                        "line": 1,
+                        "literal": "",
+                        "type": Symbol(IDENTIFIER),
+                      },
+                    },
+                  },
+                  StmtExpression {
+                    "expression": ExprAssign {
+                      "name": Token {
+                        "lexeme": "i",
+                        "line": 1,
+                        "literal": "",
+                        "type": Symbol(IDENTIFIER),
+                      },
+                      "value": ExprBinary {
+                        "left": ExprVariable {
+                          "name": Token {
+                            "lexeme": "i",
+                            "line": 1,
+                            "literal": "",
+                            "type": Symbol(IDENTIFIER),
+                          },
+                        },
+                        "operator": Token {
+                          "lexeme": "+",
+                          "line": 1,
+                          "literal": "",
+                          "type": Symbol(PLUS),
+                        },
+                        "right": ExprLiteral {
+                          "value": 1,
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+              "condition": ExprBinary {
+                "left": ExprVariable {
+                  "name": Token {
+                    "lexeme": "i",
+                    "line": 1,
+                    "literal": "",
+                    "type": Symbol(IDENTIFIER),
+                  },
+                },
+                "operator": Token {
+                  "lexeme": "<",
+                  "line": 1,
+                  "literal": "",
+                  "type": Symbol(LESS),
+                },
+                "right": ExprLiteral {
+                  "value": 10,
+                },
+              },
+            },
+          ],
+        },
+      ]
+    `);
+  });
 });

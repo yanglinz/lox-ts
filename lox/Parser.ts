@@ -14,6 +14,7 @@ import {
   Stmt,
   StmtVar,
   StmtIf,
+  StmtWhile,
   StmtPrint,
   StmtExpression,
   StmtBlock,
@@ -113,8 +114,10 @@ export class Parser {
   }
 
   private statement(): Stmt {
+    if (this.match(TokenType.FOR)) return this.forStatement();
     if (this.match(TokenType.IF)) return this.ifStatement();
     if (this.match(TokenType.PRINT)) return this.printStatement();
+    if (this.match(TokenType.WHILE)) return this.whileStatement();
     if (this.match(TokenType.LEFT_BRACE)) return new StmtBlock(this.block());
 
     return this.expressionStatement();
@@ -143,6 +146,46 @@ export class Parser {
     return new StmtVar(name, initializer);
   }
 
+  private forStatement(): Stmt {
+    this.consume(TokenType.LEFT_PAREN, "Expect '(' after 'for'.");
+
+    let initializer;
+    if (this.match(TokenType.SEMICOLON)) {
+      initializer = null;
+    } else if (this.match(TokenType.VAR)) {
+      initializer = this.varDeclaration();
+    } else {
+      initializer = this.expressionStatement();
+    }
+
+    let condition = null;
+    if (!this.check(TokenType.SEMICOLON)) {
+      condition = this.expression();
+    }
+    this.consume(TokenType.SEMICOLON, "Expect ';' after loop condition.");
+
+    let increment = null;
+    if (!this.check(TokenType.RIGHT_PAREN)) {
+      increment = this.expression();
+    }
+    this.consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
+
+    let body = this.statement();
+
+    if (increment !== null) {
+      body = new StmtBlock([body, new StmtExpression(increment)]);
+    }
+
+    if (condition == null) condition = new ExprLiteral(true);
+    body = new StmtWhile(condition, body);
+
+    if (initializer != null) {
+      body = new StmtBlock([initializer, body]);
+    }
+
+    return body;
+  }
+
   private ifStatement(): Stmt {
     this.consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
     const condition = this.expression();
@@ -155,6 +198,14 @@ export class Parser {
     }
 
     return new StmtIf(condition, thenBranch, elseBranch);
+  }
+
+  private whileStatement(): Stmt {
+    this.consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
+    const condition = this.expression();
+    this.consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.");
+    const body = this.statement();
+    return new StmtWhile(condition, body);
   }
 
   private printStatement(): Stmt {

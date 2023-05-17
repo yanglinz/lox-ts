@@ -16,6 +16,7 @@ import {
   StmtExpression,
   StmtPrint,
   StmtVar,
+  StmtWhile,
   StmtBlock,
   StmtIf,
 } from "./Stmt";
@@ -115,6 +116,12 @@ export class Interpreter extends Visitor {
     }
 
     this.environment.define(stmt.name.lexeme, value);
+  }
+
+  visitWhileStmt(stmt: StmtWhile): void {
+    while (this.isTruthy(this.evaluate(stmt.condition))) {
+      this.execute(stmt.body);
+    }
   }
 
   visitBinaryExpr(expr: ExprBinary): ExprLiteralValue {
