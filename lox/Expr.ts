@@ -1,5 +1,6 @@
 import { Token } from "./Scanner";
 import { Visitor, VisitorOutput } from "./Visitor";
+import { LoxCallable } from "./Callable";
 
 export class Expr {
   accept(_: Visitor): VisitorOutput {}
@@ -67,7 +68,7 @@ export class ExprGrouping extends Expr {
   }
 }
 
-export type ExprLiteralValue = boolean | number | string | null;
+export type ExprLiteralValue = LoxCallable | boolean | number | string | null;
 
 export class ExprLiteral extends Expr {
   value: ExprLiteralValue;
