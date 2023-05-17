@@ -1,5 +1,6 @@
 import { LoxInstance } from "./Instance";
 import { Environment } from "./Environment";
+import { LoxFunction } from "./Callable";
 import {
   Expr,
   ExprAssign,
@@ -15,6 +16,7 @@ import {
 import {
   Stmt,
   StmtExpression,
+  StmtFunction,
   StmtPrint,
   StmtVar,
   StmtWhile,
@@ -109,6 +111,11 @@ export class Interpreter extends Visitor {
 
   visitExpressionStmt(stmt: StmtExpression): ExprLiteralValue {
     return this.evaluate(stmt.expression);
+  }
+
+  visitFunctionStmt(stmt: StmtFunction): void {
+    let func = new LoxFunction(stmt);
+    this.environment.define(stmt.name.lexeme, func);
   }
 
   visitIfStmt(stmt: StmtIf): void {
