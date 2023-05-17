@@ -37,6 +37,23 @@ export class ExprBinary extends Expr {
   }
 }
 
+export class ExprCall extends Expr {
+  callee: Expr;
+  paren: Token;
+  args: Expr[];
+
+  constructor(callee: Expr, paren: Token, args: Expr[]) {
+    super();
+    this.callee = callee;
+    this.paren = paren;
+    this.args = args;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitBinaryExpr(this);
+  }
+}
+
 export class ExprGrouping extends Expr {
   expression: Expr;
 
