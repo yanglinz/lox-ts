@@ -169,4 +169,13 @@ describe("Interpreting statements", () => {
     interpret(source, logger);
     expect(logger.messages).toEqual([0, 1, 2, 3, 4]);
   });
+
+  test("function call", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      print clock();
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([Date.now()]);
+  });
 });

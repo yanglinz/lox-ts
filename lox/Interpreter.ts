@@ -4,6 +4,7 @@ import {
   Expr,
   ExprAssign,
   ExprBinary,
+  ExprCall,
   ExprGrouping,
   ExprLiteral,
   ExprLiteralValue,
@@ -22,17 +23,37 @@ import {
 } from "./Stmt";
 import { Visitor } from "./Visitor";
 import { TokenType } from "./Scanner";
+import { RuntimeError } from "./Errors";
+import { LoxCallable } from "./Callable";
 
 type TODO = any;
+
+class GlobalFnClock extends LoxCallable {
+  get arity() {
+    return 0;
+  }
+
+  call(interpreter: Interpreter, args: TODO[]) {
+    return Date.now();
+  }
+
+  toString() {
+    return "<native fn>";
+  }
+}
 
 export class Interpreter extends Visitor {
   lox: LoxInstance;
   environment: Environment;
+  globals: Environment;
 
   constructor(lox: LoxInstance) {
     super();
     this.lox = lox;
     this.environment = new Environment();
+    this.globals = this.environment;
+
+    this.globals.define("clock", new GlobalFnClock());
   }
 
   interpret(statements: Stmt[]) {
@@ -157,6 +178,28 @@ export class Interpreter extends Visitor {
 
     // Unreachable
     return null;
+  }
+
+  visitCallExpr(expr: ExprCall) {
+    let callee = this.evaluate(expr.callee);
+
+    let args = [];
+    for (let a of expr.args) {
+      args.push(this.evaluate(a));
+    }
+
+    if (!(callee instanceof LoxCallable)) {
+      throw new RuntimeError("Can only call functions and classes.");
+    }
+
+    let func = callee as LoxCallable;
+    if (args.length != func.arity) {
+      throw new RuntimeError(
+        `Expected ${func.arity} arguments but got ${args.length}.`
+      );
+    }
+
+    return func.call(this, args);
   }
 
   visitGroupingExpr(expr: ExprGrouping): ExprLiteralValue {

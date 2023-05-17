@@ -248,4 +248,40 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("function call", () => {
+    expect(getParsedExpr("hello(1, 2, 3);")).toMatchInlineSnapshot(`
+      [
+        StmtExpression {
+          "expression": ExprCall {
+            "args": [
+              ExprLiteral {
+                "value": 1,
+              },
+              ExprLiteral {
+                "value": 2,
+              },
+              ExprLiteral {
+                "value": 3,
+              },
+            ],
+            "callee": ExprVariable {
+              "name": Token {
+                "lexeme": "hello",
+                "line": 1,
+                "literal": "",
+                "type": Symbol(IDENTIFIER),
+              },
+            },
+            "paren": Token {
+              "lexeme": ")",
+              "line": 1,
+              "literal": "",
+              "type": Symbol(RIGHT_PAREN),
+            },
+          },
+        },
+      ]
+    `);
+  });
 });
