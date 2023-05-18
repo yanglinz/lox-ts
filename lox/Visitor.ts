@@ -40,11 +40,19 @@ export class Visitor {
     throw new Error("NotImplementedError");
   }
 
+  visitFunctionStmt(_: Stmt): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
   visitIfStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 
   visitPrintStmt(_: Stmt): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitReturnStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 

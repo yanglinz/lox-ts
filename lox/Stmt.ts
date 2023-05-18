@@ -19,6 +19,23 @@ export class StmtExpression extends Stmt {
   }
 }
 
+export class StmtFunction extends Stmt {
+  name: Token;
+  params: Token[];
+  body: Stmt[];
+
+  constructor(name: Token, params: Token[], body: Stmt[]) {
+    super();
+    this.name = name;
+    this.params = params;
+    this.body = body;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitFunctionStmt(this);
+  }
+}
+
 export class StmtIf extends Stmt {
   condition: Expr;
   thenBranch: Stmt;
@@ -46,6 +63,21 @@ export class StmtPrint extends Stmt {
 
   accept(visitor: Visitor): VisitorOutput {
     return visitor.visitPrintStmt(this);
+  }
+}
+
+export class StmtReturn extends Stmt {
+  keyword: Token;
+  value: Expr;
+
+  constructor(keyword: Token, value: Expr) {
+    super();
+    this.keyword = keyword;
+    this.value = value;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitReturnStmt(this);
   }
 }
 
