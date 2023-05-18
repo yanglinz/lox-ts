@@ -52,6 +52,10 @@ export class Visitor {
     throw new Error("NotImplementedError");
   }
 
+  visitReturnStmt(_: Stmt): VisualViewport {
+    throw new Error("NotImplementedError");
+  }
+
   visitVarStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }

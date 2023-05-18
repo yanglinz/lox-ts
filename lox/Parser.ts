@@ -17,6 +17,7 @@ import {
   StmtIf,
   StmtWhile,
   StmtPrint,
+  StmtReturn,
   StmtExpression,
   StmtBlock,
   StmtFunction,
@@ -120,6 +121,7 @@ export class Parser {
     if (this.match(TokenType.FOR)) return this.forStatement();
     if (this.match(TokenType.IF)) return this.ifStatement();
     if (this.match(TokenType.PRINT)) return this.printStatement();
+    if (this.match(TokenType.RETURN)) return this.returnStatement();
     if (this.match(TokenType.WHILE)) return this.whileStatement();
     if (this.match(TokenType.LEFT_BRACE)) return new StmtBlock(this.block());
 
@@ -215,6 +217,17 @@ export class Parser {
     let value = this.expression();
     this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
     return new StmtPrint(value);
+  }
+
+  private returnStatement(): Stmt {
+    let keyword = this.previous();
+    let value = null;
+    if (!this.check(TokenType.SEMICOLON)) {
+      value = this.expression();
+    }
+
+    this.consume(TokenType.SEMICOLON, "Expect ';' after return value.");
+    return new StmtReturn(keyword, value);
   }
 
   private expressionStatement(): Stmt {

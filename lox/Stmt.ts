@@ -66,6 +66,21 @@ export class StmtPrint extends Stmt {
   }
 }
 
+export class StmtReturn extends Stmt {
+  keyword: Token;
+  value: Expr;
+
+  constructor(keyword: Token, value: Expr) {
+    super();
+    this.keyword = keyword;
+    this.value = value;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitReturnStmt(this);
+  }
+}
+
 export class StmtVar extends Stmt {
   name: Token;
   initializer: Expr;
