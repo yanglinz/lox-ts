@@ -193,4 +193,18 @@ describe("Interpreting statements", () => {
     interpret(source, logger);
     expect(logger.messages).toEqual([6, 15, 24]);
   });
+
+  test("function call with return", () => {
+    const logger = new RecordedLogger();
+    const source = `
+      fun fib(n) {
+        if (n <= 1) return n;
+        return fib(n - 2) + fib(n - 1);
+      }
+
+      print fib(8);
+    `;
+    interpret(source, logger);
+    expect(logger.messages).toEqual([21]);
+  });
 });

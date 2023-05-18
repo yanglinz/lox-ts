@@ -18,6 +18,7 @@ import {
   StmtExpression,
   StmtFunction,
   StmtPrint,
+  StmtReturn,
   StmtVar,
   StmtWhile,
   StmtBlock,
@@ -25,7 +26,7 @@ import {
 } from "./Stmt";
 import { Visitor } from "./Visitor";
 import { TokenType } from "./Scanner";
-import { RuntimeError } from "./Errors";
+import { RuntimeError, ReturnValue } from "./Errors";
 import { LoxCallable } from "./Callable";
 
 type TODO = any;
@@ -131,6 +132,15 @@ export class Interpreter extends Visitor {
     let value = this.evaluate(stmt.expression);
     // TODO: Implement stringify method
     this.lox.logger.log(value as string);
+  }
+
+  visitReturnStmt(stmt: StmtReturn): void {
+    let value = null;
+    if (stmt.value != null) {
+      value = this.evaluate(stmt.value);
+    }
+
+    throw new ReturnValue(value);
   }
 
   visitBlockStmt(stmt: StmtBlock): void {

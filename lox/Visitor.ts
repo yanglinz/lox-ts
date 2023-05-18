@@ -52,7 +52,7 @@ export class Visitor {
     throw new Error("NotImplementedError");
   }
 
-  visitReturnStmt(_: Stmt): VisualViewport {
+  visitReturnStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 
