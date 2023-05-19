@@ -115,7 +115,7 @@ export class Interpreter extends Visitor {
   }
 
   visitFunctionStmt(stmt: StmtFunction): void {
-    let func = new LoxFunction(stmt);
+    let func = new LoxFunction(stmt, this.environment);
     this.environment.define(stmt.name.lexeme, func);
   }
 
