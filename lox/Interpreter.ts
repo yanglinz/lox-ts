@@ -25,7 +25,7 @@ import {
   StmtIf,
 } from "./Stmt";
 import { Visitor } from "./Visitor";
-import { TokenType } from "./Scanner";
+import { Token, TokenType } from "./Scanner";
 import { RuntimeError, ReturnValue } from "./Errors";
 import { LoxCallable } from "./Callable";
 
@@ -49,12 +49,14 @@ export class Interpreter extends Visitor {
   lox: LoxInstance;
   environment: Environment;
   globals: Environment;
+  locals: Map<Expr, number>;
 
   constructor(lox: LoxInstance) {
     super();
     this.lox = lox;
     this.environment = new Environment();
     this.globals = this.environment;
+    this.locals = new Map();
 
     this.globals.define("clock", new GlobalFnClock());
   }
@@ -96,6 +98,10 @@ export class Interpreter extends Visitor {
     return expr.accept(this);
   }
 
+  resolve(expr: Expr, depth: number): void {
+    this.locals.set(expr, depth);
+  }
+
   isTruthy(object: TODO): boolean {
     if (object == null) return false;
     if (typeof object === "boolean") return object;
@@ -115,7 +121,7 @@ export class Interpreter extends Visitor {
   }
 
   visitFunctionStmt(stmt: StmtFunction): void {
-    let func = new LoxFunction(stmt);
+    let func = new LoxFunction(stmt, this.environment);
     this.environment.define(stmt.name.lexeme, func);
   }
 
@@ -254,12 +260,28 @@ export class Interpreter extends Visitor {
   }
 
   visitVariableExpr(expr: ExprVariable): ExprLiteralValue {
-    return this.environment.get(expr.name);
+    return this.lookUpVariable(expr.name, expr);
+  }
+
+  private lookUpVariable(name: Token, expr: Expr): ExprLiteralValue {
+    const distance = this.locals.get(expr);
+    if (distance != null) {
+      return this.environment.getAt(distance, name.lexeme);
+    } else {
+      return this.globals.get(name);
+    }
   }
 
   visitAssignExpr(expr: ExprAssign): ExprLiteralValue {
     let value = this.evaluate(expr.value);
-    this.environment.assign(expr.name, value);
+
+    const distance = this.locals.get(expr);
+    if (distance != null) {
+      this.environment.assignAt(distance, expr.name, value);
+    } else {
+      this.globals.assign(expr.name, value);
+    }
+
     return value;
   }
 }
