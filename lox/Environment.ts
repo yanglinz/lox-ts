@@ -16,6 +16,15 @@ export class Environment {
     this.values.set(name, value);
   }
 
+  ancestor(distance: number): Environment {
+    let environment: Environment = this;
+    for (let i = 0; i < distance; i++) {
+      environment = environment.enclosing;
+    }
+
+    return environment;
+  }
+
   assign(name: Token, value: VariableValue) {
     if (this.values.has(name.lexeme)) {
       this.values.set(name.lexeme, value);
@@ -38,5 +47,9 @@ export class Environment {
     if (this.enclosing) return this.enclosing.get(name);
 
     throw new RuntimeError("Undefined variable '" + name.lexeme + "'.");
+  }
+
+  getAt(distance: number, name: string): VariableValue {
+    return this.ancestor(distance).values.get(name);
   }
 }

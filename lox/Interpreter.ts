@@ -25,7 +25,7 @@ import {
   StmtIf,
 } from "./Stmt";
 import { Visitor } from "./Visitor";
-import { TokenType } from "./Scanner";
+import { Token, TokenType } from "./Scanner";
 import { RuntimeError, ReturnValue } from "./Errors";
 import { LoxCallable } from "./Callable";
 
@@ -49,12 +49,14 @@ export class Interpreter extends Visitor {
   lox: LoxInstance;
   environment: Environment;
   globals: Environment;
+  locals: Map<Expr, number>;
 
   constructor(lox: LoxInstance) {
     super();
     this.lox = lox;
     this.environment = new Environment();
     this.globals = this.environment;
+    this.locals = new Map();
 
     this.globals.define("clock", new GlobalFnClock());
   }
@@ -254,7 +256,16 @@ export class Interpreter extends Visitor {
   }
 
   visitVariableExpr(expr: ExprVariable): ExprLiteralValue {
-    return this.environment.get(expr.name);
+    return this.lookUpVariable(expr.name, expr);
+  }
+
+  private lookUpVariable(name: Token, expr: Expr): ExprLiteralValue {
+    const distance = this.locals.get(expr);
+    if (distance != null) {
+      return this.environment.getAt(distance, name.lexeme);
+    } else {
+      return this.globals.get(name);
+    }
   }
 
   visitAssignExpr(expr: ExprAssign): ExprLiteralValue {
