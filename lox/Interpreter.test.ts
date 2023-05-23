@@ -2,6 +2,7 @@ import { LoxInstance } from "./Instance";
 import { Scanner } from "./Scanner";
 import { Parser } from "./Parser";
 import { Interpreter } from "./Interpreter";
+import { Resolver } from "./Resolver";
 import { RecordedLogger } from "./Instance";
 
 function interpret(source: string, logger?: RecordedLogger): any {
@@ -9,7 +10,10 @@ function interpret(source: string, logger?: RecordedLogger): any {
   let interpreter = new Interpreter(lox);
   let tokens = new Scanner(lox, source).scan();
   let parser = new Parser(lox, tokens);
-  return interpreter.interpret(parser.parse());
+  let statements = parser.parse();
+  const resolver = new Resolver(interpreter);
+  resolver.resolveAll(statements);
+  return interpreter.interpret(statements);
 }
 
 describe("Interpreting statements", () => {
