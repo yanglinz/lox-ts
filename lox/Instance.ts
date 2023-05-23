@@ -24,8 +24,14 @@ export class RecordedLogger extends LoggerInterface {
 
 export class LoxInstance {
   logger: LoggerInterface;
+  errors: string[];
 
   constructor(logger?: LoggerInterface) {
     this.logger = logger ? logger : new ConsoleLogger();
+    this.errors = [];
+  }
+
+  error(message: string) {
+    this.errors.push(message);
   }
 }
