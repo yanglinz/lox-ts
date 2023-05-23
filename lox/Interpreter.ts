@@ -98,6 +98,10 @@ export class Interpreter extends Visitor {
     return expr.accept(this);
   }
 
+  resolve(expr: Expr, depth: number): void {
+    this.locals.set(expr, depth);
+  }
+
   isTruthy(object: TODO): boolean {
     if (object == null) return false;
     if (typeof object === "boolean") return object;
@@ -270,7 +274,14 @@ export class Interpreter extends Visitor {
 
   visitAssignExpr(expr: ExprAssign): ExprLiteralValue {
     let value = this.evaluate(expr.value);
-    this.environment.assign(expr.name, value);
+
+    const distance = this.locals.get(expr);
+    if (distance != null) {
+      this.environment.assignAt(distance, expr.name, value);
+    } else {
+      this.globals.assign(expr.name, value);
+    }
+
     return value;
   }
 }

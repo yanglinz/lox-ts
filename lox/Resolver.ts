@@ -41,18 +41,18 @@ export class Resolver extends Visitor {
     node.accept(this);
   }
 
+  resolveAll(nodes: Expr[] | Stmt[]): void {
+    for (let n of nodes) {
+      this.resolve(n);
+    }
+  }
+
   private beginScope(): void {
     this.scopes.push(new Map());
   }
 
   private endScope(): void {
     this.scopes.pop();
-  }
-
-  private resolveAll(nodes: Expr[] | Stmt[]): void {
-    for (let n of nodes) {
-      this.resolve(n);
-    }
   }
 
   private declare(name: Token): void {

@@ -39,6 +39,10 @@ export class Environment {
     throw new RuntimeError("Undefined variable '" + name.lexeme + "'.");
   }
 
+  assignAt(distance: number, name: Token, value: VariableValue) {
+    this.ancestor(distance).values.set(name.lexeme, value);
+  }
+
   get(name: Token): VariableValue {
     if (this.values.has(name.lexeme)) {
       return this.values.get(name.lexeme);
