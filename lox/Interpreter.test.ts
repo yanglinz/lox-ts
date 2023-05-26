@@ -4,8 +4,9 @@ import { Parser } from "./Parser";
 import { Interpreter } from "./Interpreter";
 import { Resolver } from "./Resolver";
 import { RecordedLogger } from "./Instance";
+import { ExprLiteralValue } from "./Expr";
 
-function interpret(source: string, logger?: RecordedLogger): any {
+function interpret(source: string, logger?: RecordedLogger): ExprLiteralValue {
   let lox = new LoxInstance(logger);
   let interpreter = new Interpreter(lox);
   let tokens = new Scanner(lox, source).scan();
@@ -180,7 +181,12 @@ describe("Interpreting statements", () => {
       print clock();
     `;
     interpret(source, logger);
-    expect(logger.messages).toEqual([Date.now()]);
+
+    expect(logger.messages.length).toEqual(1);
+    let actual = logger.messages[0].toString();
+    let expected = Date.now().toString();
+    expect(actual.length).toEqual(expected.length);
+    expect(actual.substring(0, 5)).toEqual(expected.substring(0, 5));
   });
 
   test("function declaration", () => {

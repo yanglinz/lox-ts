@@ -2,8 +2,7 @@ import { Interpreter } from "./Interpreter";
 import { Environment } from "./Environment";
 import { StmtFunction } from "./Stmt";
 import { ReturnValue } from "./Errors";
-
-type TODO = any;
+import { ExprLiteralValue } from "./Expr";
 
 export class LoxCallable {
   constructor() {}
@@ -12,7 +11,7 @@ export class LoxCallable {
     throw new Error("Not implemented");
   }
 
-  call(interpreter: Interpreter, args: TODO[]): TODO {
+  call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
     throw new Error("Not implemented");
   }
 
@@ -35,7 +34,7 @@ export class LoxFunction extends LoxCallable {
     return this.declaration.params.length;
   }
 
-  call(interpreter: Interpreter, args: TODO[]): TODO {
+  call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
     let environment = new Environment(this.closure);
 
     for (let i = 0; i < this.declaration.params.length; i++) {

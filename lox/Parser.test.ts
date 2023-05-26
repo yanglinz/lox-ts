@@ -1,8 +1,9 @@
 import { LoxInstance } from "./Instance";
 import { Scanner } from "./Scanner";
 import { Parser } from "./Parser";
+import { Stmt } from "./Stmt";
 
-function getParsedExpr(source: string): any {
+function getParsedExpr(source: string): Stmt[] {
   let lox = new LoxInstance();
   let tokens = new Scanner(lox, source).scan();
   let parser = new Parser(lox, tokens);

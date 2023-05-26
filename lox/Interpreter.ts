@@ -29,14 +29,12 @@ import { Token, TokenType } from "./Scanner";
 import { RuntimeError, ReturnValue } from "./Errors";
 import { LoxCallable } from "./Callable";
 
-type TODO = any;
-
 class GlobalFnClock extends LoxCallable {
   get arity() {
     return 0;
   }
 
-  call(interpreter: Interpreter, args: TODO[]) {
+  call(interpreter: Interpreter, args: ExprLiteralValue[]) {
     return Date.now();
   }
 
@@ -102,14 +100,14 @@ export class Interpreter extends Visitor {
     this.locals.set(expr, depth);
   }
 
-  isTruthy(object: TODO): boolean {
+  isTruthy(object: ExprLiteralValue): boolean {
     if (object == null) return false;
     if (typeof object === "boolean") return object;
     if (typeof object === "number") return !(object === 0);
     return true;
   }
 
-  isEqual(a: TODO, b: TODO): boolean {
+  isEqual(a: ExprLiteralValue, b: ExprLiteralValue): boolean {
     if (a === null && b === null) return true;
     if (a === null) return false;
 
@@ -169,16 +167,16 @@ export class Interpreter extends Visitor {
   }
 
   visitBinaryExpr(expr: ExprBinary): ExprLiteralValue {
-    let right: TODO = this.evaluate(expr.right);
-    let left: TODO = this.evaluate(expr.left);
+    let right = this.evaluate(expr.right);
+    let left = this.evaluate(expr.left);
 
     let type = expr.operator.type;
     if (type === TokenType.MINUS) {
-      return left - right;
+      return (left as number) - (right as number);
     } else if (type === TokenType.SLASH) {
-      return left / right;
+      return (left as number) / (right as number);
     } else if (type === TokenType.STAR) {
-      return left * right;
+      return (left as number) * (right as number);
     } else if (type === TokenType.PLUS) {
       if (typeof left === "number" && typeof right === "number") {
         return left + right;
@@ -246,11 +244,11 @@ export class Interpreter extends Visitor {
   }
 
   visitUnaryExpr(expr: ExprUnary): ExprLiteralValue {
-    let right: TODO = this.evaluate(expr.right);
+    let right = this.evaluate(expr.right);
 
     let type = expr.operator.type;
     if (type === TokenType.MINUS) {
-      return -1 * right;
+      return -1 * (right as number);
     } else if (type === TokenType.BANG) {
       return !this.isTruthy(right);
     }
