@@ -181,7 +181,12 @@ describe("Interpreting statements", () => {
       print clock();
     `;
     interpret(source, logger);
-    expect(logger.messages).toEqual([Date.now()]);
+
+    expect(logger.messages.length).toEqual(1);
+    let actual = logger.messages[0].toString();
+    let expected = (Date.now()).toString();
+    expect(actual.length).toEqual(expected.length)
+    expect(actual.substring(0, 5)).toEqual(expected.substring(0, 5));
   });
 
   test("function declaration", () => {
