@@ -1,8 +1,8 @@
-import { Interpreter } from "./Interpreter";
 import { Environment } from "./Environment";
-import { StmtFunction } from "./Stmt";
 import { ReturnValue } from "./Errors";
 import { ExprLiteralValue } from "./Expr";
+import { Interpreter } from "./Interpreter";
+import { StmtFunction } from "./Stmt";
 
 export class LoxCallable {
   constructor() {}

@@ -1,5 +1,3 @@
-import { LoxInstance } from "./Instance";
-import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import {
   Expr,
   ExprAssign,
@@ -11,6 +9,8 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
+import { LoxInstance } from "./Instance";
+import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import {
   Stmt,
   StmtVar,

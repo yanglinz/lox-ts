@@ -1,7 +1,3 @@
-import { Interpreter } from "./Interpreter";
-import { Visitor } from "./Visitor";
-import { LoxInstance } from "./Instance";
-import { Token } from "./Scanner";
 import {
   Expr,
   ExprAssign,
@@ -12,6 +8,9 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
+import { LoxInstance } from "./Instance";
+import { Interpreter } from "./Interpreter";
+import { Token } from "./Scanner";
 import {
   Stmt,
   StmtExpression,
@@ -23,6 +22,7 @@ import {
   StmtReturn,
   StmtWhile,
 } from "./Stmt";
+import { Visitor } from "./Visitor";
 
 type Scope = Map<string, boolean>;
 

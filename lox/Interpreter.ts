@@ -1,6 +1,7 @@
-import { LoxInstance } from "./Instance";
-import { Environment } from "./Environment";
 import { LoxFunction } from "./Callable";
+import { LoxCallable } from "./Callable";
+import { Environment } from "./Environment";
+import { RuntimeError, ReturnValue } from "./Errors";
 import {
   Expr,
   ExprAssign,
@@ -13,6 +14,8 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
+import { LoxInstance } from "./Instance";
+import { Token, TokenType } from "./Scanner";
 import {
   Stmt,
   StmtExpression,
@@ -25,9 +28,6 @@ import {
   StmtIf,
 } from "./Stmt";
 import { Visitor } from "./Visitor";
-import { Token, TokenType } from "./Scanner";
-import { RuntimeError, ReturnValue } from "./Errors";
-import { LoxCallable } from "./Callable";
 
 class GlobalFnClock extends LoxCallable {
   get arity() {
