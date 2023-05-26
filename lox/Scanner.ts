@@ -102,10 +102,10 @@ export class Token {
     this.type = type;
     this.lexeme = lexeme;
     this.line = line;
-    this.literal = this._getLiteral();
+    this.literal = this.getLiteral();
   }
 
-  _getLiteral(): string | number {
+  private getLiteral(): string | number {
     if (this.type === TokenType.NUMBER) {
       return parseFloat(this.lexeme);
     }
