@@ -1,7 +1,7 @@
 import { LoxFunction } from "./Callable";
 import { LoxCallable } from "./Callable";
 import { Environment } from "./Environment";
-import { RuntimeError, ReturnValue } from "./Errors";
+import { ReturnValue, RuntimeError } from "./Errors";
 import {
   Expr,
   ExprAssign,
@@ -18,14 +18,14 @@ import { LoxInstance } from "./Instance";
 import { Token, TokenType } from "./Scanner";
 import {
   Stmt,
+  StmtBlock,
   StmtExpression,
   StmtFunction,
+  StmtIf,
   StmtPrint,
   StmtReturn,
   StmtVar,
   StmtWhile,
-  StmtBlock,
-  StmtIf,
 } from "./Stmt";
 import { Visitor } from "./Visitor";
 

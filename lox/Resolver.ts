@@ -13,13 +13,13 @@ import { Interpreter } from "./Interpreter";
 import { Token } from "./Scanner";
 import {
   Stmt,
-  StmtExpression,
   StmtBlock,
-  StmtVar,
+  StmtExpression,
   StmtFunction,
   StmtIf,
   StmtPrint,
   StmtReturn,
+  StmtVar,
   StmtWhile,
 } from "./Stmt";
 import { Visitor } from "./Visitor";
