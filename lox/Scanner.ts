@@ -176,62 +176,62 @@ export class Scanner {
   lox: LoxInstance;
   source: string;
 
-  #start: number = 0;
-  #current: number = 0;
-  #line: number = 1;
+  private start: number = 0;
+  private current: number = 0;
+  private line: number = 1;
 
-  #tokens: Token[] = [];
-  errors: ScanningError[] = [];
+  tokens: Token[];
+  errors: ScanningError[];
 
   constructor(lox: LoxInstance, source: string) {
     this.lox = lox;
     this.source = source;
+    this.tokens = [];
+    this.errors = [];
   }
 
   scan(): Token[] {
     if (this.source) {
-      while (!this.#isAtEnd()) {
-        this.#start = this.#current;
-        this.#scanNext();
+      while (!this.isAtEnd()) {
+        this.start = this.current;
+        this.scanNext();
       }
     }
 
-    this.#addToken(TokenType.EOF);
-    return this.#tokens;
+    this.addToken(TokenType.EOF);
+    return this.tokens;
   }
 
-  #scanNext(): void {
-    let c = this.#advance();
+  scanNext(): void {
+    let c = this.advance();
 
     // Match single char literals
     if (c in TokenLiterals) {
       const tokenType = TokenLiterals[c];
-      this.#addToken(tokenType);
+      this.addToken(tokenType);
     }
 
     // Match operators
     else if (c === "!") {
-      this.#addToken(this.#match("=") ? TokenType.BANG_EQUAL : TokenType.BANG);
+      this.addToken(this.match("=") ? TokenType.BANG_EQUAL : TokenType.BANG);
     } else if (c === "=") {
-      this.#addToken(
-        this.#match("=") ? TokenType.EQUAL_EQUAL : TokenType.EQUAL
-      );
+      this.addToken(this.match("=") ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
     } else if (c === "<") {
-      this.#addToken(this.#match("=") ? TokenType.LESS_EQUAL : TokenType.LESS);
+      this.addToken(this.match("=") ? TokenType.LESS_EQUAL : TokenType.LESS);
     } else if (c === ">") {
-      this.#addToken(
-        this.#match("=") ? TokenType.GREATER_EQUAL : TokenType.GREATER
+      this.addToken(
+        this.match("=") ? TokenType.GREATER_EQUAL : TokenType.GREATER
       );
     }
 
     // Match slash and comments
     else if (c === "/") {
-      if (this.#match("/")) {
-        while (this.#peek() !== "\n" && !this.#isAtEnd()) {
-          this.#advance();
+      if (this.match("/")) {
+        while (this.peek() !== "\n" && !this.isAtEnd()) {
+          this.advance();
         }
       } else {
-        this.#addToken(TokenType.SLASH);
+        this.addToken(TokenType.SLASH);
       }
     }
 
@@ -239,125 +239,125 @@ export class Scanner {
     else if (c === " " || c === "\r" || c === "\t") {
       // These white spaces can be ignored
     } else if (c === "\n") {
-      this.#line += 1;
+      this.line += 1;
     }
 
     // Match string literals
     else if (c === '"') {
-      this.#scanString();
+      this.scanString();
     } else {
       if (isDigit(c)) {
-        this.#scanNumber();
+        this.scanNumber();
       } else if (isAlpha(c)) {
-        this.#scanIdentifier();
+        this.scanIdentifier();
       }
       // If the character can't be handled by the above logic, it must be unexpected
-      this.#addError("Unexpected char");
+      this.addError("Unexpected char");
     }
   }
 
-  #scanString() {
-    while (this.#peek() !== '"' && !this.#isAtEnd()) {
-      if (this.#peek() === "\n") {
-        this.#line += 1;
+  scanString() {
+    while (this.peek() !== '"' && !this.isAtEnd()) {
+      if (this.peek() === "\n") {
+        this.line += 1;
       }
-      this.#advance();
+      this.advance();
     }
 
-    if (this.#isAtEnd()) {
-      this.#addError("Unterminated string");
+    if (this.isAtEnd()) {
+      this.addError("Unterminated string");
     }
 
     // The closing "
-    this.#advance();
-    this.#addToken(TokenType.STRING);
+    this.advance();
+    this.addToken(TokenType.STRING);
   }
 
-  #scanNumber() {
-    while (isDigit(this.#peek())) {
-      this.#advance();
+  scanNumber() {
+    while (isDigit(this.peek())) {
+      this.advance();
     }
 
-    if (this.#peek() === "." && isDigit(this.#peekNext())) {
-      this.#advance();
-      while (isDigit(this.#peek())) {
-        this.#advance();
+    if (this.peek() === "." && isDigit(this.peekNext())) {
+      this.advance();
+      while (isDigit(this.peek())) {
+        this.advance();
       }
     }
 
-    this.#addToken(TokenType.NUMBER);
+    this.addToken(TokenType.NUMBER);
   }
 
-  #scanIdentifier() {
-    while (isAlpha(this.#peek())) {
-      this.#advance();
+  scanIdentifier() {
+    while (isAlpha(this.peek())) {
+      this.advance();
     }
 
-    const text = this.source.slice(this.#start, this.#current);
+    const text = this.source.slice(this.start, this.current);
     let tokenType = TokenType.IDENTIFIER;
     if (text in ReservedKeywords) {
       tokenType = ReservedKeywords[text];
     }
-    this.#addToken(tokenType);
+    this.addToken(tokenType);
   }
 
   /**
    * Helper method to determine if we've scanned all source string into tokens
    */
-  #isAtEnd(): boolean {
-    return this.#current >= this.source.length;
+  isAtEnd(): boolean {
+    return this.current >= this.source.length;
   }
 
   /**
    * Helper method to return the current token and advance the current cursor
    */
-  #advance(): string | undefined {
-    const char = this.source[this.#current];
-    this.#current += 1;
+  advance(): string | undefined {
+    const char = this.source[this.current];
+    this.current += 1;
     return char;
   }
 
   /**
    * Helper method to conditionally advance if the current char is what we expect
    */
-  #match(expected: string): string | undefined {
-    if (this.#isAtEnd()) {
+  match(expected: string): string | undefined {
+    if (this.isAtEnd()) {
       return;
     }
 
-    if (this.source[this.#current] !== expected) {
+    if (this.source[this.current] !== expected) {
       return;
     }
 
-    return this.#advance();
+    return this.advance();
   }
 
   /**
    * Helper method to return the next char without advancing
    */
-  #peek(): string | undefined {
-    if (this.#isAtEnd()) {
+  peek(): string | undefined {
+    if (this.isAtEnd()) {
       return;
     }
 
-    return this.source[this.#current];
+    return this.source[this.current];
   }
 
-  #peekNext(): string | undefined {
-    if (this.#current + 1 >= this.source.length) {
+  peekNext(): string | undefined {
+    if (this.current + 1 >= this.source.length) {
       return;
     }
 
-    return this.source[this.#current + 1];
+    return this.source[this.current + 1];
   }
 
-  #addToken(tokenType: TokenTypeConstant): void {
-    const lexeme = this.source.slice(this.#start, this.#current);
-    this.#start = this.#current;
-    this.#tokens.push(new Token(tokenType, lexeme, this.#line));
+  addToken(tokenType: TokenTypeConstant): void {
+    const lexeme = this.source.slice(this.start, this.current);
+    this.start = this.current;
+    this.tokens.push(new Token(tokenType, lexeme, this.line));
   }
 
-  #addError(message: string) {
-    this.errors.push(new ScanningError(message, this.#line));
+  addError(message: string) {
+    this.errors.push(new ScanningError(message, this.line));
   }
 }
