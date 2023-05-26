@@ -1,11 +1,11 @@
-type TODO = any;
+import { ExprLiteralValue }  from './Expr';
 
 export class RuntimeError extends Error {}
 
 export class ReturnValue extends Error {
-  value: TODO;
+  value: ExprLiteralValue;
 
-  constructor(value: TODO) {
+  constructor(value: ExprLiteralValue) {
     super();
     this.value = value;
   }
