@@ -1,7 +1,8 @@
 import { Token } from "./Scanner";
 import { RuntimeError } from "./Errors";
+import { ExprLiteralValue }  from './Expr';
 
-type VariableValue = any;
+type VariableValue = ExprLiteralValue;
 
 export class Environment {
   enclosing?: Environment;

@@ -4,8 +4,9 @@ import { Parser } from "./Parser";
 import { Interpreter } from "./Interpreter";
 import { Resolver } from "./Resolver";
 import { RecordedLogger } from "./Instance";
+import { ExprLiteralValue } from "./Expr";
 
-function interpret(source: string, logger?: RecordedLogger): any {
+function interpret(source: string, logger?: RecordedLogger): ExprLiteralValue {
   let lox = new LoxInstance(logger);
   let interpreter = new Interpreter(lox);
   let tokens = new Scanner(lox, source).scan();
