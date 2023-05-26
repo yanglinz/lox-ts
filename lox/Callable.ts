@@ -2,7 +2,7 @@ import { Interpreter } from "./Interpreter";
 import { Environment } from "./Environment";
 import { StmtFunction } from "./Stmt";
 import { ReturnValue } from "./Errors";
-import { ExprLiteralValue } from './Expr';
+import { ExprLiteralValue } from "./Expr";
 
 export class LoxCallable {
   constructor() {}

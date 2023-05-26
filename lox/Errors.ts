@@ -1,4 +1,4 @@
-import { ExprLiteralValue }  from './Expr';
+import { ExprLiteralValue } from "./Expr";
 
 export class RuntimeError extends Error {}
 
