@@ -181,7 +181,7 @@ export class Scanner {
   #line: number = 1;
 
   #tokens: Token[] = [];
-  errors: any[] = [];
+  errors: ScanningError[] = [];
 
   constructor(lox: LoxInstance, source: string) {
     this.lox = lox;
