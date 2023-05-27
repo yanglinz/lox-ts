@@ -1,6 +1,6 @@
-import { Token } from "./Scanner";
 import { RuntimeError } from "./Errors";
 import { ExprLiteralValue } from "./Expr";
+import { Token } from "./Scanner";
 
 type VariableValue = ExprLiteralValue;
 

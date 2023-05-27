@@ -1,10 +1,10 @@
-import { LoxInstance } from "./Instance";
-import { Scanner } from "./Scanner";
-import { Parser } from "./Parser";
-import { Interpreter } from "./Interpreter";
-import { Resolver } from "./Resolver";
-import { RecordedLogger } from "./Instance";
 import { ExprLiteralValue } from "./Expr";
+import { LoxInstance } from "./Instance";
+import { RecordedLogger } from "./Instance";
+import { Interpreter } from "./Interpreter";
+import { Parser } from "./Parser";
+import { Resolver } from "./Resolver";
+import { Scanner } from "./Scanner";
 
 function interpret(source: string, logger?: RecordedLogger): ExprLiteralValue {
   let lox = new LoxInstance(logger);

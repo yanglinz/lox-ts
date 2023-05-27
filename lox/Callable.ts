@@ -1,8 +1,8 @@
-import { Interpreter } from "./Interpreter";
 import { Environment } from "./Environment";
-import { StmtFunction } from "./Stmt";
 import { ReturnValue } from "./Errors";
 import { ExprLiteralValue } from "./Expr";
+import { Interpreter } from "./Interpreter";
+import { StmtFunction } from "./Stmt";
 
 export class LoxCallable {
   constructor() {}
@@ -54,5 +54,22 @@ export class LoxFunction extends LoxCallable {
 
   toString(): string {
     return "<fn " + this.declaration.name.lexeme + ">";
+  }
+}
+
+/**
+ * Example function to demonstrate native functions
+ */
+export class GlobalFnClock extends LoxCallable {
+  get arity() {
+    return 0;
+  }
+
+  call(interpreter: Interpreter, args: ExprLiteralValue[]) {
+    return Date.now();
+  }
+
+  toString() {
+    return "<native fn>";
   }
 }

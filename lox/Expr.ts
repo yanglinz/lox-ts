@@ -1,6 +1,6 @@
+import { LoxCallable } from "./Callable";
 import { Token } from "./Scanner";
 import { Visitor, VisitorOutput } from "./Visitor";
-import { LoxCallable } from "./Callable";
 
 export class Expr {
   accept(_: Visitor): VisitorOutput {}

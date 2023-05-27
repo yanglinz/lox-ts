@@ -1,6 +1,6 @@
 import { LoxInstance } from "./Instance";
-import { Scanner } from "./Scanner";
 import { Parser } from "./Parser";
+import { Scanner } from "./Scanner";
 import { Stmt } from "./Stmt";
 
 function getParsedExpr(source: string): Stmt[] {

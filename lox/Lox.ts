@@ -1,8 +1,8 @@
 import { LoxInstance } from "./Instance";
-import { Scanner } from "./Scanner";
+import { Interpreter } from "./Interpreter";
 import { Parser } from "./Parser";
 import { Resolver } from "./Resolver";
-import { Interpreter } from "./Interpreter";
+import { Scanner } from "./Scanner";
 
 export class Lox {
   run(source: string) {

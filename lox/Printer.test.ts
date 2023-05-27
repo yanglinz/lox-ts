@@ -1,6 +1,6 @@
 import * as ast from "./Expr";
-import { Token, TokenType } from "./Scanner";
 import { AstPrinter } from "./Printer";
+import { Token, TokenType } from "./Scanner";
 
 describe("AST pretty printer", () => {
   test("print expression", () => {

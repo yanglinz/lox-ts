@@ -1,6 +1,6 @@
-import * as path from "path";
-import * as fs from "fs/promises";
 import { Lox } from "../lox/Lox";
+import * as fs from "fs/promises";
+import * as path from "path";
 
 function fileExists(filePath: string): Promise<boolean> {
   return fs

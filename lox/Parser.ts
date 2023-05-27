@@ -1,5 +1,3 @@
-import { LoxInstance } from "./Instance";
-import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import {
   Expr,
   ExprAssign,
@@ -11,16 +9,18 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
+import { LoxInstance } from "./Instance";
+import { Token, TokenType, TokenTypeConstant } from "./Scanner";
 import {
   Stmt,
-  StmtVar,
+  StmtBlock,
+  StmtExpression,
+  StmtFunction,
   StmtIf,
-  StmtWhile,
   StmtPrint,
   StmtReturn,
-  StmtExpression,
-  StmtBlock,
-  StmtFunction,
+  StmtVar,
+  StmtWhile,
 } from "./Stmt";
 
 export class Parser {
