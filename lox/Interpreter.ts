@@ -29,10 +29,10 @@ import {
 import { Visitor } from "./Visitor";
 
 export class Interpreter extends Visitor {
-  lox: LoxInstance;
-  environment: Environment;
-  globals: Environment;
-  locals: Map<Expr, number>;
+  private lox: LoxInstance;
+  private environment: Environment;
+  private globals: Environment;
+  private locals: Map<Expr, number>;
 
   constructor(lox: LoxInstance) {
     super();
@@ -49,7 +49,7 @@ export class Interpreter extends Visitor {
     try {
       for (let [i, s] of statements.entries()) {
         if (i === lastIndex) {
-          // Return the output of the last statement
+          // Return the output of the last statement for ease of testing
           return this.execute(s);
         } else {
           this.execute(s);
@@ -61,11 +61,19 @@ export class Interpreter extends Visitor {
     }
   }
 
-  execute(statement: Stmt): ExprLiteralValue {
+  evaluate(expr: Expr): ExprLiteralValue {
+    return expr.accept(this);
+  }
+
+  resolve(expr: Expr, depth: number): void {
+    this.locals.set(expr, depth);
+  }
+
+  private execute(statement: Stmt): ExprLiteralValue {
     return statement.accept(this);
   }
 
-  executeBlock(statements: Stmt[], environment: Environment): void {
+  private executeBlock(statements: Stmt[], environment: Environment): void {
     let previous = this.environment;
     try {
       this.environment = environment;
@@ -77,22 +85,16 @@ export class Interpreter extends Visitor {
     }
   }
 
-  evaluate(expr: Expr): ExprLiteralValue {
-    return expr.accept(this);
-  }
-
-  resolve(expr: Expr, depth: number): void {
-    this.locals.set(expr, depth);
-  }
-
-  isTruthy(object: ExprLiteralValue): boolean {
+  // TODO: move?
+  private isTruthy(object: ExprLiteralValue): boolean {
     if (object == null) return false;
     if (typeof object === "boolean") return object;
     if (typeof object === "number") return !(object === 0);
     return true;
   }
 
-  isEqual(a: ExprLiteralValue, b: ExprLiteralValue): boolean {
+  // TODO: move?
+  private isEqual(a: ExprLiteralValue, b: ExprLiteralValue): boolean {
     if (a === null && b === null) return true;
     if (a === null) return false;
 
