@@ -56,3 +56,20 @@ export class LoxFunction extends LoxCallable {
     return "<fn " + this.declaration.name.lexeme + ">";
   }
 }
+
+/**
+ * Example function to demonstrate native functions
+ */
+export class GlobalFnClock extends LoxCallable {
+  get arity() {
+    return 0;
+  }
+
+  call(interpreter: Interpreter, args: ExprLiteralValue[]) {
+    return Date.now();
+  }
+
+  toString() {
+    return "<native fn>";
+  }
+}

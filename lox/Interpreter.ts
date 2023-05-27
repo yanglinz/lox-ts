@@ -1,5 +1,4 @@
-import { LoxFunction } from "./Callable";
-import { LoxCallable } from "./Callable";
+import { LoxCallable, LoxFunction, GlobalFnClock } from "./Callable";
 import { Environment } from "./Environment";
 import { ReturnValue, RuntimeError } from "./Errors";
 import {
@@ -28,20 +27,6 @@ import {
   StmtWhile,
 } from "./Stmt";
 import { Visitor } from "./Visitor";
-
-class GlobalFnClock extends LoxCallable {
-  get arity() {
-    return 0;
-  }
-
-  call(interpreter: Interpreter, args: ExprLiteralValue[]) {
-    return Date.now();
-  }
-
-  toString() {
-    return "<native fn>";
-  }
-}
 
 export class Interpreter extends Visitor {
   lox: LoxInstance;
