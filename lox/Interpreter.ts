@@ -73,7 +73,7 @@ export class Interpreter extends Visitor {
     return statement.accept(this);
   }
 
-  private executeBlock(statements: Stmt[], environment: Environment): void {
+  executeBlock(statements: Stmt[], environment: Environment): void {
     let previous = this.environment;
     try {
       this.environment = environment;
