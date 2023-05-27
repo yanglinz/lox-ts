@@ -85,20 +85,8 @@ export class Interpreter extends Visitor {
     }
   }
 
-  // TODO: move?
-  private isTruthy(object: ExprLiteralValue): boolean {
-    if (object == null) return false;
-    if (typeof object === "boolean") return object;
-    if (typeof object === "number") return !(object === 0);
-    return true;
-  }
-
-  // TODO: move?
-  private isEqual(a: ExprLiteralValue, b: ExprLiteralValue): boolean {
-    if (a === null && b === null) return true;
-    if (a === null) return false;
-
-    return a == b;
+  visitBlockStmt(stmt: StmtBlock): void {
+    this.executeBlock(stmt.statements, new Environment(this.environment));
   }
 
   visitExpressionStmt(stmt: StmtExpression): ExprLiteralValue {
@@ -134,10 +122,6 @@ export class Interpreter extends Visitor {
     throw new ReturnValue(value);
   }
 
-  visitBlockStmt(stmt: StmtBlock): void {
-    this.executeBlock(stmt.statements, new Environment(this.environment));
-  }
-
   visitVarStmt(stmt: StmtVar): void {
     let value = null;
     if (stmt.initializer != null) {
@@ -151,6 +135,19 @@ export class Interpreter extends Visitor {
     while (this.isTruthy(this.evaluate(stmt.condition))) {
       this.execute(stmt.body);
     }
+  }
+
+  visitAssignExpr(expr: ExprAssign): ExprLiteralValue {
+    let value = this.evaluate(expr.value);
+
+    const distance = this.locals.get(expr);
+    if (distance != null) {
+      this.environment.assignAt(distance, expr.name, value);
+    } else {
+      this.globals.assign(expr.name, value);
+    }
+
+    return value;
   }
 
   visitBinaryExpr(expr: ExprBinary): ExprLiteralValue {
@@ -257,16 +254,17 @@ export class Interpreter extends Visitor {
     }
   }
 
-  visitAssignExpr(expr: ExprAssign): ExprLiteralValue {
-    let value = this.evaluate(expr.value);
+  private isTruthy(object: ExprLiteralValue): boolean {
+    if (object == null) return false;
+    if (typeof object === "boolean") return object;
+    if (typeof object === "number") return !(object === 0);
+    return true;
+  }
 
-    const distance = this.locals.get(expr);
-    if (distance != null) {
-      this.environment.assignAt(distance, expr.name, value);
-    } else {
-      this.globals.assign(expr.name, value);
-    }
+  private isEqual(a: ExprLiteralValue, b: ExprLiteralValue): boolean {
+    if (a === null && b === null) return true;
+    if (a === null) return false;
 
-    return value;
+    return a == b;
   }
 }
