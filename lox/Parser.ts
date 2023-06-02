@@ -96,12 +96,7 @@ export class Parser {
 
   /**
    * Statement grammar rules
-   *
-   * program   -> statement* EOF ;
-   * statement -> exprStmt | printStmt ;
-   * exprStmt  -> expression ";" ;
-   * printStmt -> "print" expression ";" ;
-   *
+   * See https://craftinginterpreters.com/appendix-i.html#statements
    */
 
   private declaration(): Stmt {
@@ -261,14 +256,7 @@ export class Parser {
 
   /**
    * Expression grammar rules
-   *
-   * expression     -> literal | unary | binary | grouping ;
-   * literal        -> NUMBER | STRING | "true" | "false" | "nil" ;
-   * grouping       -> "(" expression ")" ;
-   * unary          -> ( "-" | "!" ) expression ;
-   * binary         -> expression operator expression ;
-   * operator       -> "==" | "!=" | "<" | "<=" | ">" | ">=" | "+"  | "-"  | "*" | "/" ;
-   *
+   * See https://craftinginterpreters.com/appendix-i.html#expressions
    */
   private expression(): Expr {
     return this.assignment();
