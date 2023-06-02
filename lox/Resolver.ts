@@ -104,7 +104,10 @@ export class Resolver extends Visitor {
     if (this.scopes.length) {
       let scope = this.scopes.at(-1);
       if (scope.get(expr.name.lexeme) === false) {
-        this.lox.error("Can't read local variable in its own initializer");
+        this.lox.error(
+          expr.name,
+          "Can't read local variable in its own initializer"
+        );
       }
     }
 

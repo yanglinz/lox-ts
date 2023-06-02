@@ -1,3 +1,5 @@
+import { Token } from "./Scanner";
+
 class LoggerInterface {
   messages: string[];
 
@@ -31,7 +33,7 @@ export class LoxInstance {
     this.errors = [];
   }
 
-  error(message: string) {
+  error(token: Token, message: string) {
     this.errors.push(message);
   }
 }
