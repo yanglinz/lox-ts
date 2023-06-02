@@ -1,3 +1,4 @@
+import { ParseError } from "./Errors";
 import {
   Expr,
   ExprAssign,
@@ -90,8 +91,8 @@ export class Parser {
   }
 
   private error(token: Token, message: string) {
-    // TODO: Finish error handling implementation
-    return new Error(message);
+    this.lox.error(token, message);
+    return new ParseError();
   }
 
   /**

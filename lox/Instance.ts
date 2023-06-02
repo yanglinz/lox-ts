@@ -1,4 +1,4 @@
-import { Token } from "./Scanner";
+import { Token, TokenType } from "./Scanner";
 
 class LoggerInterface {
   messages: string[];
@@ -35,5 +35,12 @@ export class LoxInstance {
 
   error(token: Token, message: string) {
     this.errors.push(message);
+
+    if (token.type == TokenType.EOF) {
+      // TODO: Change this to a report class
+      console.log(token.line, " at end", message);
+    } else {
+      console.log(token.line, " at '" + token.lexeme + "'", message);
+    }
   }
 }
