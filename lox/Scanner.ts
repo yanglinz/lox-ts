@@ -190,6 +190,59 @@ export class Scanner {
     this.errors = [];
   }
 
+  /**
+   * Determine if we've scanned all source string into tokens
+   */
+  isAtEnd(): boolean {
+    return this.current >= this.source.length;
+  }
+
+  /**
+   * Return the current token and advance the current cursor
+   */
+  advance(): string | undefined {
+    const char = this.source[this.current];
+    this.current += 1;
+    return char;
+  }
+
+  /**
+   * Conditionally advance if the current char is what we expect
+   */
+  match(expected: string): string | undefined {
+    if (this.isAtEnd()) {
+      return;
+    }
+
+    if (this.source[this.current] !== expected) {
+      return;
+    }
+
+    return this.advance();
+  }
+
+  /**
+   * Return the next char without advancing
+   */
+  peek(): string | undefined {
+    if (this.isAtEnd()) {
+      return;
+    }
+
+    return this.source[this.current];
+  }
+
+  /**
+   * Return the char after the next char without advancing
+   */
+  peekNext(): string | undefined {
+    if (this.current + 1 >= this.source.length) {
+      return;
+    }
+
+    return this.source[this.current + 1];
+  }
+
   scan(): Token[] {
     if (this.source) {
       while (!this.isAtEnd()) {
@@ -299,56 +352,6 @@ export class Scanner {
       tokenType = ReservedKeywords[text];
     }
     this.addToken(tokenType);
-  }
-
-  /**
-   * Helper method to determine if we've scanned all source string into tokens
-   */
-  isAtEnd(): boolean {
-    return this.current >= this.source.length;
-  }
-
-  /**
-   * Helper method to return the current token and advance the current cursor
-   */
-  advance(): string | undefined {
-    const char = this.source[this.current];
-    this.current += 1;
-    return char;
-  }
-
-  /**
-   * Helper method to conditionally advance if the current char is what we expect
-   */
-  match(expected: string): string | undefined {
-    if (this.isAtEnd()) {
-      return;
-    }
-
-    if (this.source[this.current] !== expected) {
-      return;
-    }
-
-    return this.advance();
-  }
-
-  /**
-   * Helper method to return the next char without advancing
-   */
-  peek(): string | undefined {
-    if (this.isAtEnd()) {
-      return;
-    }
-
-    return this.source[this.current];
-  }
-
-  peekNext(): string | undefined {
-    if (this.current + 1 >= this.source.length) {
-      return;
-    }
-
-    return this.source[this.current + 1];
   }
 
   addToken(tokenType: TokenTypeConstant): void {
