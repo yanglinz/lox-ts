@@ -9,7 +9,6 @@
     "run:debug": "node --inspect-brk node_modules/.bin/ts-node tools/run.ts",
     "test": "jest .",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles .",
-    "type": "tsc .",
     "format": "prettier --write ./**/*.{ts,js}",
     "format:check": "prettier --check ./**/*.{ts,js}"
   },
