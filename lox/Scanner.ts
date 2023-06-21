@@ -303,9 +303,10 @@ export class Scanner {
         this.scanNumber();
       } else if (isAlpha(c)) {
         this.scanIdentifier();
+      } else {
+        // If the character can't be handled by the above logic, it must be unexpected
+        this.lox.error(this.line as any, "Unexpected char");
       }
-      // If the character can't be handled by the above logic, it must be unexpected
-      this.addError("Unexpected char");
     }
   }
 
