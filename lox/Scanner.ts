@@ -181,13 +181,11 @@ export class Scanner {
   private line: number = 1;
 
   tokens: Token[];
-  errors: ScanningError[];
 
   constructor(lox: LoxInstance, source: string) {
     this.lox = lox;
     this.source = source;
     this.tokens = [];
-    this.errors = [];
   }
 
   /**
@@ -319,7 +317,7 @@ export class Scanner {
     }
 
     if (this.isAtEnd()) {
-      this.addError("Unterminated string");
+      this.lox.error(this.line as any, "Unterminated string");
     }
 
     // The closing "
@@ -359,9 +357,5 @@ export class Scanner {
     const lexeme = this.source.slice(this.start, this.current);
     this.start = this.current;
     this.tokens.push(new Token(tokenType, lexeme, this.line));
-  }
-
-  addError(message: string) {
-    this.errors.push(new ScanningError(message, this.line));
   }
 }
