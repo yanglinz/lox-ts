@@ -9,8 +9,17 @@ export class Lox {
     try {
       const lox = new LoxInstance();
       const scanner = new Scanner(lox, source);
+      if (lox.hadError) {
+        return { lox };
+      }
       const parser = new Parser(lox, scanner.scan());
+      if (lox.hadError) {
+        return { lox };
+      }
       const interpreter = new Interpreter(lox);
+      if (lox.hadError) {
+        return { lox };
+      }
 
       let statements = parser.parse();
       const resolver = new Resolver(interpreter);
