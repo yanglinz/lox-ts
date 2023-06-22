@@ -1,15 +1,24 @@
-import { LoxInstance } from "./Instance";
+import { LoggerInterface, LoxInstance } from "./Instance";
 import { Interpreter } from "./Interpreter";
 import { Parser } from "./Parser";
 import { Resolver } from "./Resolver";
 import { Scanner } from "./Scanner";
 
+interface LoxOptions {
+  logger: LoggerInterface;
+}
+
 export class Lox {
+  logger?: LoggerInterface;
+
+  constructor(options: Partial<LoxOptions> = {}) {
+    this.logger = options.logger;
+  }
+
   run(source: string) {
-    const lox = new LoxInstance();
+    const lox = new LoxInstance(this.logger);
     try {
       const scanner = new Scanner(lox, source);
-      debugger;
       if (lox.hadError) {
         return { lox };
       }
@@ -28,7 +37,7 @@ export class Lox {
       interpreter.interpret(statements);
       return { lox, scanner, parser, interpreter };
     } catch (err) {
-      console.error(err);
+      this.logger?.error(err);
       return { lox };
     }
   }

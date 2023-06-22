@@ -1,9 +1,10 @@
+import { NoopLogger } from "../lox/Instance";
 import { Lox } from "../lox/Lox";
 
 type TODO = any;
 
 function interpret(source: string): TODO {
-  let lox = new Lox();
+  let lox = new Lox({ logger: new NoopLogger() });
   return lox.run(source);
 }
 

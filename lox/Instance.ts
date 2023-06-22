@@ -1,6 +1,6 @@
 import { Token, TokenType } from "./Scanner";
 
-class LoggerInterface {
+export class LoggerInterface {
   messages: string[];
 
   constructor() {
@@ -10,11 +10,19 @@ class LoggerInterface {
   log(message: string): void {
     throw new Error("NotImplementedError");
   }
+
+  error(message: string): void {
+    throw new Error("NotImplementedError");
+  }
 }
 
-class ConsoleLogger extends LoggerInterface {
+export class ConsoleLogger extends LoggerInterface {
   log(message: string) {
     console.log("lox >", message);
+  }
+
+  error(message: string) {
+    console.error("lox >", message);
   }
 }
 
@@ -22,6 +30,16 @@ export class RecordedLogger extends LoggerInterface {
   log(message: string) {
     this.messages.push(message);
   }
+
+  error(message: string) {
+    this.messages.push(message);
+  }
+}
+
+export class NoopLogger extends LoggerInterface {
+  log(_: string) {}
+
+  error(_: string) {}
 }
 
 export class LoxInstance {
@@ -41,10 +59,9 @@ export class LoxInstance {
     this.errors.push(message);
 
     if (token.type == TokenType.EOF) {
-      // TODO: Change this to a report class
-      console.log(token.line, " at end", message);
+      this.logger.log(`${token.line} at end ${message}`);
     } else {
-      console.log(token.line, " at '" + token.lexeme + "'", message);
+      this.logger.log(`${token.line} at ' ${token.lexeme} ' ${message}`);
     }
   }
 }
