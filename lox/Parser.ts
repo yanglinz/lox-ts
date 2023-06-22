@@ -1,3 +1,4 @@
+import { ParseError } from "./Errors";
 import {
   Expr,
   ExprAssign,
@@ -90,8 +91,8 @@ export class Parser {
   }
 
   private error(token: Token, message: string) {
-    // TODO: Finish error handling implementation
-    return new Error(message);
+    this.lox.error(token, message);
+    return new ParseError();
   }
 
   /**
@@ -105,10 +106,10 @@ export class Parser {
       if (this.match(TokenType.VAR)) return this.varDeclaration();
       return this.statement();
     } catch (error) {
-      // TODO: Implement error recovery
-      // https://craftinginterpreters.com/statements-and-state.html#parsing-variables
-      // synchronize();
-      return null;
+      if (!(error instanceof ParseError)) {
+        throw error;
+      }
+      this.synchronize();
     }
   }
 
@@ -417,6 +418,28 @@ export class Parser {
       let expr = this.expression();
       this.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
       return new ExprGrouping(expr);
+    }
+  }
+
+  private synchronize(): void {
+    this.advance();
+
+    while (!this.isAtEnd()) {
+      if (this.previous().type == TokenType.SEMICOLON) return;
+
+      switch (this.peek().type) {
+        case TokenType.CLASS:
+        case TokenType.FUN:
+        case TokenType.VAR:
+        case TokenType.FOR:
+        case TokenType.IF:
+        case TokenType.WHILE:
+        case TokenType.PRINT:
+        case TokenType.RETURN:
+          return;
+      }
+
+      this.advance();
     }
   }
 }
