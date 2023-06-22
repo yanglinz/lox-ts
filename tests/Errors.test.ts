@@ -1,11 +1,9 @@
-import { NoopLogger } from "../lox/Instance";
+import { LoxInstance, NoopLogger } from "../lox/Instance";
 import { Lox } from "../lox/Lox";
 
-type TODO = any;
-
-function interpret(source: string): TODO {
+function interpret(source: string): LoxInstance {
   let lox = new Lox({ logger: new NoopLogger() });
-  return lox.run(source);
+  return lox.run(source).lox;
 }
 
 describe("Errors", () => {
@@ -13,7 +11,7 @@ describe("Errors", () => {
     const source = `
       "Unterminated string
     `;
-    let { lox } = interpret(source);
+    let lox = interpret(source);
     expect(lox.hadError).toEqual(true);
     expect(lox.errors).toEqual(["Unterminated string"]);
   });
@@ -27,7 +25,7 @@ describe("Errors", () => {
       add(1, 2, 3)
       add(1, 2, 3);
     `;
-    let { lox } = interpret(source);
+    let lox = interpret(source);
     expect(lox.hadError).toEqual(true);
     expect(lox.errors).toEqual(["Expect ';' after value."]);
   });
