@@ -33,6 +33,10 @@ export class LoxInstance {
     this.errors = [];
   }
 
+  get hadError() {
+    return this.errors.length !== 0;
+  }
+
   error(token: Token, message: string) {
     this.errors.push(message);
 

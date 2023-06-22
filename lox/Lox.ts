@@ -6,9 +6,10 @@ import { Scanner } from "./Scanner";
 
 export class Lox {
   run(source: string) {
+    const lox = new LoxInstance();
     try {
-      const lox = new LoxInstance();
       const scanner = new Scanner(lox, source);
+      debugger;
       if (lox.hadError) {
         return { lox };
       }
@@ -25,8 +26,10 @@ export class Lox {
       const resolver = new Resolver(interpreter);
       resolver.resolveAll(statements);
       interpreter.interpret(statements);
+      return { lox, scanner, parser, interpreter };
     } catch (err) {
       console.error(err);
+      return { lox };
     }
   }
 }

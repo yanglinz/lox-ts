@@ -82,9 +82,7 @@ describe("Scanner", () => {
   test("errors for invalid strings", () => {
     const scanner = new Scanner(new LoxInstance(), '"Hello world!');
     scanner.scan();
-    expect(scanner.errors.map((e) => e.message)).toEqual([
-      "Unterminated string",
-    ]);
+    expect(scanner.lox.errors.map((e) => e)).toEqual(["Unterminated string"]);
   });
 
   test("token types for numbers", () => {
