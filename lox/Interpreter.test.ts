@@ -7,11 +7,11 @@ import { Resolver } from "./Resolver";
 import { Scanner } from "./Scanner";
 
 function interpret(source: string, logger?: RecordedLogger): ExprLiteralValue {
-  let lox = new LoxInstance(logger);
-  let interpreter = new Interpreter(lox);
-  let tokens = new Scanner(lox, source).scan();
-  let parser = new Parser(lox, tokens);
-  let statements = parser.parse();
+  const lox = new LoxInstance(logger);
+  const interpreter = new Interpreter(lox);
+  const tokens = new Scanner(lox, source).scan();
+  const parser = new Parser(lox, tokens);
+  const statements = parser.parse();
   const resolver = new Resolver(interpreter);
   resolver.resolveAll(statements);
   return interpreter.interpret(statements);
@@ -183,8 +183,8 @@ describe("Interpreting statements", () => {
     interpret(source, logger);
 
     expect(logger.messages.length).toEqual(1);
-    let actual = logger.messages[0].toString();
-    let expected = Date.now().toString();
+    const actual = logger.messages[0].toString();
+    const expected = Date.now().toString();
     expect(actual.length).toEqual(expected.length);
     expect(actual.substring(0, 5)).toEqual(expected.substring(0, 5));
   });

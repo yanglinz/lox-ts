@@ -47,7 +47,7 @@ export class Interpreter extends Visitor {
   interpret(statements: Stmt[]) {
     const lastIndex = statements.length - 1;
     try {
-      for (let [i, s] of statements.entries()) {
+      for (const [i, s] of statements.entries()) {
         if (i === lastIndex) {
           // Return the output of the last statement for ease of testing
           return this.execute(s);
@@ -74,10 +74,10 @@ export class Interpreter extends Visitor {
   }
 
   executeBlock(statements: Stmt[], environment: Environment): void {
-    let previous = this.environment;
+    const previous = this.environment;
     try {
       this.environment = environment;
-      for (let statement of statements) {
+      for (const statement of statements) {
         this.execute(statement);
       }
     } finally {
@@ -94,7 +94,7 @@ export class Interpreter extends Visitor {
   }
 
   visitFunctionStmt(stmt: StmtFunction): void {
-    let func = new LoxFunction(stmt, this.environment);
+    const func = new LoxFunction(stmt, this.environment);
     this.environment.define(stmt.name.lexeme, func);
   }
 
@@ -108,7 +108,7 @@ export class Interpreter extends Visitor {
   }
 
   visitPrintStmt(stmt: StmtPrint): void {
-    let value = this.evaluate(stmt.expression);
+    const value = this.evaluate(stmt.expression);
     // TODO: Implement stringify method
     this.lox.logger.log(value as string);
   }
@@ -138,7 +138,7 @@ export class Interpreter extends Visitor {
   }
 
   visitAssignExpr(expr: ExprAssign): ExprLiteralValue {
-    let value = this.evaluate(expr.value);
+    const value = this.evaluate(expr.value);
 
     const distance = this.locals.get(expr);
     if (distance != null) {
@@ -151,10 +151,10 @@ export class Interpreter extends Visitor {
   }
 
   visitBinaryExpr(expr: ExprBinary): ExprLiteralValue {
-    let right = this.evaluate(expr.right);
-    let left = this.evaluate(expr.left);
+    const right = this.evaluate(expr.right);
+    const left = this.evaluate(expr.left);
 
-    let type = expr.operator.type;
+    const type = expr.operator.type;
     if (type === TokenType.MINUS) {
       return (left as number) - (right as number);
     } else if (type === TokenType.SLASH) {
@@ -186,10 +186,10 @@ export class Interpreter extends Visitor {
   }
 
   visitCallExpr(expr: ExprCall) {
-    let callee = this.evaluate(expr.callee);
+    const callee = this.evaluate(expr.callee);
 
-    let args = [];
-    for (let a of expr.args) {
+    const args = [];
+    for (const a of expr.args) {
       args.push(this.evaluate(a));
     }
 
@@ -197,7 +197,7 @@ export class Interpreter extends Visitor {
       throw new RuntimeError("Can only call functions and classes.");
     }
 
-    let func = callee as LoxCallable;
+    const func = callee as LoxCallable;
     if (args.length != func.arity) {
       throw new RuntimeError(
         `Expected ${func.arity} arguments but got ${args.length}.`
@@ -228,9 +228,9 @@ export class Interpreter extends Visitor {
   }
 
   visitUnaryExpr(expr: ExprUnary): ExprLiteralValue {
-    let right = this.evaluate(expr.right);
+    const right = this.evaluate(expr.right);
 
-    let type = expr.operator.type;
+    const type = expr.operator.type;
     if (type === TokenType.MINUS) {
       return -1 * (right as number);
     } else if (type === TokenType.BANG) {
