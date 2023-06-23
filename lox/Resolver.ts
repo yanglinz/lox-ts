@@ -1,3 +1,4 @@
+import { RuntimeError } from "./Errors";
 import {
   Expr,
   ExprAssign,
@@ -106,7 +107,7 @@ export class Resolver extends Visitor {
       if (scope.get(expr.name.lexeme) === false) {
         this.lox.error(
           expr.name,
-          "Can't read local variable in its own initializer"
+          new RuntimeError("Can't read local variable in its own initializer")
         );
       }
     }

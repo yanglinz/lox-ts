@@ -91,8 +91,8 @@ export class Parser {
   }
 
   private error(token: Token, message: string) {
-    this.lox.error(token, message);
-    return new ParseError();
+    this.lox.error(token, new ParseError(message));
+    return new ParseError(message);
   }
 
   /**

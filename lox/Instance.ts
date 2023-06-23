@@ -44,7 +44,7 @@ export class NoopLogger extends LoggerInterface {
 
 export class LoxInstance {
   logger: LoggerInterface;
-  errors: string[];
+  errors: Error[];
 
   constructor(logger?: LoggerInterface) {
     this.logger = logger ? logger : new ConsoleLogger();
@@ -55,13 +55,13 @@ export class LoxInstance {
     return this.errors.length !== 0;
   }
 
-  error(token: Token, message: string) {
-    this.errors.push(message);
+  error(token: Token, error: Error) {
+    this.errors.push(error);
 
     if (token.type == TokenType.EOF) {
-      this.logger.log(`${token.line} at end ${message}`);
+      this.logger.log(`${token.line} at end ${error.message}`);
     } else {
-      this.logger.log(`${token.line} at ' ${token.lexeme} ' ${message}`);
+      this.logger.log(`${token.line} at ' ${token.lexeme} ' ${error.message}`);
     }
   }
 }
