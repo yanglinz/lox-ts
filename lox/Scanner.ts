@@ -1,3 +1,4 @@
+import { ScanError } from "./Errors";
 import { LoxInstance } from "./Instance";
 
 export type TokenTypeConstant = Symbol;
@@ -303,7 +304,7 @@ export class Scanner {
         this.scanIdentifier();
       } else {
         // If the character can't be handled by the above logic, it must be unexpected
-        this.lox.error(this.line as any, "Unexpected char");
+        this.lox.error(this.line as any, new ScanError("Unexpected char"));
       }
     }
   }
@@ -317,7 +318,7 @@ export class Scanner {
     }
 
     if (this.isAtEnd()) {
-      this.lox.error(this.line as any, "Unterminated string");
+      this.lox.error(this.line as any, new ScanError("Unterminated string"));
     }
 
     // The closing "

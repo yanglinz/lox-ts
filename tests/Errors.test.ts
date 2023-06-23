@@ -1,3 +1,4 @@
+import { ParseError, ScanError } from "../lox/Errors";
 import { LoxInstance, NoopLogger } from "../lox/Instance";
 import { Lox } from "../lox/Lox";
 
@@ -13,7 +14,8 @@ describe("Errors", () => {
     `;
     let lox = interpret(source);
     expect(lox.hadError).toEqual(true);
-    expect(lox.errors).toEqual(["Unterminated string"]);
+    expect(lox.errors.every((e) => e instanceof ScanError)).toEqual(true);
+    expect(lox.errors.map((e) => e.message)).toEqual(["Unterminated string"]);
   });
 
   test("missing semicolon", () => {
@@ -27,6 +29,9 @@ describe("Errors", () => {
     `;
     let lox = interpret(source);
     expect(lox.hadError).toEqual(true);
-    expect(lox.errors).toEqual(["Expect ';' after value."]);
+    expect(lox.errors.every((e) => e instanceof ParseError)).toEqual(true);
+    expect(lox.errors.map((e) => e.message)).toEqual([
+      "Expect ';' after value.",
+    ]);
   });
 });
