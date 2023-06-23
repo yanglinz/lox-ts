@@ -1,7 +1,7 @@
 import { ScanError } from "./Errors";
 import { LoxInstance } from "./Instance";
 
-export type TokenTypeConstant = Symbol;
+export type TokenTypeConstant = symbol;
 
 type _TokenType = {
   [key: string]: TokenTypeConstant;
@@ -177,9 +177,9 @@ export class Scanner {
   lox: LoxInstance;
   source: string;
 
-  private start: number = 0;
-  private current: number = 0;
-  private line: number = 1;
+  private start = 0;
+  private current = 0;
+  private line = 1;
 
   tokens: Token[];
 
@@ -255,7 +255,7 @@ export class Scanner {
   }
 
   scanNext(): void {
-    let c = this.advance();
+    const c = this.advance();
 
     // Match single char literals
     if (c in TokenLiterals) {

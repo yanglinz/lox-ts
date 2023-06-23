@@ -4,9 +4,9 @@ import { Scanner } from "./Scanner";
 import { Stmt } from "./Stmt";
 
 function getParsedExpr(source: string): Stmt[] {
-  let lox = new LoxInstance();
-  let tokens = new Scanner(lox, source).scan();
-  let parser = new Parser(lox, tokens);
+  const lox = new LoxInstance();
+  const tokens = new Scanner(lox, source).scan();
+  const parser = new Parser(lox, tokens);
   return parser.parse();
 }
 

@@ -25,7 +25,7 @@ export class AstPrinter extends Visitor {
 
   private parenthesize(name: string, ...exprs: Expr[]) {
     let out = `(${name}`;
-    for (let e of exprs) {
+    for (const e of exprs) {
       out += ` ${e.accept(this)}`;
     }
     out += ")";

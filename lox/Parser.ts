@@ -37,7 +37,7 @@ export class Parser {
   }
 
   parse(): Stmt[] {
-    let statements = [];
+    const statements = [];
     while (!this.isAtEnd()) {
       statements.push(this.declaration());
     }
@@ -45,7 +45,7 @@ export class Parser {
   }
 
   private match(...tokenTypes: TokenTypeConstant[]): boolean {
-    for (let t of tokenTypes) {
+    for (const t of tokenTypes) {
       if (this.check(t)) {
         this.advance();
         return true;
@@ -125,7 +125,7 @@ export class Parser {
   }
 
   private block(): Stmt[] {
-    let statements = [];
+    const statements = [];
 
     while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
       statements.push(this.declaration());
@@ -136,7 +136,7 @@ export class Parser {
   }
 
   private varDeclaration(): Stmt {
-    let name = this.consume(TokenType.IDENTIFIER, "Expect variable name.");
+    const name = this.consume(TokenType.IDENTIFIER, "Expect variable name.");
 
     let initializer = null;
     if (this.match(TokenType.EQUAL)) {
@@ -210,13 +210,13 @@ export class Parser {
   }
 
   private printStatement(): Stmt {
-    let value = this.expression();
+    const value = this.expression();
     this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
     return new StmtPrint(value);
   }
 
   private returnStatement(): Stmt {
-    let keyword = this.previous();
+    const keyword = this.previous();
     let value = null;
     if (!this.check(TokenType.SEMICOLON)) {
       value = this.expression();
@@ -227,7 +227,7 @@ export class Parser {
   }
 
   private expressionStatement(): Stmt {
-    let value = this.expression();
+    const value = this.expression();
     this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
     return new StmtExpression(value);
   }
@@ -236,7 +236,7 @@ export class Parser {
     const name = this.consume(TokenType.IDENTIFIER, `Expect ${kind} name.`);
 
     this.consume(TokenType.LEFT_PAREN, `Expect '(' after ${kind} name.`);
-    let parameters = [];
+    const parameters = [];
     if (!this.check(TokenType.RIGHT_PAREN)) {
       do {
         if (parameters.length >= 255) {
@@ -251,7 +251,7 @@ export class Parser {
     this.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
     this.consume(TokenType.LEFT_BRACE, `Expect '{' before ${kind} body.`);
 
-    let body = this.block();
+    const body = this.block();
     return new StmtFunction(name, parameters, body);
   }
 
@@ -264,14 +264,14 @@ export class Parser {
   }
 
   private assignment(): Expr {
-    let expr = this.or();
+    const expr = this.or();
 
     if (this.match(TokenType.EQUAL)) {
-      let equals = this.previous();
-      let value = this.assignment();
+      const equals = this.previous();
+      const value = this.assignment();
 
       if (expr instanceof ExprVariable) {
-        let name = expr.name;
+        const name = expr.name;
         return new ExprAssign(name, value);
       }
 
@@ -309,8 +309,8 @@ export class Parser {
     let expr = this.comparison();
 
     while (this.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
-      let operator = this.previous();
-      let right = this.comparison();
+      const operator = this.previous();
+      const right = this.comparison();
       expr = new ExprBinary(expr, operator, right);
     }
 
@@ -328,8 +328,8 @@ export class Parser {
         TokenType.LESS_EQUAL
       )
     ) {
-      let operator = this.previous();
-      let right = this.term();
+      const operator = this.previous();
+      const right = this.term();
       expr = new ExprBinary(expr, operator, right);
     }
 
@@ -340,8 +340,8 @@ export class Parser {
     let expr = this.factor();
 
     while (this.match(TokenType.MINUS, TokenType.PLUS)) {
-      let operator = this.previous();
-      let right = this.factor();
+      const operator = this.previous();
+      const right = this.factor();
       expr = new ExprBinary(expr, operator, right);
     }
 
@@ -352,8 +352,8 @@ export class Parser {
     let expr = this.unary();
 
     while (this.match(TokenType.SLASH, TokenType.STAR)) {
-      let operator = this.previous();
-      let right = this.unary();
+      const operator = this.previous();
+      const right = this.unary();
       expr = new ExprBinary(expr, operator, right);
     }
 
@@ -362,8 +362,8 @@ export class Parser {
 
   private unary(): Expr {
     if (this.match(TokenType.BANG, TokenType.MINUS)) {
-      let operator = this.previous();
-      let right = this.unary();
+      const operator = this.previous();
+      const right = this.unary();
       return new ExprUnary(operator, right);
     }
 
@@ -385,7 +385,7 @@ export class Parser {
   }
 
   private finishCall(callee: Expr): Expr {
-    let args = [];
+    const args = [];
     if (!this.check(TokenType.RIGHT_PAREN)) {
       do {
         if (args.length >= 255) {
@@ -395,7 +395,7 @@ export class Parser {
       } while (this.match(TokenType.COMMA));
     }
 
-    let paren = this.consume(
+    const paren = this.consume(
       TokenType.RIGHT_PAREN,
       "Expect ')' after arguments."
     );
@@ -415,7 +415,7 @@ export class Parser {
     } else if (this.match(TokenType.IDENTIFIER)) {
       return new ExprVariable(this.previous());
     } else if (this.match(TokenType.LEFT_PAREN)) {
-      let expr = this.expression();
+      const expr = this.expression();
       this.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
       return new ExprGrouping(expr);
     }

@@ -43,7 +43,7 @@ export class Resolver extends Visitor {
   }
 
   resolveAll(nodes: Expr[] | Stmt[]): void {
-    for (let n of nodes) {
+    for (const n of nodes) {
       this.resolve(n);
     }
   }
@@ -58,13 +58,13 @@ export class Resolver extends Visitor {
 
   private declare(name: Token): void {
     if (this.scopes.length === 0) return;
-    let scope = this.scopes.at(-1);
+    const scope = this.scopes.at(-1);
     scope.set(name.lexeme, false);
   }
 
   private define(name: Token): void {
     if (this.scopes.length === 0) return;
-    let scope = this.scopes.at(-1);
+    const scope = this.scopes.at(-1);
     scope.set(name.lexeme, true);
   }
 
@@ -79,7 +79,7 @@ export class Resolver extends Visitor {
 
   private resolveFunction(stmt: StmtFunction): void {
     this.beginScope();
-    for (let param of stmt.params) {
+    for (const param of stmt.params) {
       this.declare(param);
       this.define(param);
     }
@@ -103,7 +103,7 @@ export class Resolver extends Visitor {
 
   visitVariableExpr(expr: ExprVariable): void {
     if (this.scopes.length) {
-      let scope = this.scopes.at(-1);
+      const scope = this.scopes.at(-1);
       if (scope.get(expr.name.lexeme) === false) {
         this.lox.error(
           expr.name,
@@ -128,7 +128,7 @@ export class Resolver extends Visitor {
 
   visitCallExpr(expr: ExprCall): void {
     this.resolve(expr.callee);
-    for (let arg of expr.args) {
+    for (const arg of expr.args) {
       this.resolve(arg);
     }
   }

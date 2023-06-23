@@ -35,7 +35,7 @@ export class LoxFunction extends LoxCallable {
   }
 
   call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
-    let environment = new Environment(this.closure);
+    const environment = new Environment(this.closure);
 
     for (let i = 0; i < this.declaration.params.length; i++) {
       environment.define(this.declaration.params[i].lexeme, args[i]);
