@@ -120,16 +120,6 @@ export class Token {
   }
 }
 
-class ScanningError {
-  message: string;
-  line: number;
-
-  constructor(message: string, line: number) {
-    this.message = message;
-    this.line = line;
-  }
-}
-
 const digits = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
 
 function isDigit(char: string) {

@@ -5,8 +5,6 @@ import { Interpreter } from "./Interpreter";
 import { StmtFunction } from "./Stmt";
 
 export class LoxCallable {
-  constructor() {}
-
   get arity(): number {
     throw new Error("Not implemented");
   }

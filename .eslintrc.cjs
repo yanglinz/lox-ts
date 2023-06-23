@@ -4,7 +4,11 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
   root: true,
+  globals: {
+     module: true
+  },
   rules: {
+    "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {

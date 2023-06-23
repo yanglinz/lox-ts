@@ -373,6 +373,7 @@ export class Parser {
   private call(): Expr {
     let expr = this.primary();
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       if (this.match(TokenType.LEFT_PAREN)) {
         expr = this.finishCall(expr);

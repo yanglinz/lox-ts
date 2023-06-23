@@ -18,6 +18,7 @@ export class Environment {
   }
 
   ancestor(distance: number): Environment {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let environment: Environment = this;
     for (let i = 0; i < distance; i++) {
       environment = environment.enclosing;
