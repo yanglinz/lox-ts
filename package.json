@@ -6,11 +6,10 @@
   "license": "MIT",
   "workspaces": ["packages/*"],
   "scripts": {
-    "run": "ts-node tools/run.ts",
-    "run:debug": "node --inspect-brk node_modules/.bin/ts-node tools/run.ts",
-    "lint": "eslint .",
-    "test": "jest",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles",
+    "lint:interpreter": "(cd packages/lox-interpreter && yarn lint",
+    "lint": "yarn lint:interpreter",
+    "test:interpreter": "(cd packages/lox-interpreter && yarn test",
+    "test": "yarn test:interpreter",
     "format": "prettier --write ./**/*.{ts,js}",
     "format:check": "prettier --check ./**/*.{ts,js}"
   },

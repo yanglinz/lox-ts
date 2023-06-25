@@ -1,6 +1,6 @@
-import { ParseError, ScanError } from "../packages/lox-interpreter/lox/Errors";
-import { LoxInstance, NoopLogger } from "../packages/lox-interpreter/lox/Instance";
-import { Lox } from "../packages/lox-interpreter/lox/Lox";
+import { ParseError, ScanError } from "../lox/Errors";
+import { LoxInstance, NoopLogger } from "../lox/Instance";
+import { Lox } from "../lox/Lox";
 
 function interpret(source: string): LoxInstance {
   const lox = new Lox({ logger: new NoopLogger() });
