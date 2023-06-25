@@ -7,11 +7,11 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  build_interpreter:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v3
       - run: yarn install
-      - run: yarn format:check
-      - run: yarn test
+      - run: (cd packages/lox-interpreter && yarn format:check)
+      - run: (cd packages/lox-interpreter && yarn test)
