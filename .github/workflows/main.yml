@@ -7,16 +7,12 @@ on:
     branches: ["main"]
 
 jobs:
-  formatting:
-    - uses: actions/checkout@v3
-    - uses: volta-cli/action@v3
-    - run: yarn install
-    - run: yarn format:check
-     
-  build_interpreter:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v3
       - run: yarn install
-      - run: (cd packages/lox-interpreter && yarn test)
+      - run: yarn format:check
+      - run: yarn lint
+      - run: yarn test
