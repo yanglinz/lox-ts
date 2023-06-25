@@ -1,4 +1,4 @@
-import { Lox } from "../lox/Lox";
+import { Lox } from "../packages/lox-interpreter/lox/Lox";
 import * as fs from "fs/promises";
 import * as path from "path";
 
