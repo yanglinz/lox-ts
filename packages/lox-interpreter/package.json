@@ -1,0 +1,32 @@
+{
+  "name": "lox-ts-interpreter",
+  "version": "0.1.0",
+  "main": "index.js",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "run": "ts-node tools/run.ts",
+    "run:debug": "node --inspect-brk node_modules/.bin/ts-node tools/run.ts",
+    "lint": "eslint .",
+    "test": "jest",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles",
+    "format": "prettier --write ./**/*.{ts,js}",
+    "format:check": "prettier --check ./**/*.{ts,js}"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.7",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
+  },
+  "volta": {
+    "node": "18.15.0",
+    "yarn": "1.22.19"
+  }
+}

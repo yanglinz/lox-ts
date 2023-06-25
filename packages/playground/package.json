@@ -1,0 +1,11 @@
+{
+  "name": "lox-ts-playground",
+  "version": "0.1.0",
+  "main": "index.js",
+  "private": true,
+  "license": "MIT",
+  "volta": {
+    "node": "18.15.0",
+    "yarn": "1.22.19"
+  }
+}

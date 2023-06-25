@@ -4,6 +4,7 @@
   "main": "index.js",
   "private": true,
   "license": "MIT",
+  "workspaces": ["packages/*"],
   "scripts": {
     "run": "ts-node tools/run.ts",
     "run:debug": "node --inspect-brk node_modules/.bin/ts-node tools/run.ts",
