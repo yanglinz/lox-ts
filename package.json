@@ -6,9 +6,9 @@
   "license": "MIT",
   "workspaces": ["packages/*"],
   "scripts": {
-    "lint:interpreter": "(cd packages/lox-interpreter && yarn lint",
+    "lint:interpreter": "(cd packages/lox-interpreter && yarn lint)",
     "lint": "yarn lint:interpreter",
-    "test:interpreter": "(cd packages/lox-interpreter && yarn test",
+    "test:interpreter": "(cd packages/lox-interpreter && yarn test)",
     "test": "yarn test:interpreter",
     "format": "prettier --write ./**/*.{ts,js}",
     "format:check": "prettier --check ./**/*.{ts,js}"
