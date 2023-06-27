@@ -1,1 +1,1 @@
-console.log("hello world!");
+import { Component } from "preact";
