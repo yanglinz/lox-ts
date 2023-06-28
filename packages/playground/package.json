@@ -5,8 +5,12 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev:vite": "vite",
+    "dev:tailwind": "tailwindcss -i ./src/index.css -o ./src/index.compiled.css --watch",
+    "dev": "yarn build:tailwind && run-p dev:*",
+    "build:vite": "vite build",
+    "build:tailwind": "tailwindcss -i ./src/index.css -o ./src/index.compiled.css",
+    "build": "yarn build:tailwind && yarn build:vite"
   },
   "dependencies": {
     "preact": "^10.15.1"
@@ -14,6 +18,7 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
     "autoprefixer": "^10.4.14",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.1.3",
