@@ -1,10 +1,10 @@
 export function CodeEditor() {
   return (
-    <div class="py-5 px-5">
+    <div>
       <textarea
         class="
           w-full p-2
-          bg-yellow-50 border border-solid border-slate-200 rounded-sm
+          bg-yellow-50 border border-solid border-stone-200 rounded-sm
           font-mono text-sm
         "
         name=""
