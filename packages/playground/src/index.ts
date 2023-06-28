@@ -1,4 +1,4 @@
-import { render } from 'preact';
-import { Root } from './App';
+import { Root } from "./App";
+import { render } from "preact";
 
 render(Root, document.getElementById("app"));
