@@ -4,7 +4,7 @@ interface CodeEditorProps {
 
 export function CodeEditor(props: CodeEditorProps) {
   return (
-    <div>
+    <div class="w-full">
       <textarea
         class="
           w-full p-2
