@@ -1,5 +1,6 @@
 import { CodeControls } from "./CodeControls";
 import { CodeEditor } from "./CodeEditor";
+import { CodeOutput } from "./CodeOutput";
 import { Header } from "./Header";
 import { Lox } from "lox-ts-interpreter";
 import { useReducer } from "preact/hooks";
@@ -49,6 +50,9 @@ function App() {
       </div>
       <div class="p-5">
         <CodeEditor id={editorId} />
+      </div>
+      <div class="pb-5 px-5">
+        <CodeOutput />
       </div>
     </div>
   );
