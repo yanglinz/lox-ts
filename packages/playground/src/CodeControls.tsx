@@ -1,8 +1,8 @@
-interface ControlsProps {
+interface CodeControlsProps {
   onClickRun: (e: MouseEvent) => void;
 }
 
-export function Controls(props: ControlsProps) {
+export function CodeControls(props: CodeControlsProps) {
   return (
     <div>
       <button
