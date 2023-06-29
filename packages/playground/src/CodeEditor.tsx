@@ -1,4 +1,8 @@
-export function CodeEditor() {
+interface CodeEditorProps {
+  id: string;
+}
+
+export function CodeEditor(props: CodeEditorProps) {
   return (
     <div>
       <textarea
@@ -7,8 +11,7 @@ export function CodeEditor() {
           bg-yellow-50 border border-solid border-stone-200 rounded-sm
           font-mono text-sm
         "
-        name=""
-        id=""
+        id={props.id}
         cols={80}
         rows={20}
       ></textarea>
