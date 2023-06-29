@@ -1,5 +1,5 @@
 interface ControlsProps {
-  getInputValue: Function;
+  onClickRun: Function;
 }
 
 export function Controls(props: ControlsProps) {
@@ -10,7 +10,7 @@ export function Controls(props: ControlsProps) {
           bg-stone-100 px-5 py-2
           border border-solid border-stone-200 rounded-sm
         "
-        onClick={() => console.log(props.getInputValue())}
+        onClick={props.onClickRun}
       >
         Run
       </button>
