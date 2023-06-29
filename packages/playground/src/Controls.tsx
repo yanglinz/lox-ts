@@ -1,5 +1,5 @@
 interface ControlsProps {
-  onClickRun: Function;
+  onClickRun: (e: MouseEvent) => void;
 }
 
 export function Controls(props: ControlsProps) {
