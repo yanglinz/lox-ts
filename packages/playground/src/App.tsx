@@ -14,8 +14,8 @@ const initialState = {
 const appReducer = (state, action) => {
   switch (action.type) {
     case "INTERPRET_SOURCE": {
-      const { source } = action;
-      return { ...state, source };
+      const { source, stdout, stderr } = action;
+      return { ...state, source, stdout, stderr };
     }
     default: {
       throw new Error("Unexpected action in appReducer");
@@ -55,7 +55,7 @@ function App() {
         <CodeEditor id={editorId} />
       </div>
       <div class="pb-5 px-5">
-        <CodeOutput />
+        <CodeOutput stdout={appState.stdout} stderr={appState.stderr} />
       </div>
     </div>
   );
