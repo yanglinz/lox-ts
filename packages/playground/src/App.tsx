@@ -2,7 +2,7 @@ import { CodeControls } from "./CodeControls";
 import { CodeEditor } from "./CodeEditor";
 import { CodeOutput } from "./CodeOutput";
 import { Header } from "./Header";
-import { Lox } from "lox-ts-interpreter";
+import { Lox, RecordedLogger } from "lox-ts-interpreter";
 import { useReducer } from "preact/hooks";
 
 const initialState = {
@@ -33,13 +33,16 @@ function App() {
     const source = textArea.value;
 
     // Interpret the source code
-    const lox = new Lox();
-    const { lox: instance } = lox.run(source);
-    // TODO: Use the output to populate stdout and stderr
-    const output = instance.errors;
-    () => output;
+    const logger = new RecordedLogger();
+    const lox = new Lox({ logger });
+    lox.run(source);
 
-    dispatch({ type: "INTERPRET_SOURCE", source, stdout: [], stderr: [] });
+    dispatch({
+      type: "INTERPRET_SOURCE",
+      source,
+      stdout: logger.messages,
+      stderr: [],
+    });
   };
 
   return (
