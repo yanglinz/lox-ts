@@ -14,8 +14,12 @@ describe("Errors", () => {
     `;
     const lox = interpret(source);
     expect(lox.hadError).toEqual(true);
-    expect(lox.errors.every((e) => e instanceof ScanError)).toEqual(true);
-    expect(lox.errors.map((e) => e.message)).toEqual(["Unterminated string"]);
+    expect(lox.streamError.every((e) => e.error instanceof ScanError)).toEqual(
+      true
+    );
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
+      "Unterminated string",
+    ]);
   });
 
   test("missing semicolon", () => {
@@ -29,8 +33,10 @@ describe("Errors", () => {
     `;
     const lox = interpret(source);
     expect(lox.hadError).toEqual(true);
-    expect(lox.errors.every((e) => e instanceof ParseError)).toEqual(true);
-    expect(lox.errors.map((e) => e.message)).toEqual([
+    expect(lox.streamError.every((e) => e.error instanceof ParseError)).toEqual(
+      true
+    );
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
       "Expect ';' after value.",
     ]);
   });

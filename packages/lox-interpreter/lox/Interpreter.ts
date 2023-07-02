@@ -110,7 +110,7 @@ export class Interpreter extends Visitor {
   visitPrintStmt(stmt: StmtPrint): void {
     const value = this.evaluate(stmt.expression);
     // TODO: Implement stringify method
-    this.lox.logger.log(value as string);
+    this.lox.print(value as string);
   }
 
   visitReturnStmt(stmt: StmtReturn): void {

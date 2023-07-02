@@ -1,6 +1,7 @@
+import { StreamError, StreamPrint } from "lox-ts-interpreter";
+
 interface CodeOutputProps {
-  stdout: string[];
-  stderr: string[];
+  stream: (StreamPrint | StreamError)[];
 }
 
 export function CodeOutput(props: CodeOutputProps) {
@@ -13,12 +14,28 @@ export function CodeOutput(props: CodeOutputProps) {
     >
       <div class="w-full">
         <ul>
-          {props.stdout.map((m, i) => (
-            <li key={i + m}>
-              <span class="font-mono text-sm text-stone-400">{"> "}</span>
-              <span class="font-mono text-sm text-stone-800">{m}</span>
-            </li>
-          ))}
+          {props.stream.map((s, i) => {
+            if (s.type === "print") {
+              return (
+                <li key={i + s.message}>
+                  <span class="font-mono text-sm text-stone-400">{"> "}</span>
+                  <span class="font-mono text-sm text-stone-800">
+                    {s.message}
+                  </span>
+                </li>
+              );
+            }
+            if (s.type === "error") {
+              return (
+                <li key={i + s.error.message}>
+                  <span class="font-mono text-sm text-stone-400">{"> "}</span>
+                  <span class="font-mono text-sm text-stone-800">
+                    {s.error.message}
+                  </span>
+                </li>
+              );
+            }
+          })}
         </ul>
       </div>
     </div>

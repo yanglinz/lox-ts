@@ -10,7 +10,7 @@
     "lint": "yarn lint:interpreter",
     "test:interpreter": "(cd packages/lox-interpreter && yarn test)",
     "test": "yarn test:interpreter",
-    "format": "prettier --write packages/**/*.{ts,tsx,js}",
+    "format": "prettier --write ./**/*.{ts,tsx,js}",
     "format:check": "prettier --check packages/**/*.{ts,tsx,js}"
   },
   "devDependencies": {

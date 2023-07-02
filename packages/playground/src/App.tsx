@@ -2,20 +2,19 @@ import { CodeControls } from "./CodeControls";
 import { CodeEditor } from "./CodeEditor";
 import { CodeOutput } from "./CodeOutput";
 import { Header } from "./Header";
-import { Lox, RecordedLogger } from "lox-ts-interpreter";
+import { Lox } from "lox-ts-interpreter";
 import { useReducer } from "preact/hooks";
 
 const initialState = {
   source: "",
-  stdout: [],
-  stderr: [],
+  stream: [],
 };
 
 const appReducer = (state, action) => {
   switch (action.type) {
     case "INTERPRET_SOURCE": {
-      const { source, stdout, stderr } = action;
-      return { ...state, source, stdout, stderr };
+      const { source, stream } = action;
+      return { ...state, source, stream };
     }
     default: {
       throw new Error("Unexpected action in appReducer");
@@ -33,15 +32,12 @@ function App() {
     const source = textArea.value;
 
     // Interpret the source code
-    const logger = new RecordedLogger();
-    const lox = new Lox({ logger });
-    lox.run(source);
+    const instance = new Lox().run(source);
 
     dispatch({
       type: "INTERPRET_SOURCE",
       source,
-      stdout: logger.messages,
-      stderr: [],
+      stream: instance.lox.stream,
     });
   };
 
@@ -55,7 +51,7 @@ function App() {
         <CodeEditor id={editorId} />
       </div>
       <div class="pb-5 px-5">
-        <CodeOutput stdout={appState.stdout} stderr={appState.stderr} />
+        <CodeOutput stream={appState.stream} />
       </div>
     </div>
   );
