@@ -26,12 +26,12 @@ export class NoopLogger extends LoggerInterface {
   error(_: string) {}
 }
 
-interface StreamError {
+export interface StreamError {
   type: "error";
   error: Error;
 }
 
-interface StreamPrint {
+export interface StreamPrint {
   type: "print";
   message: string;
 }

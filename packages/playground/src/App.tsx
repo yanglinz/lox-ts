@@ -2,13 +2,12 @@ import { CodeControls } from "./CodeControls";
 import { CodeEditor } from "./CodeEditor";
 import { CodeOutput } from "./CodeOutput";
 import { Header } from "./Header";
-import { Lox, RecordedLogger } from "lox-ts-interpreter";
+import { Lox } from "lox-ts-interpreter";
 import { useReducer } from "preact/hooks";
 
 const initialState = {
   source: "",
-  stdout: [],
-  stderr: [],
+  stream: [],
 };
 
 const appReducer = (state, action) => {
@@ -33,15 +32,13 @@ function App() {
     const source = textArea.value;
 
     // Interpret the source code
-    const logger = new RecordedLogger();
-    const lox = new Lox({ logger });
-    lox.run(source);
+    const lox = new Lox();
+    const instance = lox.run(source);
 
     dispatch({
       type: "INTERPRET_SOURCE",
       source,
-      stdout: logger.messages,
-      stderr: [],
+      stream: instance.lox.stream,
     });
   };
 
@@ -55,7 +52,7 @@ function App() {
         <CodeEditor id={editorId} />
       </div>
       <div class="pb-5 px-5">
-        <CodeOutput stdout={appState.stdout} stderr={appState.stderr} />
+        <CodeOutput stream={appState.stream} />
       </div>
     </div>
   );
