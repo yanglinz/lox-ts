@@ -34,8 +34,8 @@ export class Lox {
       const statements = parser.parse();
       const resolver = new Resolver(interpreter);
       resolver.resolveAll(statements);
-      interpreter.interpret(statements);
-      return { lox, scanner, parser, interpreter };
+      const value = interpreter.interpret(statements);
+      return { lox, scanner, parser, interpreter, value };
     } catch (err) {
       this.logger?.error(err);
       return { lox };

@@ -1,97 +1,91 @@
 import { ExprLiteralValue } from "./Expr";
-import { LoxInstance } from "./Instance";
-import { RecordedLogger } from "./Instance";
-import { Interpreter } from "./Interpreter";
-import { Parser } from "./Parser";
-import { Resolver } from "./Resolver";
-import { Scanner } from "./Scanner";
+import { LoxInstance, NoopLogger } from "./Instance";
+import { Lox } from "./Lox";
 
-function interpret(source: string, logger?: RecordedLogger): ExprLiteralValue {
-  const lox = new LoxInstance(logger);
-  const interpreter = new Interpreter(lox);
-  const tokens = new Scanner(lox, source).scan();
-  const parser = new Parser(lox, tokens);
-  const statements = parser.parse();
-  const resolver = new Resolver(interpreter);
-  resolver.resolveAll(statements);
-  return interpreter.interpret(statements);
+function interpretValue(source: string): ExprLiteralValue {
+  const lox = new Lox({ logger: new NoopLogger() });
+  return lox.run(source).value;
+}
+
+function interpretPrints(source: string): ExprLiteralValue[] {
+  const lox = new Lox({ logger: new NoopLogger() });
+  const instance = lox.run(source).lox;
+  return instance.streamPrint.map((p) => p.message);
 }
 
 describe("Interpreting statements", () => {
   test("simple unary expressions", () => {
     // minus operator
-    expect(interpret("-1;")).toEqual(-1);
-    expect(interpret("-123;")).toEqual(-123);
-    expect(interpret("-(-1);")).toEqual(1);
-    expect(interpret("-(-(-1));")).toEqual(-1);
+    expect(interpretValue("-1;")).toEqual(-1);
+    expect(interpretValue("-123;")).toEqual(-123);
+    expect(interpretValue("-(-1);")).toEqual(1);
+    expect(interpretValue("-(-(-1));")).toEqual(-1);
 
     // bang operator
-    expect(interpret("!false;")).toEqual(true);
-    expect(interpret("!true;")).toEqual(false);
-    expect(interpret("!!true;")).toEqual(true);
-    expect(interpret("!!false;")).toEqual(false);
+    expect(interpretValue("!false;")).toEqual(true);
+    expect(interpretValue("!true;")).toEqual(false);
+    expect(interpretValue("!!true;")).toEqual(true);
+    expect(interpretValue("!!false;")).toEqual(false);
   });
 
   test("simple binary expressions", () => {
     // minus operator
-    expect(interpret("1 - 1;")).toEqual(0);
-    expect(interpret("123 - 124;")).toEqual(-1);
+    expect(interpretValue("1 - 1;")).toEqual(0);
+    expect(interpretValue("123 - 124;")).toEqual(-1);
 
     // slash operator
-    expect(interpret("1 / 1;")).toEqual(1);
-    expect(interpret("10 / 1;")).toEqual(10);
-    expect(interpret("10 / 5;")).toEqual(2);
+    expect(interpretValue("1 / 1;")).toEqual(1);
+    expect(interpretValue("10 / 1;")).toEqual(10);
+    expect(interpretValue("10 / 5;")).toEqual(2);
 
     // star operator
-    expect(interpret("1 * 1;")).toEqual(1);
-    expect(interpret("1 * 0;")).toEqual(0);
-    expect(interpret("0 * 1;")).toEqual(0);
-    expect(interpret("10 * 5;")).toEqual(50);
+    expect(interpretValue("1 * 1;")).toEqual(1);
+    expect(interpretValue("1 * 0;")).toEqual(0);
+    expect(interpretValue("0 * 1;")).toEqual(0);
+    expect(interpretValue("10 * 5;")).toEqual(50);
 
     // plus operator
-    expect(interpret("1 + 1;")).toEqual(2);
-    expect(interpret("1 + (-1);")).toEqual(0);
-    expect(interpret('"foo" + "bar";')).toEqual("foobar");
+    expect(interpretValue("1 + 1;")).toEqual(2);
+    expect(interpretValue("1 + (-1);")).toEqual(0);
+    expect(interpretValue('"foo" + "bar";')).toEqual("foobar");
 
     // comparison operators
-    expect(interpret("1 < 1;")).toEqual(false);
-    expect(interpret("1 < 123;")).toEqual(true);
-    expect(interpret("123 < 1;")).toEqual(false);
-    expect(interpret("1 <= 1;")).toEqual(true);
-    expect(interpret("1 <= 123;")).toEqual(true);
+    expect(interpretValue("1 < 1;")).toEqual(false);
+    expect(interpretValue("1 < 123;")).toEqual(true);
+    expect(interpretValue("123 < 1;")).toEqual(false);
+    expect(interpretValue("1 <= 1;")).toEqual(true);
+    expect(interpretValue("1 <= 123;")).toEqual(true);
 
-    expect(interpret("1 > 1;")).toEqual(false);
-    expect(interpret("1 > 123;")).toEqual(false);
-    expect(interpret("123 > 1;")).toEqual(true);
-    expect(interpret("1 >= 1;")).toEqual(true);
-    expect(interpret("123 >= 1;")).toEqual(true);
+    expect(interpretValue("1 > 1;")).toEqual(false);
+    expect(interpretValue("1 > 123;")).toEqual(false);
+    expect(interpretValue("123 > 1;")).toEqual(true);
+    expect(interpretValue("1 >= 1;")).toEqual(true);
+    expect(interpretValue("123 >= 1;")).toEqual(true);
 
     // equality operators
-    expect(interpret("nil == nil;")).toEqual(true);
-    expect(interpret("nil == 1;")).toEqual(false);
-    expect(interpret("1 == 1;")).toEqual(true);
-    expect(interpret("123 == 1;")).toEqual(false);
-    expect(interpret("true == true;")).toEqual(true);
-    expect(interpret("false == false;")).toEqual(true);
-    expect(interpret("true == false;")).toEqual(false);
-    expect(interpret('"foo" == "foo";')).toEqual(true);
-    expect(interpret('"foo" == "bar";')).toEqual(false);
+    expect(interpretValue("nil == nil;")).toEqual(true);
+    expect(interpretValue("nil == 1;")).toEqual(false);
+    expect(interpretValue("1 == 1;")).toEqual(true);
+    expect(interpretValue("123 == 1;")).toEqual(false);
+    expect(interpretValue("true == true;")).toEqual(true);
+    expect(interpretValue("false == false;")).toEqual(true);
+    expect(interpretValue("true == false;")).toEqual(false);
+    expect(interpretValue('"foo" == "foo";')).toEqual(true);
+    expect(interpretValue('"foo" == "bar";')).toEqual(false);
   });
 
   test("variable declarations", () => {
-    const logger = new RecordedLogger();
     const source = `
       var a = 1;
       var b = 2;
       b = 3;
       print a + b;
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([4]);
+    let prints = interpretPrints(source);
+    expect(prints).toEqual([4]);
   });
 
   test("variable scoping", () => {
-    const logger = new RecordedLogger();
     const source = `
       var a = "global a";
       var b = "global b";
@@ -113,8 +107,7 @@ describe("Interpreting statements", () => {
       print b;
       print c;
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([
+    expect(interpretPrints(source)).toEqual([
       "inner a",
       "outer b",
       "global c",
@@ -128,31 +121,26 @@ describe("Interpreting statements", () => {
   });
 
   test("if statements", () => {
-    const logger = new RecordedLogger();
     const source = `
       if (true) { print 1; }
       if (false) { print 2; }
       if (true) { print 3; } else { print 4; }
       if (false) { print 5; } else { print 6; }
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([1, 3, 6]);
+    expect(interpretPrints(source)).toEqual([1, 3, 6]);
   });
 
   test("logical expressions", () => {
-    const logger = new RecordedLogger();
     const source = `
       print 1 or 2;
       print 0 or 3;
       print 0 and 4;
       print 5 and 6;
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([1, 3, 0, 6]);
+    expect(interpretPrints(source)).toEqual([1, 3, 0, 6]);
   });
 
   test("while loop", () => {
-    const logger = new RecordedLogger();
     const source = `
       var i = 0;
       while (i < 5) {
@@ -160,37 +148,32 @@ describe("Interpreting statements", () => {
         i = i + 1;
       }
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([0, 1, 2, 3, 4]);
+    expect(interpretPrints(source)).toEqual([0, 1, 2, 3, 4]);
   });
 
   test("for loop", () => {
-    const logger = new RecordedLogger();
     const source = `
       for (var i = 0; i < 5; i = i + 1) {
         print i;
       }
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([0, 1, 2, 3, 4]);
+    expect(interpretPrints(source)).toEqual([0, 1, 2, 3, 4]);
   });
 
   test("function call", () => {
-    const logger = new RecordedLogger();
     const source = `
       print clock();
     `;
-    interpret(source, logger);
+    const prints = interpretPrints(source);
 
-    expect(logger.messages.length).toEqual(1);
-    const actual = logger.messages[0].toString();
+    expect(prints.length).toEqual(1);
+    const actual = prints[0].toString();
     const expected = Date.now().toString();
     expect(actual.length).toEqual(expected.length);
     expect(actual.substring(0, 5)).toEqual(expected.substring(0, 5));
   });
 
   test("function declaration", () => {
-    const logger = new RecordedLogger();
     const source = `
       fun add(a, b, c) {
         print a + b + c;
@@ -200,12 +183,10 @@ describe("Interpreting statements", () => {
       add(4, 5, 6);
       add(7, 8, 9);
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([6, 15, 24]);
+    expect(interpretPrints(source)).toEqual([6, 15, 24]);
   });
 
   test("function call with return", () => {
-    const logger = new RecordedLogger();
     const source = `
       fun fib(n) {
         if (n <= 1) return n;
@@ -214,7 +195,6 @@ describe("Interpreting statements", () => {
 
       print fib(8);
     `;
-    interpret(source, logger);
-    expect(logger.messages).toEqual([21]);
+    expect(interpretPrints(source)).toEqual([21]);
   });
 });

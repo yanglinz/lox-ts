@@ -48,11 +48,11 @@ export class LoxInstance {
   }
 
   get streamError(): StreamError[] {
-    return this.stream.filter(s => s.type === "error") as StreamError[];
+    return this.stream.filter((s) => s.type === "error") as StreamError[];
   }
 
   get streamPrint(): StreamPrint[] {
-    return this.stream.filter(s => s.type === "print") as StreamPrint[];
+    return this.stream.filter((s) => s.type === "print") as StreamPrint[];
   }
 
   print(message: string) {
