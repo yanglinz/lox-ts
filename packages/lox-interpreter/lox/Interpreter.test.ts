@@ -1,5 +1,5 @@
 import { ExprLiteralValue } from "./Expr";
-import { LoxInstance, NoopLogger } from "./Instance";
+import { NoopLogger } from "./Instance";
 import { Lox } from "./Lox";
 
 function interpretValue(source: string): ExprLiteralValue {
@@ -81,8 +81,7 @@ describe("Interpreting statements", () => {
       b = 3;
       print a + b;
     `;
-    let prints = interpretPrints(source);
-    expect(prints).toEqual([4]);
+    expect(interpretPrints(source)).toEqual([4]);
   });
 
   test("variable scoping", () => {
