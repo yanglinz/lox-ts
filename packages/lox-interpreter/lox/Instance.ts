@@ -1,13 +1,7 @@
 import { Token, TokenType } from "./Scanner";
 
 export class LoggerInterface {
-  messages: string[];
-
-  constructor() {
-    this.messages = [];
-  }
-
-  log(message: string): void {
+  print(message: string): void {
     throw new Error("NotImplementedError");
   }
 
@@ -17,7 +11,7 @@ export class LoggerInterface {
 }
 
 export class ConsoleLogger extends LoggerInterface {
-  log(message: string) {
+  print(message: string) {
     console.log("lox >", message);
   }
 
@@ -26,42 +20,47 @@ export class ConsoleLogger extends LoggerInterface {
   }
 }
 
-export class RecordedLogger extends LoggerInterface {
-  log(message: string) {
-    this.messages.push(message);
-  }
-
-  error(message: string) {
-    this.messages.push(message);
-  }
-}
-
 export class NoopLogger extends LoggerInterface {
-  log(_: string) {}
+  print(_: string) {}
 
   error(_: string) {}
 }
 
+interface StreamError {
+  type: "error";
+  error: Error;
+}
+
+interface StreamPrint {
+  type: "print";
+  message: string;
+}
+
 export class LoxInstance {
+  stream: (StreamError | StreamPrint)[];
   logger: LoggerInterface;
-  errors: Error[];
+  hadError: boolean;
 
   constructor(logger?: LoggerInterface) {
-    this.logger = logger ? logger : new ConsoleLogger();
-    this.errors = [];
+    this.stream = [];
+    this.logger = logger || new ConsoleLogger();
+    this.hadError = false;
   }
 
-  get hadError() {
-    return this.errors.length !== 0;
+  print(message: string) {
+    this.stream.push({ type: "print", message: message });
   }
 
   error(token: Token, error: Error) {
-    this.errors.push(error);
+    this.hadError = true;
+    this.stream.push({ type: "error", error });
 
+    let message = "";
     if (token.type == TokenType.EOF) {
-      this.logger.log(`${token.line} at end ${error.message}`);
+      message = `${token.line} at end ${error.message}`;
     } else {
-      this.logger.log(`${token.line} at ' ${token.lexeme} ' ${error.message}`);
+      message = `${token.line} at ' ${token.lexeme} ' ${error.message}`;
     }
+    this.logger.error(message);
   }
 }
