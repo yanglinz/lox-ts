@@ -1,2 +1,2 @@
 export { Lox } from "./lox/Lox";
-export { StreamError, StreamPrint } from "./lox/Instance";
+export type { StreamError, StreamPrint } from "./lox/Instance";

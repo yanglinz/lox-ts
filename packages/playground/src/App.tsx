@@ -13,8 +13,8 @@ const initialState = {
 const appReducer = (state, action) => {
   switch (action.type) {
     case "INTERPRET_SOURCE": {
-      const { source, stdout, stderr } = action;
-      return { ...state, source, stdout, stderr };
+      const { source, stream } = action;
+      return { ...state, source, stream };
     }
     default: {
       throw new Error("Unexpected action in appReducer");
@@ -32,8 +32,7 @@ function App() {
     const source = textArea.value;
 
     // Interpret the source code
-    const lox = new Lox();
-    const instance = lox.run(source);
+    const instance = new Lox().run(source);
 
     dispatch({
       type: "INTERPRET_SOURCE",
