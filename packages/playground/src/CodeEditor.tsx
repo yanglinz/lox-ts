@@ -4,11 +4,11 @@ interface CodeEditorProps {
 
 export function CodeEditor(props: CodeEditorProps) {
   return (
-    <div class="w-full">
+    <div class="flex w-full">
       <textarea
         class="
           w-full p-5
-          bg-yellow-50 border border-solid border-stone-200 rounded-sm
+          bg-yellow-50
           font-mono text-sm
         "
         id={props.id}

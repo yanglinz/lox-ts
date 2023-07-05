@@ -43,7 +43,6 @@ export function CodeOutput(props: CodeOutputProps) {
     <div
       class="
         w-full bg-stone-100 p-5
-        border border-solid border-stone-200 rounded-sm
       "
     >
       {inner}

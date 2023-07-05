@@ -44,14 +44,16 @@ function App() {
   return (
     <div>
       <Header />
-      <div class="pt-5 px-5">
+      <div class="mt-5 mx-5">
         <CodeControls onClickRun={onClickRun} />
       </div>
-      <div class="p-5">
-        <CodeEditor id={editorId} />
-      </div>
-      <div class="pb-5 px-5">
-        <CodeOutput stream={appState.stream} />
+      <div class="m-5 border border-solid border-stone-200 rounded-sm">
+        <div>
+          <CodeEditor id={editorId} />
+        </div>
+        <div class="border-t border-solid border-stone-200">
+          <CodeOutput stream={appState.stream} />
+        </div>
       </div>
     </div>
   );
