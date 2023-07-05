@@ -5,14 +5,13 @@ interface CodeOutputProps {
 }
 
 export function CodeOutput(props: CodeOutputProps) {
-  return (
-    <div
-      class="
-        w-full bg-stone-100 px-5 py-2
-        border border-solid border-stone-200 rounded-sm
-      "
-    >
-      <div class="w-full">
+  let inner =
+    props.stream.length === 0 ? (
+      <div className="w-full pb-5">
+        <br />
+      </div>
+    ) : (
+      <div class="w-full pb-5">
         <ul>
           {props.stream.map((s, i) => {
             if (s.type === "print") {
@@ -38,6 +37,16 @@ export function CodeOutput(props: CodeOutputProps) {
           })}
         </ul>
       </div>
+    );
+
+  return (
+    <div
+      class="
+        w-full bg-stone-100 p-5
+        border border-solid border-stone-200 rounded-sm
+      "
+    >
+      {inner}
     </div>
   );
 }

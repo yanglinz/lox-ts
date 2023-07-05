@@ -7,7 +7,7 @@ export function CodeEditor(props: CodeEditorProps) {
     <div class="w-full">
       <textarea
         class="
-          w-full p-2
+          w-full p-5
           bg-yellow-50 border border-solid border-stone-200 rounded-sm
           font-mono text-sm
         "
