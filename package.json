@@ -4,7 +4,9 @@
   "main": "index.js",
   "private": true,
   "license": "MIT",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "lint:interpreter": "(cd packages/lox-interpreter && yarn lint)",
     "lint": "yarn lint:interpreter",
