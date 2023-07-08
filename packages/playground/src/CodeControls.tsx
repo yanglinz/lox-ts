@@ -13,14 +13,13 @@ export function CodeControls(props: CodeControlsProps) {
   return (
     <div class="flex items-stretch">
       <div
-        class="bg-stone-100 pr-2 mr-2
-            border border-solid border-stone-200 rounded-sm"
+        class="
+          bg-stone-100 pr-2 mr-2
+          border border-solid border-stone-200 rounded-sm
+        "
       >
         <select
-          class="
-            bg-stone-100
-            py-2 pl-2
-          "
+          class="bg-stone-100 py-2 pl-2"
           defaultValue={props.defaultExampleId}
           onChange={props.onChangeExample}
         >
