@@ -1,6 +1,3 @@
-# Project
-packages/*/lox/*.js
-
 # Logs
 logs
 *.log

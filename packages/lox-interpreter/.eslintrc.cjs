@@ -5,7 +5,7 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   root: true,
   globals: {
-     module: true
+    module: true,
   },
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
