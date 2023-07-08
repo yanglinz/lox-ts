@@ -3,7 +3,7 @@ import { CodeEditor } from "./CodeEditor";
 import { CodeOutput } from "./CodeOutput";
 import { Header } from "./Header";
 import { Lox } from "lox-ts-interpreter";
-import { useReducer } from "preact/hooks";
+import { useEffect, useReducer } from "preact/hooks";
 
 const initialState = {
   source: "",
@@ -26,14 +26,13 @@ function App() {
   const [appState, dispatch] = useReducer(appReducer, initialState);
 
   const editorId = "mainEditor";
-  const onClickRun = () => {
-    // Get the value of the editor input as source
+  const getEditorEl = () => {
     const textArea = document.getElementById(editorId) as HTMLTextAreaElement;
-    const source = textArea.value;
+    return textArea;
+  };
 
-    // Interpret the source code
+  const interpret = (source) => {
     const instance = new Lox().run(source);
-
     dispatch({
       type: "INTERPRET_SOURCE",
       source,
@@ -41,11 +40,43 @@ function App() {
     });
   };
 
+  const loadAndRunExample = (exampleId) => {
+    const url = `/examples/${exampleId}`;
+
+    fetch(url)
+      .then((r) => r.text())
+      .then((s) => {
+        getEditorEl().value = s;
+        interpret(s);
+      })
+      // TODO: Implement proper error handling
+      .catch((e) => console.error(e));
+  };
+
+  const onClickRun = () => {
+    const source = getEditorEl().value;
+    interpret(source);
+  };
+
+  const onChangeExample = (e) => {
+    const exampleId = e.target.value;
+    loadAndRunExample(exampleId);
+  };
+
+  const defaultExampleId = "HelloWorld.lox";
+  useEffect(() => {
+    loadAndRunExample(defaultExampleId);
+  }, []);
+
   return (
     <div>
       <Header />
       <div class="mt-5 mx-5">
-        <CodeControls onClickRun={onClickRun} />
+        <CodeControls
+          defaultExampleId={defaultExampleId}
+          onChangeExample={onChangeExample}
+          onClickRun={onClickRun}
+        />
       </div>
       <div class="m-5 border border-solid border-stone-200 rounded-sm">
         <div>
