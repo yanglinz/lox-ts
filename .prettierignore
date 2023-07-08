@@ -1,1 +1,5 @@
-packages/*/lox/*.js
+# Node
+node_modules/
+
+# Builds
+dist/
