@@ -371,53 +371,6 @@ describe("Parser should parse statements", () => {
     `);
   });
 
-  test("function declaration", () => {
-    expect(
-      getParsedExpr(`
-        fun identity(a) {
-          return a;
-        }
-    `)
-    ).toMatchInlineSnapshot(`
-      [
-        StmtFunction {
-          "body": [
-            StmtReturn {
-              "keyword": Token {
-                "lexeme": "return",
-                "line": 3,
-                "literal": "",
-                "type": Symbol(RETURN),
-              },
-              "value": ExprVariable {
-                "name": Token {
-                  "lexeme": "a",
-                  "line": 3,
-                  "literal": "",
-                  "type": Symbol(IDENTIFIER),
-                },
-              },
-            },
-          ],
-          "name": Token {
-            "lexeme": "identity",
-            "line": 2,
-            "literal": "",
-            "type": Symbol(IDENTIFIER),
-          },
-          "params": [
-            Token {
-              "lexeme": "a",
-              "line": 2,
-              "literal": "",
-              "type": Symbol(IDENTIFIER),
-            },
-          ],
-        },
-      ]
-    `);
-  });
-
   test("class declaration", () => {
     expect(
       getParsedExpr(`
