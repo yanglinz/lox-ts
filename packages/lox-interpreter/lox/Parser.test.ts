@@ -390,4 +390,65 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("class declaration with methods", () => {
+    expect(
+      getParsedExpr(`
+        class Vehicle {
+          drive() {
+            print "Driving!";
+          }
+
+          honk() {
+            print "Beep!";
+          }
+        }
+    `)
+    ).toMatchInlineSnapshot(`
+      [
+        StmtClass {
+          "methods": [
+            StmtFunction {
+              "body": [
+                StmtPrint {
+                  "expression": ExprLiteral {
+                    "value": "Driving!",
+                  },
+                },
+              ],
+              "name": Token {
+                "lexeme": "drive",
+                "line": 3,
+                "literal": "",
+                "type": Symbol(IDENTIFIER),
+              },
+              "params": [],
+            },
+            StmtFunction {
+              "body": [
+                StmtPrint {
+                  "expression": ExprLiteral {
+                    "value": "Beep!",
+                  },
+                },
+              ],
+              "name": Token {
+                "lexeme": "honk",
+                "line": 7,
+                "literal": "",
+                "type": Symbol(IDENTIFIER),
+              },
+              "params": [],
+            },
+          ],
+          "name": Token {
+            "lexeme": "Vehicle",
+            "line": 2,
+            "literal": "",
+            "type": Symbol(IDENTIFIER),
+          },
+        },
+      ]
+    `);
+  });
 });
