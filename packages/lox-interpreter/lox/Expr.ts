@@ -1,5 +1,4 @@
-import { LoxCallable } from "./Callable";
-import { LoxClass } from "./Class";
+import { LoxCallable, LoxClass } from "./Callable";
 import { Token } from "./Scanner";
 import { Visitor, VisitorOutput } from "./Visitor";
 
