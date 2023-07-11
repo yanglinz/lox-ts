@@ -15,6 +15,7 @@ import { Token } from "./Scanner";
 import {
   Stmt,
   StmtBlock,
+  StmtClass,
   StmtExpression,
   StmtFunction,
   StmtIf,
@@ -91,6 +92,12 @@ export class Resolver extends Visitor {
     this.beginScope();
     this.resolveAll(stmt.statements);
     this.endScope();
+  }
+
+  visitClassStmt(stmt: StmtClass): void {
+    this.declare(stmt.name);
+    this.define(stmt.name);
+    return null;
   }
 
   visitVarStmt(stmt: StmtVar): void {

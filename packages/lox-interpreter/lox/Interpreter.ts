@@ -1,4 +1,4 @@
-import { GlobalFnClock, LoxCallable, LoxFunction } from "./Callable";
+import { GlobalFnClock, LoxCallable, LoxClass, LoxFunction } from "./Callable";
 import { Environment } from "./Environment";
 import { ReturnValue, RuntimeError } from "./Errors";
 import {
@@ -18,6 +18,7 @@ import { Token, TokenType } from "./Scanner";
 import {
   Stmt,
   StmtBlock,
+  StmtClass,
   StmtExpression,
   StmtFunction,
   StmtIf,
@@ -87,6 +88,13 @@ export class Interpreter extends Visitor {
 
   visitBlockStmt(stmt: StmtBlock): void {
     this.executeBlock(stmt.statements, new Environment(this.environment));
+  }
+
+  visitClassStmt(stmt: StmtClass): void {
+    this.environment.define(stmt.name.lexeme, null);
+    const klass = new LoxClass(stmt.name.lexeme);
+    this.environment.assign(stmt.name, klass);
+    return null;
   }
 
   visitExpressionStmt(stmt: StmtExpression): ExprLiteralValue {
