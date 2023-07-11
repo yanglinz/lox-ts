@@ -1,6 +1,5 @@
 import { ExprLiteralValue } from "./Expr";
-import { NoopLogger } from "./Instance";
-import { Lox } from "./Lox";
+import { Lox, NoopLogger } from "./Lox";
 
 function interpretValue(source: string): ExprLiteralValue {
   const lox = new Lox({ logger: new NoopLogger() });

@@ -1,5 +1,5 @@
 import { ScanError } from "./Errors";
-import { LoxInstance } from "./Instance";
+import { LoxInstance } from "./Lox";
 
 export type TokenTypeConstant = symbol;
 

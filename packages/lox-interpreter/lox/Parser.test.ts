@@ -1,4 +1,4 @@
-import { LoxInstance } from "./Instance";
+import { LoxInstance } from "./Lox";
 import { Parser } from "./Parser";
 import { Scanner } from "./Scanner";
 import { Stmt } from "./Stmt";
