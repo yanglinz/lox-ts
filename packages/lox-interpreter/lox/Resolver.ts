@@ -9,8 +9,8 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
-import { LoxInstance } from "./Instance";
 import { Interpreter } from "./Interpreter";
+import { LoxInstance } from "./Lox";
 import { Token } from "./Scanner";
 import {
   Stmt,

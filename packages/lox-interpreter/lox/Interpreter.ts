@@ -13,7 +13,7 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
-import { LoxInstance } from "./Instance";
+import { LoxInstance } from "./Lox";
 import { Token, TokenType } from "./Scanner";
 import {
   Stmt,

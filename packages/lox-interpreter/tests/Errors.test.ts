@@ -1,5 +1,5 @@
 import { ParseError, ScanError } from "../lox/Errors";
-import { LoxInstance, NoopLogger } from "../lox/Instance";
+import { LoxInstance, NoopLogger } from "../lox/Lox";
 import { Lox } from "../lox/Lox";
 
 function interpret(source: string): LoxInstance {

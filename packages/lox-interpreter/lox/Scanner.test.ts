@@ -1,4 +1,4 @@
-import { LoxInstance } from "./Instance";
+import { LoxInstance } from "./Lox";
 import { Scanner, TokenType, TokenTypeConstant } from "./Scanner";
 
 function getTokens(source: string): TokenTypeConstant[] {
