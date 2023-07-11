@@ -417,4 +417,24 @@ describe("Parser should parse statements", () => {
       ]
     `);
   });
+
+  test("class declaration", () => {
+    expect(
+      getParsedExpr(`
+        class Vehicle {}
+    `)
+    ).toMatchInlineSnapshot(`
+      [
+        StmtClass {
+          "methods": [],
+          "name": Token {
+            "lexeme": "Vehicle",
+            "line": 2,
+            "literal": "",
+            "type": Symbol(IDENTIFIER),
+          },
+        },
+      ]
+    `);
+  });
 });

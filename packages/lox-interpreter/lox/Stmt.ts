@@ -123,3 +123,18 @@ export class StmtBlock extends Stmt {
     return visitor.visitBlockStmt(this);
   }
 }
+
+export class StmtClass extends Stmt {
+  name: Token;
+  methods: StmtFunction[];
+
+  constructor(name: Token, methods: StmtFunction[]) {
+    super();
+    this.name = name;
+    this.methods = methods;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitClassStmt(this);
+  }
+}

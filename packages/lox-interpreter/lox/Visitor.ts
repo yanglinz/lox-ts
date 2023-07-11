@@ -67,4 +67,8 @@ export class Visitor {
   visitBlockStmt(_: Stmt): VisitorOutput {
     throw new Error("NotImplementedError");
   }
+
+  visitClassStmt(_: Stmt): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
 }
