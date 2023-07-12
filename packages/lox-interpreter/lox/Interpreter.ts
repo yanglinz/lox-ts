@@ -13,6 +13,7 @@ import {
   ExprUnary,
   ExprVariable,
 } from "./Expr";
+import { LoxClassInstance } from "./Instance";
 import { LoxInstance } from "./Lox";
 import { Token, TokenType } from "./Scanner";
 import {
@@ -117,8 +118,13 @@ export class Interpreter extends Visitor {
 
   visitPrintStmt(stmt: StmtPrint): void {
     const value = this.evaluate(stmt.expression);
-    // TODO: Implement stringify method
-    this.lox.print(value as string);
+
+    // TODO: Implement generic stringify method
+    let message = value as string;
+    if (value instanceof LoxClass || value instanceof LoxClassInstance) {
+      message = value.toString();
+    }
+    this.lox.print(message);
   }
 
   visitReturnStmt(stmt: StmtReturn): void {
