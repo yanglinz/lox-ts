@@ -195,4 +195,14 @@ describe("Interpreting statements", () => {
     `;
     expect(interpretPrints(source)).toEqual([21]);
   });
+
+  test("class declaration", () => {
+    const source = `
+      class Bagel {}
+      var bagel = Bagel();
+      print Bagel;
+      print bagel;
+    `;
+    expect(interpretPrints(source)).toEqual(["Bagel", "Bagel instance"]);
+  });
 });

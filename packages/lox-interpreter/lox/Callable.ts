@@ -1,6 +1,7 @@
 import { Environment } from "./Environment";
 import { ReturnValue } from "./Errors";
 import { ExprLiteralValue } from "./Expr";
+import { LoxClassInstance } from "./Instance";
 import { Interpreter } from "./Interpreter";
 import { StmtFunction } from "./Stmt";
 
@@ -72,11 +73,21 @@ export class GlobalFnClock extends LoxCallable {
   }
 }
 
-export class LoxClass {
+export class LoxClass extends LoxCallable {
   name: string;
 
   constructor(name: string) {
+    super();
     this.name = name;
+  }
+
+  get arity(): number {
+    return 0;
+  }
+
+  call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
+    const instance = new LoxClassInstance(this);
+    return instance;
   }
 
   toString(): string {

@@ -1,4 +1,4 @@
-import { Lox } from "../lox/Lox";
+import { ConsoleLogger, Lox } from "../lox/Lox";
 import * as fs from "fs/promises";
 import * as path from "path";
 
@@ -30,8 +30,8 @@ async function runFile() {
   }
 
   const source = await fs.readFile(filePath, "utf8");
-  const lox = new Lox();
-  lox.run(source);
+  const lox = new Lox({ logger: new ConsoleLogger() });
+  const result = lox.run(source);
 }
 
 runFile();
