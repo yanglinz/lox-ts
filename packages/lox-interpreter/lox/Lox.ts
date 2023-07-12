@@ -61,6 +61,7 @@ export class LoxInstance {
 
   print(message: string) {
     this.stream.push({ type: "print", message: message });
+    this.logger.print(message);
   }
 
   error(token: Token, error: Error) {
