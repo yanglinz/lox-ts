@@ -90,7 +90,7 @@ export class Resolver extends Visitor {
     }
   }
 
-  private resolveFunction(stmt: StmtFunction, functionType: symbol): void {
+  private resolveFunction(stmt: StmtFunction, functionType: symbol = FunctionType.FUNCTION): void {
     this.beginScope();
     for (const param of stmt.params) {
       this.declare(param);
