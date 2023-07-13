@@ -4,6 +4,7 @@ import {
   ExprAssign,
   ExprBinary,
   ExprCall,
+  ExprGet,
   ExprGrouping,
   ExprLogical,
   ExprUnary,
@@ -140,6 +141,10 @@ export class Resolver extends Visitor {
     }
   }
 
+  visitGetExpr(expr: ExprGet): void {
+    this.resolve(expr.object);
+  }
+
   visitGroupingExpr(expr: ExprGrouping): void {
     this.resolve(expr.expression);
   }
@@ -151,7 +156,6 @@ export class Resolver extends Visitor {
   visitLogicalExpr(expr: ExprLogical): void {
     this.resolve(expr.left);
     this.resolve(expr.right);
-    return null;
   }
 
   visitUnaryExpr(expr: ExprUnary): void {

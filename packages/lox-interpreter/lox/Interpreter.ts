@@ -6,6 +6,7 @@ import {
   ExprAssign,
   ExprBinary,
   ExprCall,
+  ExprGet,
   ExprGrouping,
   ExprLiteral,
   ExprLiteralValue,
@@ -219,6 +220,15 @@ export class Interpreter extends Visitor {
     }
 
     return func.call(this, args);
+  }
+
+  visitGetExpr(expr: ExprGet) {
+    const object = this.evaluate(expr.object);
+    if (object instanceof LoxClassInstance) {
+      return (object as LoxClassInstance).get(expr.name);
+    }
+
+    throw new RuntimeError("Only instance have properties.");
   }
 
   visitGroupingExpr(expr: ExprGrouping): ExprLiteralValue {
