@@ -56,6 +56,21 @@ export class ExprCall extends Expr {
   }
 }
 
+export class ExprGet extends Expr {
+  object: Expr;
+  name: Token;
+
+  constructor(object: Expr, name: Token) {
+    super();
+    this.object = object;
+    this.name = name;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitGetExpr(this);
+  }
+}
+
 export class ExprGrouping extends Expr {
   expression: Expr;
 

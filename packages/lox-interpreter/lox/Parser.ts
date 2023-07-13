@@ -4,6 +4,7 @@ import {
   ExprAssign,
   ExprBinary,
   ExprCall,
+  ExprGet,
   ExprGrouping,
   ExprLiteral,
   ExprLogical,
@@ -393,6 +394,12 @@ export class Parser {
     while (true) {
       if (this.match(TokenType.LEFT_PAREN)) {
         expr = this.finishCall(expr);
+      } else if (this.match(TokenType.DOT)) {
+        const name = this.consume(
+          TokenType.IDENTIFIER,
+          "Expect property name after '.'."
+        );
+        expr = new ExprGet(expr, name);
       } else {
         break;
       }
