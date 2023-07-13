@@ -11,6 +11,7 @@ import {
   ExprLiteral,
   ExprLiteralValue,
   ExprLogical,
+  ExprSet,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -94,7 +95,14 @@ export class Interpreter extends Visitor {
 
   visitClassStmt(stmt: StmtClass): void {
     this.environment.define(stmt.name.lexeme, null);
-    const klass = new LoxClass(stmt.name.lexeme);
+
+    const methods = new Map();
+    for (let method of stmt.methods) {
+      const func = new LoxFunction(method, this.environment);
+      methods.set(method.name.lexeme, func);
+    }
+
+    const klass = new LoxClass(stmt.name.lexeme, methods);
     this.environment.assign(stmt.name, klass);
     return null;
   }
@@ -249,6 +257,18 @@ export class Interpreter extends Visitor {
     }
 
     return this.evaluate(expr.right);
+  }
+
+  visitSetExpr(expr: ExprSet): ExprLiteralValue {
+    const object = this.evaluate(expr.object);
+
+    if (!(object instanceof LoxClassInstance)) {
+      throw new RuntimeError("Only instances have fields.");
+    }
+
+    const value = this.evaluate(expr.value);
+    (object as LoxClassInstance).set(expr.name, value);
+    return value;
   }
 
   visitUnaryExpr(expr: ExprUnary): ExprLiteralValue {

@@ -8,6 +8,7 @@ import {
   ExprGrouping,
   ExprLiteral,
   ExprLogical,
+  ExprSet,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -290,6 +291,9 @@ export class Parser {
       if (expr instanceof ExprVariable) {
         const name = expr.name;
         return new ExprAssign(name, value);
+      } else if (expr instanceof ExprGet) {
+        const get = expr as ExprGet;
+        return new ExprSet(get.object, get.name, value);
       }
 
       this.error(equals, "Invalid assignment target.");

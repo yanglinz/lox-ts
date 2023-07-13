@@ -17,7 +17,16 @@ export class LoxClassInstance {
       return this.fields.get(name.lexeme);
     }
 
+    const method = this.klass.findMethod(name.lexeme);
+    if (method) {
+      return method;
+    }
+
     throw new RuntimeError(`Undefined property ${name.lexeme}.`);
+  }
+
+  set(name: Token, value: ExprLiteralValue) {
+    this.fields.set(name.lexeme, value);
   }
 
   toString(): string {

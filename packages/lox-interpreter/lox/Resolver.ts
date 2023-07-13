@@ -7,6 +7,7 @@ import {
   ExprGet,
   ExprGrouping,
   ExprLogical,
+  ExprSet,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -28,6 +29,16 @@ import {
 import { Visitor } from "./Visitor";
 
 type Scope = Map<string, boolean>;
+
+type _FunctionType = {
+  [key: string]: symbol;
+};
+
+const FunctionType: _FunctionType = {
+  NONE: Symbol("NONE"),
+  FUNCTION: Symbol("FUNCTION"),
+  METHOD: Symbol("METHOD"),
+};
 
 export class Resolver extends Visitor {
   lox: LoxInstance;
@@ -79,7 +90,7 @@ export class Resolver extends Visitor {
     }
   }
 
-  private resolveFunction(stmt: StmtFunction): void {
+  private resolveFunction(stmt: StmtFunction, functionType: symbol): void {
     this.beginScope();
     for (const param of stmt.params) {
       this.declare(param);
@@ -97,6 +108,12 @@ export class Resolver extends Visitor {
 
   visitClassStmt(stmt: StmtClass): void {
     this.declare(stmt.name);
+
+    for (let method of stmt.methods) {
+      const declaration = FunctionType.METHOD;
+      this.resolveFunction(method, declaration);
+    }
+
     this.define(stmt.name);
     return null;
   }
@@ -156,6 +173,11 @@ export class Resolver extends Visitor {
   visitLogicalExpr(expr: ExprLogical): void {
     this.resolve(expr.left);
     this.resolve(expr.right);
+  }
+
+  visitSetExpr(expr: ExprSet): void {
+    this.resolve(expr.value);
+    this.resolve(expr.object);
   }
 
   visitUnaryExpr(expr: ExprUnary): void {

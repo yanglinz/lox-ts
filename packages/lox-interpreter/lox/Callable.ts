@@ -75,14 +75,24 @@ export class GlobalFnClock extends LoxCallable {
 
 export class LoxClass extends LoxCallable {
   name: string;
+  methods: Map<string, LoxFunction>;
 
-  constructor(name: string) {
+  constructor(name: string, methods: Map<string, LoxFunction>) {
     super();
     this.name = name;
+    this.methods = methods;
   }
 
   get arity(): number {
     return 0;
+  }
+
+  findMethod(name: string): LoxFunction | null {
+    if (this.methods.has(name)) {
+      return this.methods.get(name);
+    }
+
+    return null;
   }
 
   call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {

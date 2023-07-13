@@ -123,6 +123,23 @@ export class ExprLogical extends Expr {
   }
 }
 
+export class ExprSet extends Expr {
+  object: Expr;
+  name: Token;
+  value: Expr;
+
+  constructor(object: Expr, name: Token, value: Expr) {
+    super();
+    this.object = object;
+    this.name = name;
+    this.value = value;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitSetExpr(this);
+  }
+}
+
 export class ExprUnary extends Expr {
   operator: Token;
   right: Expr;
