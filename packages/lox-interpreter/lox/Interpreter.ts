@@ -12,6 +12,7 @@ import {
   ExprLiteralValue,
   ExprLogical,
   ExprSet,
+  ExprThis,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -269,6 +270,10 @@ export class Interpreter extends Visitor {
     const value = this.evaluate(expr.value);
     (object as LoxClassInstance).set(expr.name, value);
     return value;
+  }
+
+  visitThisExpr(expr: ExprThis) {
+    return this.lookUpVariable(expr.keyword, expr);
   }
 
   visitUnaryExpr(expr: ExprUnary): ExprLiteralValue {

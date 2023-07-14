@@ -140,6 +140,19 @@ export class ExprSet extends Expr {
   }
 }
 
+export class ExprThis extends Expr {
+  keyword: Token;
+
+  constructor(keyword: Token) {
+    super();
+    this.keyword = keyword;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitThisExpr(this);
+  }
+}
+
 export class ExprUnary extends Expr {
   operator: Token;
   right: Expr;

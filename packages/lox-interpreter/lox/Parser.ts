@@ -9,6 +9,7 @@ import {
   ExprLiteral,
   ExprLogical,
   ExprSet,
+  ExprThis,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -440,6 +441,8 @@ export class Parser {
       return new ExprLiteral(null);
     } else if (this.match(TokenType.NUMBER, TokenType.STRING)) {
       return new ExprLiteral(this.previous().literal);
+    } else if (this.match(TokenType.THIS)) {
+      return new ExprThis(this.previous());
     } else if (this.match(TokenType.IDENTIFIER)) {
       return new ExprVariable(this.previous());
     } else if (this.match(TokenType.LEFT_PAREN)) {

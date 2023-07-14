@@ -8,6 +8,7 @@ import {
   ExprGrouping,
   ExprLogical,
   ExprSet,
+  ExprThis,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -90,7 +91,10 @@ export class Resolver extends Visitor {
     }
   }
 
-  private resolveFunction(stmt: StmtFunction, functionType: symbol = FunctionType.FUNCTION): void {
+  private resolveFunction(
+    stmt: StmtFunction,
+    functionType: symbol = FunctionType.FUNCTION
+  ): void {
     this.beginScope();
     for (const param of stmt.params) {
       this.declare(param);
@@ -108,14 +112,19 @@ export class Resolver extends Visitor {
 
   visitClassStmt(stmt: StmtClass): void {
     this.declare(stmt.name);
+    this.define(stmt.name);
+
+    this.beginScope();
+
+    const scope = this.scopes.at(-1);
+    scope.set("this", true);
 
     for (let method of stmt.methods) {
       const declaration = FunctionType.METHOD;
       this.resolveFunction(method, declaration);
     }
 
-    this.define(stmt.name);
-    return null;
+    this.endScope();
   }
 
   visitVarStmt(stmt: StmtVar): void {
@@ -178,6 +187,10 @@ export class Resolver extends Visitor {
   visitSetExpr(expr: ExprSet): void {
     this.resolve(expr.value);
     this.resolve(expr.object);
+  }
+
+  visitThisExpr(expr: ExprThis): void {
+    this.resolveLocal(expr, expr.keyword);
   }
 
   visitUnaryExpr(expr: ExprUnary): void {

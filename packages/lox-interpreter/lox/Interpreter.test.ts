@@ -214,7 +214,12 @@ describe("Interpreting statements", () => {
         }
       }
       Bagel().eat();
+      var eat = Bagel().eat;
+      eat();
     `;
-    expect(interpretPrints(source)).toEqual(["Eating a bagel!"]);
+    expect(interpretPrints(source)).toEqual([
+      "Eating a bagel!",
+      "Eating a bagel!",
+    ]);
   });
 });

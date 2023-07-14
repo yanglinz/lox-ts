@@ -33,6 +33,12 @@ export class LoxFunction extends LoxCallable {
     return this.declaration.params.length;
   }
 
+  bind(instance: LoxClassInstance): LoxFunction {
+    const environment = new Environment(this.closure);
+    environment.define("this", instance);
+    return new LoxFunction(this.declaration, environment);
+  }
+
   call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
     const environment = new Environment(this.closure);
 

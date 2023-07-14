@@ -36,6 +36,10 @@ export class Visitor {
     throw new Error("NotImplementedError");
   }
 
+  visitThisExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
   visitUnaryExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
