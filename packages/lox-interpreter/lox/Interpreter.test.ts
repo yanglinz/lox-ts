@@ -222,4 +222,38 @@ describe("Interpreting statements", () => {
       "Eating a bagel!",
     ]);
   });
+
+  test("class declaration with this methods", () => {
+    const source = `
+      class Cake {
+        taste() {
+          var adjective = "delicious";
+          print "The " + this.flavor + " cake is " + adjective + "!";
+        }
+      }
+      
+      var cake = Cake();
+      cake.flavor = "Lemon";
+      cake.taste();
+    `;
+    expect(interpretPrints(source)).toEqual(["The Lemon cake is delicious!"]);
+  });
+
+  test("class declaration with this methods closure", () => {
+    const source = `
+      class Thing {
+        getCallback() {
+          fun localFunction() {
+            print this;
+          }
+      
+          return localFunction;
+        }
+      }
+      
+      var callback = Thing().getCallback();
+      callback();
+    `;
+    expect(interpretPrints(source)).toEqual(["Thing instance"]);
+  });
 });
