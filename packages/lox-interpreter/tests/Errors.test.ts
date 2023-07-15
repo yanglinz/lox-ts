@@ -73,7 +73,7 @@ describe("Errors", () => {
       lox.streamError.every((e) => e.error instanceof RuntimeError)
     ).toEqual(true);
     expect(lox.streamError.map((e) => e.error.message)).toEqual([
-      "Can't return a value from an initializer."
+      "Can't return a value from an initializer.",
     ]);
   });
 });

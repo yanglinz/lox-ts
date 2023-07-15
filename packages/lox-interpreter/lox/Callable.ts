@@ -56,6 +56,7 @@ export class LoxFunction extends LoxCallable {
       interpreter.executeBlock(this.declaration.body, environment);
     } catch (e) {
       if (e instanceof ReturnValue) {
+        if (this.isInitializer) return this.closure.getAt(0, "this");
         return e.value;
       }
     }

@@ -223,6 +223,21 @@ describe("Interpreting statements", () => {
     ]);
   });
 
+  test("class declaration with init", () => {
+    const source = `
+      class Cake {
+        init() {
+          this.flavor = "Lemon";
+          return;
+        }
+      }
+
+      var cake = Cake();
+      print cake.flavor;
+    `;
+    expect(interpretPrints(source)).toEqual(["The Lemon"]);
+  });
+
   test("class declaration with this methods", () => {
     const source = `
       class Cake {
