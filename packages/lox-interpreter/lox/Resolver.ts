@@ -31,8 +31,10 @@ import { Visitor } from "./Visitor";
 
 type Scope = Map<string, boolean>;
 
+type FunctionKind = symbol;
+
 type _FunctionType = {
-  [key: string]: symbol;
+  [key: string]: FunctionKind;
 };
 
 const FunctionType: _FunctionType = {
@@ -41,15 +43,28 @@ const FunctionType: _FunctionType = {
   METHOD: Symbol("METHOD"),
 };
 
+type ClassKind = symbol;
+
+type _ClassType = {
+  [key: string]: ClassKind;
+};
+
+const ClassType: _ClassType = {
+  NONE: Symbol("NONE"),
+  CLASS: Symbol("CLASS"),
+};
+
 export class Resolver extends Visitor {
   lox: LoxInstance;
   interpreter: Interpreter;
   scopes: Scope[];
+  currentClass: ClassKind;
 
   constructor(interpreter: Interpreter) {
     super();
     this.interpreter = interpreter;
     this.scopes = [];
+    this.currentClass = ClassType.NONE;
   }
 
   resolve(node: Expr | Stmt): void {
@@ -93,7 +108,7 @@ export class Resolver extends Visitor {
 
   private resolveFunction(
     stmt: StmtFunction,
-    functionType: symbol = FunctionType.FUNCTION
+    functionType: FunctionKind = FunctionType.FUNCTION
   ): void {
     this.beginScope();
     for (const param of stmt.params) {
@@ -111,6 +126,9 @@ export class Resolver extends Visitor {
   }
 
   visitClassStmt(stmt: StmtClass): void {
+    const enclosingClass = this.currentClass;
+    this.currentClass = ClassType.CLASS;
+
     this.declare(stmt.name);
     this.define(stmt.name);
 
@@ -124,6 +142,7 @@ export class Resolver extends Visitor {
       this.resolveFunction(method, declaration);
     }
 
+    this.currentClass = enclosingClass;
     this.endScope();
   }
 
@@ -190,6 +209,14 @@ export class Resolver extends Visitor {
   }
 
   visitThisExpr(expr: ExprThis): void {
+    if (this.currentClass == ClassType.NONE) {
+      this.lox.error(
+        expr.keyword,
+        new RuntimeError("Can't use 'this' outside of a class.")
+      );
+      return null;
+    }
+
     this.resolveLocal(expr, expr.keyword);
   }
 
