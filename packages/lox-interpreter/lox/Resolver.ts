@@ -40,6 +40,7 @@ type _FunctionType = {
 const FunctionType: _FunctionType = {
   NONE: Symbol("NONE"),
   FUNCTION: Symbol("FUNCTION"),
+  INITIALIZER: Symbol("INITIALIZER"),
   METHOD: Symbol("METHOD"),
 };
 
@@ -58,6 +59,7 @@ export class Resolver extends Visitor {
   lox: LoxInstance;
   interpreter: Interpreter;
   scopes: Scope[];
+  currentFunction: FunctionKind;
   currentClass: ClassKind;
 
   constructor(lox: LoxInstance, interpreter: Interpreter) {
@@ -65,6 +67,7 @@ export class Resolver extends Visitor {
     this.lox = lox;
     this.interpreter = interpreter;
     this.scopes = [];
+    this.currentFunction = FunctionType.NONE;
     this.currentClass = ClassType.NONE;
   }
 
@@ -111,6 +114,9 @@ export class Resolver extends Visitor {
     stmt: StmtFunction,
     functionType: FunctionKind = FunctionType.FUNCTION
   ): void {
+    const enclosingFunction = this.currentFunction;
+    this.currentFunction = functionType;
+
     this.beginScope();
     for (const param of stmt.params) {
       this.declare(param);
@@ -118,6 +124,8 @@ export class Resolver extends Visitor {
     }
     this.resolveAll(stmt.body);
     this.endScope();
+
+    this.currentFunction = enclosingFunction;
   }
 
   visitBlockStmt(stmt: StmtBlock): void {
@@ -139,7 +147,11 @@ export class Resolver extends Visitor {
     scope.set("this", true);
 
     for (let method of stmt.methods) {
-      const declaration = FunctionType.METHOD;
+      let declaration = FunctionType.METHOD;
+      if (method.name.lexeme === "init") {
+        declaration = FunctionType.INITIALIZER;
+      }
+
       this.resolveFunction(method, declaration);
     }
 
@@ -247,6 +259,13 @@ export class Resolver extends Visitor {
 
   visitReturnStmt(stmt: StmtReturn): void {
     if (stmt.value != null) {
+      if (this.currentFunction === FunctionType.INITIALIZER) {
+        this.lox.error(
+          stmt.keyword,
+          new RuntimeError("Can't return a value from an initializer.")
+        );
+      }
+
       this.resolve(stmt.value);
     }
   }

@@ -58,4 +58,22 @@ describe("Errors", () => {
       "Can't use 'this' outside of a class.",
     ]);
   });
+
+  test("invalid return from init", () => {
+    const source = `
+      class Car {
+        init() {
+          return 123;
+        }
+      }
+    `;
+    const lox = interpret(source);
+    expect(lox.hadError).toEqual(true);
+    expect(
+      lox.streamError.every((e) => e.error instanceof RuntimeError)
+    ).toEqual(true);
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
+      "Can't return a value from an initializer."
+    ]);
+  });
 });

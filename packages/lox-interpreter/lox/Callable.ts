@@ -22,11 +22,17 @@ export class LoxCallable {
 export class LoxFunction extends LoxCallable {
   declaration: StmtFunction;
   closure: Environment;
+  isInitializer: boolean;
 
-  constructor(declaration: StmtFunction, closure: Environment) {
+  constructor(
+    declaration: StmtFunction,
+    closure: Environment,
+    isInitializer: boolean
+  ) {
     super();
     this.declaration = declaration;
     this.closure = closure;
+    this.isInitializer = isInitializer;
   }
 
   get arity(): number {
@@ -36,7 +42,7 @@ export class LoxFunction extends LoxCallable {
   bind(instance: LoxClassInstance): LoxFunction {
     const environment = new Environment(this.closure);
     environment.define("this", instance);
-    return new LoxFunction(this.declaration, environment);
+    return new LoxFunction(this.declaration, environment, this.isInitializer);
   }
 
   call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
@@ -52,6 +58,10 @@ export class LoxFunction extends LoxCallable {
       if (e instanceof ReturnValue) {
         return e.value;
       }
+    }
+
+    if (this.isInitializer) {
+      return this.closure.getAt(0, "this");
     }
 
     return null;
@@ -90,7 +100,12 @@ export class LoxClass extends LoxCallable {
   }
 
   get arity(): number {
-    return 0;
+    const initializer: LoxFunction = this.findMethod("init");
+    if (!initializer) {
+      return 0;
+    }
+
+    return initializer.arity;
   }
 
   findMethod(name: string): LoxFunction | null {
@@ -103,6 +118,11 @@ export class LoxClass extends LoxCallable {
 
   call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
     const instance = new LoxClassInstance(this);
+    const initializer: LoxFunction = this.findMethod("init");
+    if (initializer !== null) {
+      initializer.bind(instance).call(interpreter, args);
+    }
+
     return instance;
   }
 

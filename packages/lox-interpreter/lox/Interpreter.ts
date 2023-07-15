@@ -99,7 +99,8 @@ export class Interpreter extends Visitor {
 
     const methods = new Map();
     for (let method of stmt.methods) {
-      const func = new LoxFunction(method, this.environment);
+      const isInitializer = method.name.lexeme === "init";
+      const func = new LoxFunction(method, this.environment, isInitializer);
       methods.set(method.name.lexeme, func);
     }
 
@@ -113,7 +114,7 @@ export class Interpreter extends Visitor {
   }
 
   visitFunctionStmt(stmt: StmtFunction): void {
-    const func = new LoxFunction(stmt, this.environment);
+    const func = new LoxFunction(stmt, this.environment, false);
     this.environment.define(stmt.name.lexeme, func);
   }
 
