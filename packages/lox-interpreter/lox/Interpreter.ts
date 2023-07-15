@@ -100,7 +100,9 @@ export class Interpreter extends Visitor {
     if (stmt.superclass) {
       superclass = this.evaluate(stmt.superclass);
       if (!(superclass instanceof LoxClass)) {
-        throw new RuntimeError(`${stmt.superclass.name} Superclass must be a class.`);
+        throw new RuntimeError(
+          `${stmt.superclass.name} Superclass must be a class.`
+        );
       }
     }
 
@@ -113,7 +115,7 @@ export class Interpreter extends Visitor {
       methods.set(method.name.lexeme, func);
     }
 
-    const klass = new LoxClass(stmt.name.lexeme, methods);
+    const klass = new LoxClass(stmt.name.lexeme, superclass, methods);
     this.environment.assign(stmt.name, klass);
     return null;
   }

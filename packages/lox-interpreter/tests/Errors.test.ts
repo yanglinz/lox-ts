@@ -103,7 +103,7 @@ describe("Errors", () => {
       lox.streamError.every((e) => e.error instanceof RuntimeError)
     ).toEqual(true);
     expect(lox.streamError.map((e) => e.error.message)).toEqual([
-      "Superclass must be a class."
+      "Superclass must be a class.",
     ]);
   });
 });
