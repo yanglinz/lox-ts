@@ -1,4 +1,4 @@
-import { ParseError, ScanError } from "../lox/Errors";
+import { ParseError, RuntimeError, ScanError } from "../lox/Errors";
 import { LoxInstance, NoopLogger } from "../lox/Lox";
 import { Lox } from "../lox/Lox";
 
@@ -38,6 +38,24 @@ describe("Errors", () => {
     );
     expect(lox.streamError.map((e) => e.error.message)).toEqual([
       "Expect ';' after value.",
+    ]);
+  });
+
+  test("invalid use of this", () => {
+    const source = `
+      fun notAMethod() {
+        print this;
+      }
+
+      notAMethod();
+    `;
+    const lox = interpret(source);
+    expect(lox.hadError).toEqual(true);
+    expect(
+      lox.streamError.every((e) => e.error instanceof RuntimeError)
+    ).toEqual(true);
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
+      "Can't use 'this' outside of a class.",
     ]);
   });
 });

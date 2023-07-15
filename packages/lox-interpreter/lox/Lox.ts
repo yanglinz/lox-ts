@@ -96,21 +96,32 @@ export class Lox {
       if (lox.hadError) {
         return { lox };
       }
+
       const parser = new Parser(lox, scanner.scan());
       if (lox.hadError) {
         return { lox };
       }
+
       const interpreter = new Interpreter(lox);
       if (lox.hadError) {
         return { lox };
       }
 
       const statements = parser.parse();
-      const resolver = new Resolver(interpreter);
+      const resolver = new Resolver(lox, interpreter);
       resolver.resolveAll(statements);
+      if (lox.hadError) {
+        return { lox };
+      }
+
       const value = interpreter.interpret(statements);
+      if (lox.hadError) {
+        return { lox };
+      }
+
       return { lox, scanner, parser, interpreter, value };
     } catch (err) {
+      lox.hadError = true;
       this.logger?.error(err);
       return { lox };
     }

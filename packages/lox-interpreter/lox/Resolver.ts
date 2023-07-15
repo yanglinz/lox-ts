@@ -60,8 +60,9 @@ export class Resolver extends Visitor {
   scopes: Scope[];
   currentClass: ClassKind;
 
-  constructor(interpreter: Interpreter) {
+  constructor(lox: LoxInstance, interpreter: Interpreter) {
     super();
+    this.lox = lox;
     this.interpreter = interpreter;
     this.scopes = [];
     this.currentClass = ClassType.NONE;
@@ -209,7 +210,7 @@ export class Resolver extends Visitor {
   }
 
   visitThisExpr(expr: ExprThis): void {
-    if (this.currentClass == ClassType.NONE) {
+    if (this.currentClass === ClassType.NONE) {
       this.lox.error(
         expr.keyword,
         new RuntimeError("Can't use 'this' outside of a class.")
