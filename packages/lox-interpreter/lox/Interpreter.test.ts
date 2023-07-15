@@ -235,7 +235,7 @@ describe("Interpreting statements", () => {
       var cake = Cake();
       print cake.flavor;
     `;
-    expect(interpretPrints(source)).toEqual(["The Lemon"]);
+    expect(interpretPrints(source)).toEqual(["Lemon"]);
   });
 
   test("class declaration with this methods", () => {
