@@ -76,4 +76,18 @@ describe("Errors", () => {
       "Can't return a value from an initializer.",
     ]);
   });
+
+  test("self inheritance", () => {
+    const source = `
+      class Car < Car {}
+    `;
+    const lox = interpret(source);
+    expect(lox.hadError).toEqual(true);
+    expect(
+      lox.streamError.every((e) => e.error instanceof RuntimeError)
+    ).toEqual(true);
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
+      "A class can't inherit from itself.",
+    ]);
+  });
 });

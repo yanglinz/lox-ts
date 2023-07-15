@@ -141,6 +141,17 @@ export class Resolver extends Visitor {
     this.declare(stmt.name);
     this.define(stmt.name);
 
+    if (stmt.superclass) {
+      if (stmt.name.lexeme === stmt.superclass.name.lexeme) {
+        this.lox.error(
+          stmt.superclass.name,
+          new RuntimeError("A class can't inherit from itself.")
+        );
+      }
+
+      this.resolve(stmt.superclass);
+    }
+
     this.beginScope();
 
     const scope = this.scopes.at(-1);
