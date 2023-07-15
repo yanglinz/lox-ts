@@ -12,6 +12,7 @@ import {
   ExprLiteralValue,
   ExprLogical,
   ExprSet,
+  ExprSuper,
   ExprThis,
   ExprUnary,
   ExprVariable,
@@ -108,6 +109,11 @@ export class Interpreter extends Visitor {
 
     this.environment.define(stmt.name.lexeme, null);
 
+    if (stmt.superclass) {
+      this.environment = new Environment(this.environment);
+      this.environment.define("super", superclass);
+    }
+
     const methods = new Map();
     for (let method of stmt.methods) {
       const isInitializer = method.name.lexeme === "init";
@@ -116,6 +122,11 @@ export class Interpreter extends Visitor {
     }
 
     const klass = new LoxClass(stmt.name.lexeme, superclass, methods);
+
+    if (superclass) {
+      this.environment = this.environment.enclosing;
+    }
+
     this.environment.assign(stmt.name, klass);
     return null;
   }
@@ -282,6 +293,22 @@ export class Interpreter extends Visitor {
     const value = this.evaluate(expr.value);
     (object as LoxClassInstance).set(expr.name, value);
     return value;
+  }
+
+  visitSuperExpr(expr: ExprSuper): ExprLiteralValue {
+    const distance: number = this.locals.get(expr);
+    const superclass = this.environment.getAt(distance, "super");
+
+    const object = this.environment.getAt(distance - 1, "this");
+    const method = (superclass as LoxClass).findMethod(expr.method.lexeme);
+
+    if (method) {
+      throw new RuntimeError(
+        expr.method + "Undefined property '" + expr.method.lexeme + "'."
+      );
+    }
+
+    return method.bind(object as LoxClassInstance);
   }
 
   visitThisExpr(expr: ExprThis) {

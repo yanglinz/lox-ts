@@ -8,6 +8,7 @@ import {
   ExprGrouping,
   ExprLogical,
   ExprSet,
+  ExprSuper,
   ExprThis,
   ExprUnary,
   ExprVariable,
@@ -152,6 +153,11 @@ export class Resolver extends Visitor {
       this.resolve(stmt.superclass);
     }
 
+    if (stmt.superclass) {
+      this.beginScope();
+      this.scopes.at(-1).set("super", true);
+    }
+
     this.beginScope();
 
     const scope = this.scopes.at(-1);
@@ -164,6 +170,10 @@ export class Resolver extends Visitor {
       }
 
       this.resolveFunction(method, declaration);
+    }
+
+    if (stmt.superclass) {
+      this.endScope();
     }
 
     this.currentClass = enclosingClass;
@@ -230,6 +240,10 @@ export class Resolver extends Visitor {
   visitSetExpr(expr: ExprSet): void {
     this.resolve(expr.value);
     this.resolve(expr.object);
+  }
+
+  visitSuperExpr(expr: ExprSuper): void {
+    this.resolveLocal(expr, expr.keyword);
   }
 
   visitThisExpr(expr: ExprThis): void {

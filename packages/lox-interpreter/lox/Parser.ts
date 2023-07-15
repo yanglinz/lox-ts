@@ -9,6 +9,7 @@ import {
   ExprLiteral,
   ExprLogical,
   ExprSet,
+  ExprSuper,
   ExprThis,
   ExprUnary,
   ExprVariable,
@@ -450,6 +451,14 @@ export class Parser {
       return new ExprLiteral(this.previous().literal);
     } else if (this.match(TokenType.THIS)) {
       return new ExprThis(this.previous());
+    } else if (this.match(TokenType.SUPER)) {
+      const keyword = this.previous();
+      this.consume(TokenType.DOT, "Expect '.' after 'super'.");
+      const method = this.consume(
+        TokenType.IDENTIFIER,
+        "Expect superclass method name."
+      );
+      return new ExprSuper(keyword, method);
     } else if (this.match(TokenType.IDENTIFIER)) {
       return new ExprVariable(this.previous());
     } else if (this.match(TokenType.LEFT_PAREN)) {
