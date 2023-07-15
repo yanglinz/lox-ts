@@ -271,4 +271,18 @@ describe("Interpreting statements", () => {
     `;
     expect(interpretPrints(source)).toEqual(["Thing instance"]);
   });
+
+  test("class declaration with inheritance", () => {
+    const source = `
+      class Vehicle {
+        drive() {
+          print "Driving vehicle!";
+        }
+      }
+
+      class Car < Vehicle {}
+      Car().drive();
+    `;
+    expect(interpretPrints(source)).toEqual(["Driving vehicle!"]);
+  });
 });

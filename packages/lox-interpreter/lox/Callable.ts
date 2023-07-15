@@ -120,6 +120,10 @@ export class LoxClass extends LoxCallable {
       return this.methods.get(name);
     }
 
+    if (this.superclass) {
+      return this.superclass.findMethod(name);
+    }
+
     return null;
   }
 
