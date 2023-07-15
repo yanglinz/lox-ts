@@ -90,4 +90,20 @@ describe("Errors", () => {
       "A class can't inherit from itself.",
     ]);
   });
+
+  // TODO: Don't skip
+  test.skip("non-class inheritance", () => {
+    const source = `
+      var NotAClass = "Not a class!";
+      class Car < NotAClass {}
+    `;
+    const lox = interpret(source);
+    expect(lox.hadError).toEqual(true);
+    expect(
+      lox.streamError.every((e) => e.error instanceof RuntimeError)
+    ).toEqual(true);
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
+      "Superclass must be a class."
+    ]);
+  });
 });
