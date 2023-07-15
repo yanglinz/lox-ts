@@ -95,6 +95,14 @@ export class Interpreter extends Visitor {
   }
 
   visitClassStmt(stmt: StmtClass): void {
+    let superclass = null;
+    if (stmt.superclass) {
+      superclass = this.evaluate(stmt.superclass);
+      if (!(superclass instanceof LoxClass)) {
+        throw new RuntimeError(`${stmt.superclass.name} Superclass must be a class.`);
+      }
+    }
+
     this.environment.define(stmt.name.lexeme, null);
 
     const methods = new Map();
