@@ -106,4 +106,36 @@ describe("Errors", () => {
       "Superclass must be a class.",
     ]);
   });
+
+  test("super in non-subclass", () => {
+    const source = `
+      class NonSubclass {
+        method() {
+          super.method();
+        }
+      }
+    `;
+    const lox = interpret(source);
+    expect(lox.hadError).toEqual(true);
+    expect(
+      lox.streamError.every((e) => e.error instanceof RuntimeError)
+    ).toEqual(true);
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
+      "Can't use 'super' in a class with no superclass.",
+    ]);
+  });
+
+  test("super outside of class", () => {
+    const source = `
+    super.notEvenInAClass();
+    `;
+    const lox = interpret(source);
+    expect(lox.hadError).toEqual(true);
+    expect(
+      lox.streamError.every((e) => e.error instanceof RuntimeError)
+    ).toEqual(true);
+    expect(lox.streamError.map((e) => e.error.message)).toEqual([
+      "Can't use 'super' outside of a class.",
+    ]);
+  });
 });

@@ -54,6 +54,7 @@ type _ClassType = {
 const ClassType: _ClassType = {
   NONE: Symbol("NONE"),
   CLASS: Symbol("CLASS"),
+  SUBCLASS: Symbol("SUBCLASS"),
 };
 
 export class Resolver extends Visitor {
@@ -150,6 +151,7 @@ export class Resolver extends Visitor {
         );
       }
 
+      this.currentClass = ClassType.SUBCLASS;
       this.resolve(stmt.superclass);
     }
 
@@ -243,6 +245,18 @@ export class Resolver extends Visitor {
   }
 
   visitSuperExpr(expr: ExprSuper): void {
+    if (this.currentClass == ClassType.NONE) {
+      this.lox.error(
+        expr.keyword,
+        new RuntimeError("Can't use 'super' outside of a class.")
+      );
+    } else if (this.currentClass != ClassType.SUBCLASS) {
+      this.lox.error(
+        expr.keyword,
+        new RuntimeError("Can't use 'super' in a class with no superclass.")
+      );
+    }
+
     this.resolveLocal(expr, expr.keyword);
   }
 
