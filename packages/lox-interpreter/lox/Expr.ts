@@ -56,6 +56,21 @@ export class ExprCall extends Expr {
   }
 }
 
+export class ExprGet extends Expr {
+  object: Expr;
+  name: Token;
+
+  constructor(object: Expr, name: Token) {
+    super();
+    this.object = object;
+    this.name = name;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitGetExpr(this);
+  }
+}
+
 export class ExprGrouping extends Expr {
   expression: Expr;
 
@@ -105,6 +120,51 @@ export class ExprLogical extends Expr {
 
   accept(visitor: Visitor): VisitorOutput {
     return visitor.visitLogicalExpr(this);
+  }
+}
+
+export class ExprSet extends Expr {
+  object: Expr;
+  name: Token;
+  value: Expr;
+
+  constructor(object: Expr, name: Token, value: Expr) {
+    super();
+    this.object = object;
+    this.name = name;
+    this.value = value;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitSetExpr(this);
+  }
+}
+
+export class ExprSuper extends Expr {
+  keyword: Token;
+  method: Token;
+
+  constructor(keyword: Token, method: Token) {
+    super();
+    this.keyword = keyword;
+    this.method = method;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitSuperExpr(this);
+  }
+}
+
+export class ExprThis extends Expr {
+  keyword: Token;
+
+  constructor(keyword: Token) {
+    super();
+    this.keyword = keyword;
+  }
+
+  accept(visitor: Visitor): VisitorOutput {
+    return visitor.visitThisExpr(this);
   }
 }
 

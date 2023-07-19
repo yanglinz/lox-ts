@@ -22,15 +22,27 @@ export class LoxCallable {
 export class LoxFunction extends LoxCallable {
   declaration: StmtFunction;
   closure: Environment;
+  isInitializer: boolean;
 
-  constructor(declaration: StmtFunction, closure: Environment) {
+  constructor(
+    declaration: StmtFunction,
+    closure: Environment,
+    isInitializer: boolean
+  ) {
     super();
     this.declaration = declaration;
     this.closure = closure;
+    this.isInitializer = isInitializer;
   }
 
   get arity(): number {
     return this.declaration.params.length;
+  }
+
+  bind(instance: LoxClassInstance): LoxFunction {
+    const environment = new Environment(this.closure);
+    environment.define("this", instance);
+    return new LoxFunction(this.declaration, environment, this.isInitializer);
   }
 
   call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
@@ -44,8 +56,15 @@ export class LoxFunction extends LoxCallable {
       interpreter.executeBlock(this.declaration.body, environment);
     } catch (e) {
       if (e instanceof ReturnValue) {
+        if (this.isInitializer) return this.closure.getAt(0, "this");
         return e.value;
+      } else {
+        throw e;
       }
+    }
+
+    if (this.isInitializer) {
+      return this.closure.getAt(0, "this");
     }
 
     return null;
@@ -75,18 +94,48 @@ export class GlobalFnClock extends LoxCallable {
 
 export class LoxClass extends LoxCallable {
   name: string;
+  superclass: LoxClass | null;
+  methods: Map<string, LoxFunction>;
 
-  constructor(name: string) {
+  constructor(
+    name: string,
+    superclass: LoxClass | null,
+    methods: Map<string, LoxFunction>
+  ) {
     super();
     this.name = name;
+    this.superclass = superclass;
+    this.methods = methods;
   }
 
   get arity(): number {
-    return 0;
+    const initializer: LoxFunction = this.findMethod("init");
+    if (!initializer) {
+      return 0;
+    }
+
+    return initializer.arity;
+  }
+
+  findMethod(name: string): LoxFunction | null {
+    if (this.methods.has(name)) {
+      return this.methods.get(name);
+    }
+
+    if (this.superclass) {
+      return this.superclass.findMethod(name);
+    }
+
+    return null;
   }
 
   call(interpreter: Interpreter, args: ExprLiteralValue[]): ExprLiteralValue {
     const instance = new LoxClassInstance(this);
+    const initializer: LoxFunction = this.findMethod("init");
+    if (initializer !== null) {
+      initializer.bind(instance).call(interpreter, args);
+    }
+
     return instance;
   }
 

@@ -386,6 +386,7 @@ describe("Parser should parse statements", () => {
             "literal": "",
             "type": Symbol(IDENTIFIER),
           },
+          "superclass": null,
         },
       ]
     `);
@@ -447,6 +448,7 @@ describe("Parser should parse statements", () => {
             "literal": "",
             "type": Symbol(IDENTIFIER),
           },
+          "superclass": null,
         },
       ]
     `);

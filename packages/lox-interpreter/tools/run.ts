@@ -31,7 +31,7 @@ async function runFile() {
 
   const source = await fs.readFile(filePath, "utf8");
   const lox = new Lox({ logger: new ConsoleLogger() });
-  const result = lox.run(source);
+  lox.run(source);
 }
 
 runFile();

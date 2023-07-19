@@ -16,6 +16,10 @@ export class Visitor {
     throw new Error("NotImplementedError");
   }
 
+  visitGetExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
   visitGroupingExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
@@ -25,6 +29,18 @@ export class Visitor {
   }
 
   visitLogicalExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitSetExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitSuperExpr(_: Expr): VisitorOutput {
+    throw new Error("NotImplementedError");
+  }
+
+  visitThisExpr(_: Expr): VisitorOutput {
     throw new Error("NotImplementedError");
   }
 

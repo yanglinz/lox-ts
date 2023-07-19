@@ -6,10 +6,14 @@ import {
   ExprAssign,
   ExprBinary,
   ExprCall,
+  ExprGet,
   ExprGrouping,
   ExprLiteral,
   ExprLiteralValue,
   ExprLogical,
+  ExprSet,
+  ExprSuper,
+  ExprThis,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -60,6 +64,8 @@ export class Interpreter extends Visitor {
     } catch (error) {
       // TODO: Implement RuntimeErrors
       // https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
+      () => error;
+      throw error;
     }
   }
 
@@ -92,8 +98,36 @@ export class Interpreter extends Visitor {
   }
 
   visitClassStmt(stmt: StmtClass): void {
+    let superclass = null;
+    if (stmt.superclass) {
+      superclass = this.evaluate(stmt.superclass);
+      if (!(superclass instanceof LoxClass)) {
+        throw new RuntimeError(
+          `${stmt.superclass.name} Superclass must be a class.`
+        );
+      }
+    }
+
     this.environment.define(stmt.name.lexeme, null);
-    const klass = new LoxClass(stmt.name.lexeme);
+
+    if (stmt.superclass) {
+      this.environment = new Environment(this.environment);
+      this.environment.define("super", superclass);
+    }
+
+    const methods = new Map();
+    for (const method of stmt.methods) {
+      const isInitializer = method.name.lexeme === "init";
+      const func = new LoxFunction(method, this.environment, isInitializer);
+      methods.set(method.name.lexeme, func);
+    }
+
+    const klass = new LoxClass(stmt.name.lexeme, superclass, methods);
+
+    if (superclass) {
+      this.environment = this.environment.enclosing;
+    }
+
     this.environment.assign(stmt.name, klass);
     return null;
   }
@@ -103,7 +137,7 @@ export class Interpreter extends Visitor {
   }
 
   visitFunctionStmt(stmt: StmtFunction): void {
-    const func = new LoxFunction(stmt, this.environment);
+    const func = new LoxFunction(stmt, this.environment, false);
     this.environment.define(stmt.name.lexeme, func);
   }
 
@@ -221,6 +255,15 @@ export class Interpreter extends Visitor {
     return func.call(this, args);
   }
 
+  visitGetExpr(expr: ExprGet) {
+    const object = this.evaluate(expr.object);
+    if (object instanceof LoxClassInstance) {
+      return (object as LoxClassInstance).get(expr.name);
+    }
+
+    throw new RuntimeError("Only instance have properties.");
+  }
+
   visitGroupingExpr(expr: ExprGrouping): ExprLiteralValue {
     return this.evaluate(expr.expression);
   }
@@ -239,6 +282,38 @@ export class Interpreter extends Visitor {
     }
 
     return this.evaluate(expr.right);
+  }
+
+  visitSetExpr(expr: ExprSet): ExprLiteralValue {
+    const object = this.evaluate(expr.object);
+
+    if (!(object instanceof LoxClassInstance)) {
+      throw new RuntimeError("Only instances have fields.");
+    }
+
+    const value = this.evaluate(expr.value);
+    (object as LoxClassInstance).set(expr.name, value);
+    return value;
+  }
+
+  visitSuperExpr(expr: ExprSuper): ExprLiteralValue {
+    const distance: number = this.locals.get(expr);
+    const superclass = this.environment.getAt(distance, "super");
+
+    const object = this.environment.getAt(distance - 1, "this");
+    const method = (superclass as LoxClass).findMethod(expr.method.lexeme);
+
+    if (!method) {
+      throw new RuntimeError(
+        expr.method + "Undefined property '" + expr.method.lexeme + "'."
+      );
+    }
+
+    return method.bind(object as LoxClassInstance);
+  }
+
+  visitThisExpr(expr: ExprThis) {
+    return this.lookUpVariable(expr.keyword, expr);
   }
 
   visitUnaryExpr(expr: ExprUnary): ExprLiteralValue {

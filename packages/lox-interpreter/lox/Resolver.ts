@@ -4,8 +4,12 @@ import {
   ExprAssign,
   ExprBinary,
   ExprCall,
+  ExprGet,
   ExprGrouping,
   ExprLogical,
+  ExprSet,
+  ExprSuper,
+  ExprThis,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -28,15 +32,45 @@ import { Visitor } from "./Visitor";
 
 type Scope = Map<string, boolean>;
 
+type FunctionKind = symbol;
+
+type _FunctionType = {
+  [key: string]: FunctionKind;
+};
+
+const FunctionType: _FunctionType = {
+  NONE: Symbol("NONE"),
+  FUNCTION: Symbol("FUNCTION"),
+  INITIALIZER: Symbol("INITIALIZER"),
+  METHOD: Symbol("METHOD"),
+};
+
+type ClassKind = symbol;
+
+type _ClassType = {
+  [key: string]: ClassKind;
+};
+
+const ClassType: _ClassType = {
+  NONE: Symbol("NONE"),
+  CLASS: Symbol("CLASS"),
+  SUBCLASS: Symbol("SUBCLASS"),
+};
+
 export class Resolver extends Visitor {
   lox: LoxInstance;
   interpreter: Interpreter;
   scopes: Scope[];
+  currentFunction: FunctionKind;
+  currentClass: ClassKind;
 
-  constructor(interpreter: Interpreter) {
+  constructor(lox: LoxInstance, interpreter: Interpreter) {
     super();
+    this.lox = lox;
     this.interpreter = interpreter;
     this.scopes = [];
+    this.currentFunction = FunctionType.NONE;
+    this.currentClass = ClassType.NONE;
   }
 
   resolve(node: Expr | Stmt): void {
@@ -78,7 +112,13 @@ export class Resolver extends Visitor {
     }
   }
 
-  private resolveFunction(stmt: StmtFunction): void {
+  private resolveFunction(
+    stmt: StmtFunction,
+    functionType: FunctionKind = FunctionType.FUNCTION
+  ): void {
+    const enclosingFunction = this.currentFunction;
+    this.currentFunction = functionType;
+
     this.beginScope();
     for (const param of stmt.params) {
       this.declare(param);
@@ -86,6 +126,8 @@ export class Resolver extends Visitor {
     }
     this.resolveAll(stmt.body);
     this.endScope();
+
+    this.currentFunction = enclosingFunction;
   }
 
   visitBlockStmt(stmt: StmtBlock): void {
@@ -95,9 +137,49 @@ export class Resolver extends Visitor {
   }
 
   visitClassStmt(stmt: StmtClass): void {
+    const enclosingClass = this.currentClass;
+    this.currentClass = ClassType.CLASS;
+
     this.declare(stmt.name);
     this.define(stmt.name);
-    return null;
+
+    if (stmt.superclass) {
+      if (stmt.name.lexeme === stmt.superclass.name.lexeme) {
+        this.lox.error(
+          stmt.superclass.name,
+          new RuntimeError("A class can't inherit from itself.")
+        );
+      }
+
+      this.currentClass = ClassType.SUBCLASS;
+      this.resolve(stmt.superclass);
+    }
+
+    if (stmt.superclass) {
+      this.beginScope();
+      this.scopes.at(-1).set("super", true);
+    }
+
+    this.beginScope();
+
+    const scope = this.scopes.at(-1);
+    scope.set("this", true);
+
+    for (const method of stmt.methods) {
+      let declaration = FunctionType.METHOD;
+      if (method.name.lexeme === "init") {
+        declaration = FunctionType.INITIALIZER;
+      }
+
+      this.resolveFunction(method, declaration);
+    }
+
+    if (stmt.superclass) {
+      this.endScope();
+    }
+
+    this.currentClass = enclosingClass;
+    this.endScope();
   }
 
   visitVarStmt(stmt: StmtVar): void {
@@ -140,6 +222,10 @@ export class Resolver extends Visitor {
     }
   }
 
+  visitGetExpr(expr: ExprGet): void {
+    this.resolve(expr.object);
+  }
+
   visitGroupingExpr(expr: ExprGrouping): void {
     this.resolve(expr.expression);
   }
@@ -151,7 +237,39 @@ export class Resolver extends Visitor {
   visitLogicalExpr(expr: ExprLogical): void {
     this.resolve(expr.left);
     this.resolve(expr.right);
-    return null;
+  }
+
+  visitSetExpr(expr: ExprSet): void {
+    this.resolve(expr.value);
+    this.resolve(expr.object);
+  }
+
+  visitSuperExpr(expr: ExprSuper): void {
+    if (this.currentClass == ClassType.NONE) {
+      this.lox.error(
+        expr.keyword,
+        new RuntimeError("Can't use 'super' outside of a class.")
+      );
+    } else if (this.currentClass != ClassType.SUBCLASS) {
+      this.lox.error(
+        expr.keyword,
+        new RuntimeError("Can't use 'super' in a class with no superclass.")
+      );
+    }
+
+    this.resolveLocal(expr, expr.keyword);
+  }
+
+  visitThisExpr(expr: ExprThis): void {
+    if (this.currentClass === ClassType.NONE) {
+      this.lox.error(
+        expr.keyword,
+        new RuntimeError("Can't use 'this' outside of a class.")
+      );
+      return null;
+    }
+
+    this.resolveLocal(expr, expr.keyword);
   }
 
   visitUnaryExpr(expr: ExprUnary): void {
@@ -180,6 +298,13 @@ export class Resolver extends Visitor {
 
   visitReturnStmt(stmt: StmtReturn): void {
     if (stmt.value != null) {
+      if (this.currentFunction === FunctionType.INITIALIZER) {
+        this.lox.error(
+          stmt.keyword,
+          new RuntimeError("Can't return a value from an initializer.")
+        );
+      }
+
       this.resolve(stmt.value);
     }
   }

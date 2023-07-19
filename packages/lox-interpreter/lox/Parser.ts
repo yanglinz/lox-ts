@@ -4,9 +4,13 @@ import {
   ExprAssign,
   ExprBinary,
   ExprCall,
+  ExprGet,
   ExprGrouping,
   ExprLiteral,
   ExprLogical,
+  ExprSet,
+  ExprSuper,
+  ExprThis,
   ExprUnary,
   ExprVariable,
 } from "./Expr";
@@ -139,6 +143,13 @@ export class Parser {
 
   private classDeclaration(): Stmt {
     const name = this.consume(TokenType.IDENTIFIER, "Expect class name.");
+
+    let superclass: ExprVariable = null;
+    if (this.match(TokenType.LESS)) {
+      this.consume(TokenType.IDENTIFIER, "Expect superclass name.");
+      superclass = new ExprVariable(this.previous());
+    }
+
     this.consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
 
     const methods: StmtFunction[] = [];
@@ -148,7 +159,7 @@ export class Parser {
 
     this.consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
 
-    return new StmtClass(name, methods);
+    return new StmtClass(name, superclass, methods);
   }
 
   private varDeclaration(): Stmt {
@@ -289,6 +300,9 @@ export class Parser {
       if (expr instanceof ExprVariable) {
         const name = expr.name;
         return new ExprAssign(name, value);
+      } else if (expr instanceof ExprGet) {
+        const get = expr as ExprGet;
+        return new ExprSet(get.object, get.name, value);
       }
 
       this.error(equals, "Invalid assignment target.");
@@ -393,6 +407,12 @@ export class Parser {
     while (true) {
       if (this.match(TokenType.LEFT_PAREN)) {
         expr = this.finishCall(expr);
+      } else if (this.match(TokenType.DOT)) {
+        const name = this.consume(
+          TokenType.IDENTIFIER,
+          "Expect property name after '.'."
+        );
+        expr = new ExprGet(expr, name);
       } else {
         break;
       }
@@ -429,6 +449,16 @@ export class Parser {
       return new ExprLiteral(null);
     } else if (this.match(TokenType.NUMBER, TokenType.STRING)) {
       return new ExprLiteral(this.previous().literal);
+    } else if (this.match(TokenType.THIS)) {
+      return new ExprThis(this.previous());
+    } else if (this.match(TokenType.SUPER)) {
+      const keyword = this.previous();
+      this.consume(TokenType.DOT, "Expect '.' after 'super'.");
+      const method = this.consume(
+        TokenType.IDENTIFIER,
+        "Expect superclass method name."
+      );
+      return new ExprSuper(keyword, method);
     } else if (this.match(TokenType.IDENTIFIER)) {
       return new ExprVariable(this.previous());
     } else if (this.match(TokenType.LEFT_PAREN)) {

@@ -1,4 +1,4 @@
-import { Expr } from "./Expr";
+import { Expr, ExprVariable } from "./Expr";
 import { Token } from "./Scanner";
 import { Visitor, VisitorOutput } from "./Visitor";
 
@@ -126,11 +126,17 @@ export class StmtBlock extends Stmt {
 
 export class StmtClass extends Stmt {
   name: Token;
+  superclass: ExprVariable | null;
   methods: StmtFunction[];
 
-  constructor(name: Token, methods: StmtFunction[]) {
+  constructor(
+    name: Token,
+    superclass: ExprVariable | null,
+    methods: StmtFunction[]
+  ) {
     super();
     this.name = name;
+    this.superclass = superclass;
     this.methods = methods;
   }
 

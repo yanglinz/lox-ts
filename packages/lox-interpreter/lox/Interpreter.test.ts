@@ -205,4 +205,109 @@ describe("Interpreting statements", () => {
     `;
     expect(interpretPrints(source)).toEqual(["Bagel", "Bagel instance"]);
   });
+
+  test("class declaration with methods", () => {
+    const source = `
+      class Bagel {
+        eat() {
+          print "Eating a bagel!";
+        }
+      }
+      Bagel().eat();
+      var eat = Bagel().eat;
+      eat();
+    `;
+    expect(interpretPrints(source)).toEqual([
+      "Eating a bagel!",
+      "Eating a bagel!",
+    ]);
+  });
+
+  test("class declaration with init", () => {
+    const source = `
+      class Cake {
+        init() {
+          this.flavor = "Lemon";
+          return;
+        }
+      }
+
+      var cake = Cake();
+      print cake.flavor;
+    `;
+    expect(interpretPrints(source)).toEqual(["Lemon"]);
+  });
+
+  test("class declaration with this methods", () => {
+    const source = `
+      class Cake {
+        taste() {
+          var adjective = "delicious";
+          print "The " + this.flavor + " cake is " + adjective + "!";
+        }
+      }
+      
+      var cake = Cake();
+      cake.flavor = "Lemon";
+      cake.taste();
+    `;
+    expect(interpretPrints(source)).toEqual(["The Lemon cake is delicious!"]);
+  });
+
+  test("class declaration with this methods closure", () => {
+    const source = `
+      class Thing {
+        getCallback() {
+          fun localFunction() {
+            print this;
+          }
+      
+          return localFunction;
+        }
+      }
+      
+      var callback = Thing().getCallback();
+      callback();
+    `;
+    expect(interpretPrints(source)).toEqual(["Thing instance"]);
+  });
+
+  test("class declaration with inheritance", () => {
+    const source = `
+      class Vehicle {
+        drive() {
+          print "Driving vehicle!";
+        }
+      }
+
+      class Car < Vehicle {}
+      Car().drive();
+    `;
+    expect(interpretPrints(source)).toEqual(["Driving vehicle!"]);
+  });
+
+  test("class declaration with inheritance using super", () => {
+    const source = `
+      class A {
+        method() {
+          print "A method";
+        }
+      }
+      
+      class B < A {
+        method() {
+          print "B method";
+        }
+      
+        test() {
+          super.method();
+        }
+      }
+      
+      class C < B {}
+      
+      C().test();
+    `;
+    expect(interpretPrints(source)).toEqual(["A method"]);
+  });
 });
