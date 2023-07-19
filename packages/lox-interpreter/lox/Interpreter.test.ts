@@ -285,4 +285,29 @@ describe("Interpreting statements", () => {
     `;
     expect(interpretPrints(source)).toEqual(["Driving vehicle!"]);
   });
+
+  test("class declaration with inheritance using super", () => {
+    const source = `
+      class A {
+        method() {
+          print "A method";
+        }
+      }
+      
+      class B < A {
+        method() {
+          print "B method";
+        }
+      
+        test() {
+          super.method();
+        }
+      }
+      
+      class C < B {}
+      
+      C().test();
+    `;
+    expect(interpretPrints(source)).toEqual(["A method"]);
+  });
 });
