@@ -64,6 +64,7 @@ export class Interpreter extends Visitor {
     } catch (error) {
       // TODO: Implement RuntimeErrors
       // https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
+      () => error;
       throw error;
     }
   }
