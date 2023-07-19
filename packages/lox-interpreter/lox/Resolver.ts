@@ -165,7 +165,7 @@ export class Resolver extends Visitor {
     const scope = this.scopes.at(-1);
     scope.set("this", true);
 
-    for (let method of stmt.methods) {
+    for (const method of stmt.methods) {
       let declaration = FunctionType.METHOD;
       if (method.name.lexeme === "init") {
         declaration = FunctionType.INITIALIZER;

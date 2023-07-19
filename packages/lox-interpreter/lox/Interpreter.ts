@@ -115,7 +115,7 @@ export class Interpreter extends Visitor {
     }
 
     const methods = new Map();
-    for (let method of stmt.methods) {
+    for (const method of stmt.methods) {
       const isInitializer = method.name.lexeme === "init";
       const func = new LoxFunction(method, this.environment, isInitializer);
       methods.set(method.name.lexeme, func);
