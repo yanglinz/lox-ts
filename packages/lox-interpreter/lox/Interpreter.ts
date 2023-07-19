@@ -302,7 +302,7 @@ export class Interpreter extends Visitor {
     const object = this.environment.getAt(distance - 1, "this");
     const method = (superclass as LoxClass).findMethod(expr.method.lexeme);
 
-    if (method) {
+    if (!method) {
       throw new RuntimeError(
         expr.method + "Undefined property '" + expr.method.lexeme + "'."
       );
