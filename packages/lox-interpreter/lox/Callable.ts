@@ -58,6 +58,8 @@ export class LoxFunction extends LoxCallable {
       if (e instanceof ReturnValue) {
         if (this.isInitializer) return this.closure.getAt(0, "this");
         return e.value;
+      } else {
+        throw e;
       }
     }
 
