@@ -15,7 +15,7 @@ import {
   ExprVariable,
 } from "./Expr";
 import { LoxInstance } from "./Lox";
-import { Token, TokenType, TokenTypeConstant } from "./Scanner";
+import { Token, TokenType, TokenTypeValue } from "./Scanner";
 import {
   Stmt,
   StmtBlock,
@@ -49,7 +49,7 @@ export class Parser {
     return statements;
   }
 
-  private match(...tokenTypes: TokenTypeConstant[]): boolean {
+  private match(...tokenTypes: TokenTypeValue[]): boolean {
     for (const t of tokenTypes) {
       if (this.check(t)) {
         this.advance();
@@ -60,7 +60,7 @@ export class Parser {
     return false;
   }
 
-  private check(type: TokenTypeConstant): boolean {
+  private check(type: TokenTypeValue): boolean {
     if (this.isAtEnd()) {
       return false;
     }
@@ -87,7 +87,7 @@ export class Parser {
     return this.previous();
   }
 
-  private consume(type: TokenTypeConstant, message: string) {
+  private consume(type: TokenTypeValue, message: string) {
     if (this.check(type)) {
       return this.advance();
     }

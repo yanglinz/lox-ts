@@ -49,7 +49,7 @@ export const TokenType = {
   EOF: Symbol("EOF"),
 } as const;
 
-type TokenTypeValue = ObjectValues<typeof TokenType>;
+export type TokenTypeValue = ObjectValues<typeof TokenType>;
 
 export const ReservedKeyword = {
   and: TokenType.AND,
