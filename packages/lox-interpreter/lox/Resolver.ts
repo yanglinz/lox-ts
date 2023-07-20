@@ -30,39 +30,33 @@ import {
 } from "./Stmt";
 import { Visitor } from "./Visitor";
 
+type ObjectValues<T> = T[keyof T];
+
 type Scope = Map<string, boolean>;
 
-type FunctionKind = symbol;
-
-type _FunctionType = {
-  [key: string]: FunctionKind;
-};
-
-const FunctionType: _FunctionType = {
+const FunctionType = {
   NONE: Symbol("NONE"),
   FUNCTION: Symbol("FUNCTION"),
   INITIALIZER: Symbol("INITIALIZER"),
   METHOD: Symbol("METHOD"),
-};
+} as const;
 
-type ClassKind = symbol;
+type FunctionTypeValue = ObjectValues<typeof FunctionType>;
 
-type _ClassType = {
-  [key: string]: ClassKind;
-};
-
-const ClassType: _ClassType = {
+const ClassType = {
   NONE: Symbol("NONE"),
   CLASS: Symbol("CLASS"),
   SUBCLASS: Symbol("SUBCLASS"),
-};
+} as const;
+
+type ClassTypeValue = ObjectValues<typeof ClassType>;
 
 export class Resolver extends Visitor {
   lox: LoxInstance;
   interpreter: Interpreter;
   scopes: Scope[];
-  currentFunction: FunctionKind;
-  currentClass: ClassKind;
+  currentFunction: FunctionTypeValue;
+  currentClass: ClassTypeValue;
 
   constructor(lox: LoxInstance, interpreter: Interpreter) {
     super();
@@ -114,7 +108,7 @@ export class Resolver extends Visitor {
 
   private resolveFunction(
     stmt: StmtFunction,
-    functionType: FunctionKind = FunctionType.FUNCTION
+    functionType: FunctionTypeValue = FunctionType.FUNCTION
   ): void {
     const enclosingFunction = this.currentFunction;
     this.currentFunction = functionType;

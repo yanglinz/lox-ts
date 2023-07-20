@@ -1,13 +1,9 @@
 import { ScanError } from "./Errors";
 import { LoxInstance } from "./Lox";
 
-export type TokenTypeConstant = symbol;
+type ObjectValues<T> = T[keyof T];
 
-type _TokenType = {
-  [key: string]: TokenTypeConstant;
-};
-
-export const TokenType: _TokenType = {
+export const TokenType = {
   LEFT_PAREN: Symbol("LEFT_PAREN"),
   RIGHT_PAREN: Symbol("RIGHT_PAREN"),
   LEFT_BRACE: Symbol("LEFT_BRACE"),
@@ -20,7 +16,7 @@ export const TokenType: _TokenType = {
   SLASH: Symbol("SLASH"),
   STAR: Symbol("STAR"),
 
-  // One or two character tokens.
+  // One or two character tokens
   BANG: Symbol("BANG"),
   BANG_EQUAL: Symbol("BANG_EQUAL"),
   EQUAL: Symbol("EQUAL"),
@@ -33,7 +29,7 @@ export const TokenType: _TokenType = {
   STRING: Symbol("STRING"),
   NUMBER: Symbol("NUMBER"),
 
-  // Keywords.
+  // Keywords
   AND: Symbol("AND"),
   CLASS: Symbol("CLASS"),
   ELSE: Symbol("ELSE"),
@@ -51,30 +47,11 @@ export const TokenType: _TokenType = {
   VAR: Symbol("VAR"),
   WHILE: Symbol("WHILE"),
   EOF: Symbol("EOF"),
-};
+} as const;
 
-type _TokenLiterals = {
-  [key: string]: TokenTypeConstant;
-};
+type TokenTypeValue = ObjectValues<typeof TokenType>;
 
-export const TokenLiterals: _TokenLiterals = {
-  "(": TokenType.LEFT_PAREN,
-  ")": TokenType.RIGHT_PAREN,
-  "{": TokenType.LEFT_BRACE,
-  "}": TokenType.RIGHT_BRACE,
-  ",": TokenType.COMMA,
-  ".": TokenType.DOT,
-  "-": TokenType.MINUS,
-  "+": TokenType.PLUS,
-  ";": TokenType.SEMICOLON,
-  "*": TokenType.STAR,
-};
-
-type _ReservedKeywords = {
-  [key: string]: TokenTypeConstant;
-};
-
-export const ReservedKeywords: _ReservedKeywords = {
+export const ReservedKeyword = {
   and: TokenType.AND,
   class: TokenType.CLASS,
   else: TokenType.ELSE,
@@ -91,15 +68,15 @@ export const ReservedKeywords: _ReservedKeywords = {
   true: TokenType.TRUE,
   var: TokenType.VAR,
   while: TokenType.WHILE,
-};
+} as const;
 
 export class Token {
-  type: TokenTypeConstant;
+  type: TokenTypeValue;
   lexeme: string;
   literal: string | number;
   line: number;
 
-  constructor(type: TokenTypeConstant, lexeme: string, line: number) {
+  constructor(type: TokenTypeValue, lexeme: string, line: number) {
     this.type = type;
     this.lexeme = lexeme;
     this.line = line;
@@ -247,10 +224,27 @@ export class Scanner {
   scanNext(): void {
     const c = this.advance();
 
-    // Match single char literals
-    if (c in TokenLiterals) {
-      const tokenType = TokenLiterals[c];
-      this.addToken(tokenType);
+    // Match token literal
+    if (c === "(") {
+      this.addToken(TokenType.LEFT_PAREN);
+    } else if (c === ")") {
+      this.addToken(TokenType.RIGHT_PAREN);
+    } else if (c === "{") {
+      this.addToken(TokenType.LEFT_BRACE);
+    } else if (c === "}") {
+      this.addToken(TokenType.RIGHT_BRACE);
+    } else if (c === ",") {
+      this.addToken(TokenType.COMMA);
+    } else if (c === ".") {
+      this.addToken(TokenType.DOT);
+    } else if (c === "-") {
+      this.addToken(TokenType.MINUS);
+    } else if (c === "+") {
+      this.addToken(TokenType.PLUS);
+    } else if (c === ";") {
+      this.addToken(TokenType.SEMICOLON);
+    } else if (c === "*") {
+      this.addToken(TokenType.STAR);
     }
 
     // Match operators
@@ -338,13 +332,13 @@ export class Scanner {
 
     const text = this.source.slice(this.start, this.current);
     let tokenType = TokenType.IDENTIFIER;
-    if (text in ReservedKeywords) {
-      tokenType = ReservedKeywords[text];
+    if (text in ReservedKeyword) {
+      tokenType = ReservedKeyword[text as keyof typeof ReservedKeyword];
     }
     this.addToken(tokenType);
   }
 
-  addToken(tokenType: TokenTypeConstant): void {
+  addToken(tokenType: TokenTypeValue): void {
     const lexeme = this.source.slice(this.start, this.current);
     this.start = this.current;
     this.tokens.push(new Token(tokenType, lexeme, this.line));
