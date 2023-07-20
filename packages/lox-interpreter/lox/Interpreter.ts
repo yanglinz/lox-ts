@@ -110,7 +110,8 @@ export class Interpreter extends Visitor {
       superclass = this.evaluate(stmt.superclass);
       if (!(superclass instanceof LoxClass)) {
         throw new RuntimeError(
-          `${stmt.superclass.name} Superclass must be a class.`
+          stmt.superclass.name,
+          "Superclass must be a class."
         );
       }
     }
@@ -256,12 +257,16 @@ export class Interpreter extends Visitor {
     }
 
     if (!(callee instanceof LoxCallable)) {
-      throw new RuntimeError("Can only call functions and classes.");
+      throw new RuntimeError(
+        expr.paren,
+        "Can only call functions and classes."
+      );
     }
 
     const func = callee as LoxCallable;
     if (args.length != func.arity) {
       throw new RuntimeError(
+        expr.paren,
         `Expected ${func.arity} arguments but got ${args.length}.`
       );
     }
@@ -275,7 +280,7 @@ export class Interpreter extends Visitor {
       return (object as LoxClassInstance).get(expr.name);
     }
 
-    throw new RuntimeError("Only instance have properties.");
+    throw new RuntimeError(expr.name, "Only instance have properties.");
   }
 
   visitGroupingExpr(expr: ExprGrouping): ExprLiteralValue {
@@ -302,7 +307,7 @@ export class Interpreter extends Visitor {
     const object = this.evaluate(expr.object);
 
     if (!(object instanceof LoxClassInstance)) {
-      throw new RuntimeError("Only instances have fields.");
+      throw new RuntimeError(expr.name, "Only instances have fields.");
     }
 
     const value = this.evaluate(expr.value);
@@ -319,7 +324,8 @@ export class Interpreter extends Visitor {
 
     if (!method) {
       throw new RuntimeError(
-        expr.method + "Undefined property '" + expr.method.lexeme + "'."
+        expr.method,
+        "Undefined property '" + expr.method.lexeme + "'."
       );
     }
 
@@ -347,8 +353,7 @@ export class Interpreter extends Visitor {
 
   private checkNumberOperand(operator: Token, operand: ExprLiteralValue): void {
     if (typeof operand === "number") return;
-    // TODO: Errors need a token
-    throw new RuntimeError("Operand must be a number.");
+    throw new RuntimeError(operator, "Operand must be a number.");
   }
 
   private checkNumberOperands(
@@ -357,8 +362,7 @@ export class Interpreter extends Visitor {
     right: ExprLiteralValue
   ): void {
     if (typeof left === "number" && typeof right === "number") return;
-    // TODO: Errors need a token
-    throw new RuntimeError("Operand must be a number.");
+    throw new RuntimeError(operator, "Operand must be a number.");
   }
 
   visitVariableExpr(expr: ExprVariable): ExprLiteralValue {

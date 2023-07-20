@@ -38,7 +38,7 @@ export class Environment {
       return;
     }
 
-    throw new RuntimeError("Undefined variable '" + name.lexeme + "'.");
+    throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
   }
 
   assignAt(distance: number, name: Token, value: VariableValue) {
@@ -52,7 +52,7 @@ export class Environment {
 
     if (this.enclosing) return this.enclosing.get(name);
 
-    throw new RuntimeError("Undefined variable '" + name.lexeme + "'.");
+    throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
   }
 
   getAt(distance: number, name: string): VariableValue {
