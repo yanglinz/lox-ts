@@ -1,6 +1,12 @@
-import { GlobalFnClock, LoxCallable, LoxClass, LoxFunction } from "./Callable";
+import {
+  GlobalFnClock,
+  LoxCallable,
+  LoxClass,
+  LoxFunction,
+  ReturnValue,
+} from "./Callable";
 import { Environment } from "./Environment";
-import { ReturnValue, RuntimeError } from "./Errors";
+import { RuntimeError } from "./Errors";
 import {
   Expr,
   ExprAssign,

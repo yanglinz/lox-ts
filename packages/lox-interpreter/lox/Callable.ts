@@ -1,5 +1,4 @@
 import { Environment } from "./Environment";
-import { ReturnValue } from "./Errors";
 import { ExprLiteralValue } from "./Expr";
 import { LoxClassInstance } from "./Instance";
 import { Interpreter } from "./Interpreter";
@@ -16,6 +15,15 @@ export class LoxCallable {
 
   toString(): string {
     throw new Error("Not implemented");
+  }
+}
+
+export class ReturnValue extends Error {
+  value: ExprLiteralValue;
+
+  constructor(value: ExprLiteralValue) {
+    super();
+    this.value = value;
   }
 }
 
