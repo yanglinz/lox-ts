@@ -62,10 +62,11 @@ export class Interpreter extends Visitor {
         }
       }
     } catch (error) {
-      // TODO: Implement RuntimeErrors
-      // https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
-      () => error;
-      throw error;
+      if (error instanceof RuntimeError) {
+        this.lox.runtimeError(error);
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -204,10 +205,13 @@ export class Interpreter extends Visitor {
 
     const type = expr.operator.type;
     if (type === TokenType.MINUS) {
+      this.checkNumberOperands(expr.operator, left, right);
       return (left as number) - (right as number);
     } else if (type === TokenType.SLASH) {
+      this.checkNumberOperands(expr.operator, left, right);
       return (left as number) / (right as number);
     } else if (type === TokenType.STAR) {
+      this.checkNumberOperands(expr.operator, left, right);
       return (left as number) * (right as number);
     } else if (type === TokenType.PLUS) {
       if (typeof left === "number" && typeof right === "number") {
@@ -216,12 +220,16 @@ export class Interpreter extends Visitor {
         return left + right;
       }
     } else if (type === TokenType.GREATER) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left > right;
     } else if (type === TokenType.GREATER_EQUAL) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left >= right;
     } else if (type === TokenType.LESS) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left < right;
     } else if (type === TokenType.LESS_EQUAL) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left <= right;
     } else if (type === TokenType.BANG_EQUAL) {
       return !this.isEqual(left, right);
@@ -321,6 +329,7 @@ export class Interpreter extends Visitor {
 
     const type = expr.operator.type;
     if (type === TokenType.MINUS) {
+      this.checkNumberOperand(expr.operator, right);
       return -1 * (right as number);
     } else if (type === TokenType.BANG) {
       return !this.isTruthy(right);
@@ -328,6 +337,22 @@ export class Interpreter extends Visitor {
 
     // Unreachable
     return null;
+  }
+
+  private checkNumberOperand(operator: Token, operand: ExprLiteralValue): void {
+    if (typeof operand === "number") return;
+    // TODO: Errors need a token
+    throw new RuntimeError("Operand must be a number.");
+  }
+
+  private checkNumberOperands(
+    operator: Token,
+    left: ExprLiteralValue,
+    right: ExprLiteralValue
+  ): void {
+    if (typeof left === "number" && typeof right === "number") return;
+    // TODO: Errors need a token
+    throw new RuntimeError("Operand must be a number.");
   }
 
   visitVariableExpr(expr: ExprVariable): ExprLiteralValue {

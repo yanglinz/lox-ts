@@ -76,6 +76,11 @@ export class LoxInstance {
     }
     this.logger.error(message);
   }
+
+  runtimeError(error: Error) {
+    this.hadError = true;
+    this.stream.push({ type: "error", error });
+  }
 }
 
 interface LoxOptions {
