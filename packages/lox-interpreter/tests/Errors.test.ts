@@ -96,8 +96,7 @@ describe("Errors", () => {
     ]);
   });
 
-  // TODO: Don't skip
-  test.skip("non-class inheritance", () => {
+  test("non-class inheritance", () => {
     const source = `
       var NotAClass = "Not a class!";
       class Car < NotAClass {}
