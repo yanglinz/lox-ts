@@ -1,7 +1,7 @@
 import { LoxInstance } from "./Lox";
-import { Scanner, TokenType, TokenTypeConstant } from "./Scanner";
+import { Scanner, TokenType, TokenTypeValue } from "./Scanner";
 
-function getTokens(source: string): TokenTypeConstant[] {
+function getTokens(source: string): TokenTypeValue[] {
   const lox = new LoxInstance();
   const tokens = new Scanner(lox, source).scan().map((t) => t.type);
   expect(tokens.length).toBeGreaterThan(0);
