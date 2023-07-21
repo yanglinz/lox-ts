@@ -33,6 +33,7 @@ export class NoopLogger extends LoggerInterface {
 export interface StreamError {
   type: "error";
   error: Error;
+  token?: Token;
 }
 
 export interface StreamPrint {
@@ -66,7 +67,7 @@ export class LoxInstance {
 
   error(token: Token, error: Error) {
     this.hadError = true;
-    this.stream.push({ type: "error", error });
+    this.stream.push({ type: "error", error, token });
 
     let message = "";
     if (token.type == TokenType.EOF) {
@@ -75,6 +76,11 @@ export class LoxInstance {
       message = `${token.line} at ' ${token.lexeme} ' ${error.message}`;
     }
     this.logger.error(message);
+  }
+
+  runtimeError(error: Error) {
+    this.hadError = true;
+    this.stream.push({ type: "error", error });
   }
 }
 

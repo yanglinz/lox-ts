@@ -1,4 +1,4 @@
-import { RuntimeError } from "./Errors";
+import { ResolutionError } from "./Errors";
 import {
   Expr,
   ExprAssign,
@@ -141,7 +141,7 @@ export class Resolver extends Visitor {
       if (stmt.name.lexeme === stmt.superclass.name.lexeme) {
         this.lox.error(
           stmt.superclass.name,
-          new RuntimeError("A class can't inherit from itself.")
+          new ResolutionError("A class can't inherit from itself.")
         );
       }
 
@@ -190,7 +190,9 @@ export class Resolver extends Visitor {
       if (scope.get(expr.name.lexeme) === false) {
         this.lox.error(
           expr.name,
-          new RuntimeError("Can't read local variable in its own initializer")
+          new ResolutionError(
+            "Can't read local variable in its own initializer"
+          )
         );
       }
     }
@@ -242,12 +244,12 @@ export class Resolver extends Visitor {
     if (this.currentClass == ClassType.NONE) {
       this.lox.error(
         expr.keyword,
-        new RuntimeError("Can't use 'super' outside of a class.")
+        new ResolutionError("Can't use 'super' outside of a class.")
       );
     } else if (this.currentClass != ClassType.SUBCLASS) {
       this.lox.error(
         expr.keyword,
-        new RuntimeError("Can't use 'super' in a class with no superclass.")
+        new ResolutionError("Can't use 'super' in a class with no superclass.")
       );
     }
 
@@ -258,7 +260,7 @@ export class Resolver extends Visitor {
     if (this.currentClass === ClassType.NONE) {
       this.lox.error(
         expr.keyword,
-        new RuntimeError("Can't use 'this' outside of a class.")
+        new ResolutionError("Can't use 'this' outside of a class.")
       );
       return null;
     }
@@ -295,7 +297,7 @@ export class Resolver extends Visitor {
       if (this.currentFunction === FunctionType.INITIALIZER) {
         this.lox.error(
           stmt.keyword,
-          new RuntimeError("Can't return a value from an initializer.")
+          new ResolutionError("Can't return a value from an initializer.")
         );
       }
 

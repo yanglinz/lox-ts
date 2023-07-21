@@ -1,6 +1,12 @@
-import { GlobalFnClock, LoxCallable, LoxClass, LoxFunction } from "./Callable";
+import {
+  GlobalFnClock,
+  LoxCallable,
+  LoxClass,
+  LoxFunction,
+  ReturnValue,
+} from "./Callable";
 import { Environment } from "./Environment";
-import { ReturnValue, RuntimeError } from "./Errors";
+import { RuntimeError } from "./Errors";
 import {
   Expr,
   ExprAssign,
@@ -62,10 +68,11 @@ export class Interpreter extends Visitor {
         }
       }
     } catch (error) {
-      // TODO: Implement RuntimeErrors
-      // https://craftinginterpreters.com/evaluating-expressions.html#runtime-errors
-      () => error;
-      throw error;
+      if (error instanceof RuntimeError) {
+        this.lox.runtimeError(error);
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -103,7 +110,8 @@ export class Interpreter extends Visitor {
       superclass = this.evaluate(stmt.superclass);
       if (!(superclass instanceof LoxClass)) {
         throw new RuntimeError(
-          `${stmt.superclass.name} Superclass must be a class.`
+          stmt.superclass.name,
+          "Superclass must be a class."
         );
       }
     }
@@ -204,10 +212,13 @@ export class Interpreter extends Visitor {
 
     const type = expr.operator.type;
     if (type === TokenType.MINUS) {
+      this.checkNumberOperands(expr.operator, left, right);
       return (left as number) - (right as number);
     } else if (type === TokenType.SLASH) {
+      this.checkNumberOperands(expr.operator, left, right);
       return (left as number) / (right as number);
     } else if (type === TokenType.STAR) {
+      this.checkNumberOperands(expr.operator, left, right);
       return (left as number) * (right as number);
     } else if (type === TokenType.PLUS) {
       if (typeof left === "number" && typeof right === "number") {
@@ -216,12 +227,16 @@ export class Interpreter extends Visitor {
         return left + right;
       }
     } else if (type === TokenType.GREATER) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left > right;
     } else if (type === TokenType.GREATER_EQUAL) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left >= right;
     } else if (type === TokenType.LESS) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left < right;
     } else if (type === TokenType.LESS_EQUAL) {
+      this.checkNumberOperands(expr.operator, left, right);
       return left <= right;
     } else if (type === TokenType.BANG_EQUAL) {
       return !this.isEqual(left, right);
@@ -242,12 +257,16 @@ export class Interpreter extends Visitor {
     }
 
     if (!(callee instanceof LoxCallable)) {
-      throw new RuntimeError("Can only call functions and classes.");
+      throw new RuntimeError(
+        expr.paren,
+        "Can only call functions and classes."
+      );
     }
 
     const func = callee as LoxCallable;
     if (args.length != func.arity) {
       throw new RuntimeError(
+        expr.paren,
         `Expected ${func.arity} arguments but got ${args.length}.`
       );
     }
@@ -261,7 +280,7 @@ export class Interpreter extends Visitor {
       return (object as LoxClassInstance).get(expr.name);
     }
 
-    throw new RuntimeError("Only instance have properties.");
+    throw new RuntimeError(expr.name, "Only instance have properties.");
   }
 
   visitGroupingExpr(expr: ExprGrouping): ExprLiteralValue {
@@ -288,7 +307,7 @@ export class Interpreter extends Visitor {
     const object = this.evaluate(expr.object);
 
     if (!(object instanceof LoxClassInstance)) {
-      throw new RuntimeError("Only instances have fields.");
+      throw new RuntimeError(expr.name, "Only instances have fields.");
     }
 
     const value = this.evaluate(expr.value);
@@ -305,7 +324,8 @@ export class Interpreter extends Visitor {
 
     if (!method) {
       throw new RuntimeError(
-        expr.method + "Undefined property '" + expr.method.lexeme + "'."
+        expr.method,
+        "Undefined property '" + expr.method.lexeme + "'."
       );
     }
 
@@ -321,6 +341,7 @@ export class Interpreter extends Visitor {
 
     const type = expr.operator.type;
     if (type === TokenType.MINUS) {
+      this.checkNumberOperand(expr.operator, right);
       return -1 * (right as number);
     } else if (type === TokenType.BANG) {
       return !this.isTruthy(right);
@@ -328,6 +349,20 @@ export class Interpreter extends Visitor {
 
     // Unreachable
     return null;
+  }
+
+  private checkNumberOperand(operator: Token, operand: ExprLiteralValue): void {
+    if (typeof operand === "number") return;
+    throw new RuntimeError(operator, "Operand must be a number.");
+  }
+
+  private checkNumberOperands(
+    operator: Token,
+    left: ExprLiteralValue,
+    right: ExprLiteralValue
+  ): void {
+    if (typeof left === "number" && typeof right === "number") return;
+    throw new RuntimeError(operator, "Operand must be a number.");
   }
 
   visitVariableExpr(expr: ExprVariable): ExprLiteralValue {
