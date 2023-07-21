@@ -4,6 +4,22 @@ interface CodeOutputProps {
   stream: (StreamPrint | StreamError)[];
 }
 
+function getErrorMessage(stream: StreamError) {
+  const token = stream.token || stream.error.token;
+
+  if (!token) {
+    return stream.error.message;
+  }
+
+  let message = "";
+  if (token.type.toString() === "EOF") {
+    message = `Line ${token.line} at end: ${stream.error.message}`;
+  } else {
+    message = `Line ${token.line} at '${token.lexeme}': ${stream.error.message}`;
+  }
+  return message;
+}
+
 export function CodeOutput(props: CodeOutputProps) {
   let inner =
     props.stream.length === 0 ? (
@@ -29,7 +45,7 @@ export function CodeOutput(props: CodeOutputProps) {
                 <li key={i + s.error.message}>
                   <span class="font-mono text-sm text-stone-400">{"> "}</span>
                   <span class="font-mono text-sm text-stone-800">
-                    {s.error.message}
+                    {getErrorMessage(s)}
                   </span>
                 </li>
               );
