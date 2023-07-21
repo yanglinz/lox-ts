@@ -21,8 +21,6 @@ function getErrorMessage(stream: StreamError) {
 }
 
 export function CodeOutput(props: CodeOutputProps) {
-  console.log(props.stream);
-
   let inner =
     props.stream.length === 0 ? (
       <div className="w-full pb-5">
