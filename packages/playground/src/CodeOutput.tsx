@@ -5,10 +5,10 @@ interface CodeOutputProps {
 }
 
 function getErrorMessage(stream: StreamError) {
-  const token = stream.error.token;
+  const token = stream.token || stream.error.token;
 
   if (!token) {
-    return token.error.message;
+    return stream.error.message;
   }
 
   let message = "";
