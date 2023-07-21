@@ -70,7 +70,7 @@ export class LoxInstance {
     this.stream.push({ type: "error", error, token });
 
     let message = "";
-    if (token.type == TokenType.EOF) {
+    if (token.type === TokenType.EOF) {
       message = `${token.line} at end ${error.message}`;
     } else {
       message = `${token.line} at ' ${token.lexeme} ' ${error.message}`;
