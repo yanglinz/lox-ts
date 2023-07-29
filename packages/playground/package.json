@@ -13,6 +13,7 @@
     "build": "yarn build:tailwind && yarn build:vite"
   },
   "dependencies": {
+    "@codemirror/state": "^6.2.1",
     "codemirror": "^6.0.1",
     "preact": "^10.15.1"
   },

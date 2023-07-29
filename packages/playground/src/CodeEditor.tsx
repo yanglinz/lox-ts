@@ -1,26 +1,21 @@
-import { createRef, Component } from 'preact';
-import {EditorView, basicSetup} from "codemirror"
+import { Component, createRef } from "preact";
+
+type TODO = any;
 
 interface CodeEditorProps {
-  id: string;
+  editorSingleton: TODO;
 }
 
-export class CodeEditor extends Component {
+export class CodeEditor extends Component<CodeEditorProps> {
   ref = createRef();
 
   componentDidMount() {
     if (this.ref.current) {
-      let editor = new EditorView({
-        extensions: [basicSetup],
-        parent: this.ref.current
-      })
+      this.props.editorSingleton.init(this.ref.current);
     }
   }
 
   render() {
-    return (
-      <div ref={this.ref}>
-      </div>
-    );
+    return <div ref={this.ref}></div>;
   }
 }
