@@ -24,6 +24,7 @@ const appReducer = (state, action) => {
 };
 
 const editorSingleton = new CodeEditorSingleton();
+window["editorSingleton"] = editorSingleton;
 
 function App() {
   const [appState, dispatch] = useReducer(appReducer, initialState);
@@ -43,7 +44,7 @@ function App() {
     fetch(url)
       .then((r) => r.text())
       .then((s) => {
-        // getEditorEl().value = s;
+        editorSingleton.replaceText(s);
         interpret(s);
       })
       // TODO: Implement proper error handling
@@ -51,8 +52,7 @@ function App() {
   };
 
   const onClickRun = () => {
-    // const source = getEditorEl().value;
-    const source = "123;";
+    const source = editorSingleton.currentText;
     interpret(source);
   };
 

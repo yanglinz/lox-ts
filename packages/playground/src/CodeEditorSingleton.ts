@@ -1,10 +1,7 @@
-import { EditorState, Text } from "@codemirror/state";
 import { EditorView, basicSetup } from "codemirror";
 
-type TODO = any;
-
 export class CodeEditorSingleton {
-  editor: TODO;
+  editor: EditorView;
 
   constructor() {
     this.editor = null;
@@ -14,6 +11,16 @@ export class CodeEditorSingleton {
     this.editor = new EditorView({
       extensions: [basicSetup],
       parent: parentNode,
+    });
+  }
+
+  get currentText() {
+    return this.editor.state.doc.toString();
+  }
+
+  replaceText(s: string) {
+    this.editor.dispatch({
+      changes: { from: 0, to: this.currentText.length, insert: s },
     });
   }
 }
