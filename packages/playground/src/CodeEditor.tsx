@@ -16,6 +16,6 @@ export class CodeEditor extends Component<CodeEditorProps> {
   }
 
   render() {
-    return <div ref={this.ref}></div>;
+    return <div class="overflow-scroll h-96 bg-amber-50" ref={this.ref}></div>;
   }
 }
