@@ -1,0 +1,42 @@
+/* override default font */
+
+.cm-editor .cm-gutters {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.cm-editor .cm-content {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+/* override default spacing */
+
+.cm-editor .cm-lineNumbers .cm-gutterElement {
+  padding-left: 1.5rem;
+  padding-right: 0.625rem;
+}
+
+/* override default colors */
+
+.cm-editor .cm-gutters {
+  background: none;
+  color: rgb(168 162 158);
+  border-right: none;
+}
+
+.cm-editor .cm-activeLineGutter {
+  background: rgba(254, 243, 199, 0.9);
+}
+
+.cm-editor .cm-activeLine {
+  background: none;
+}
+
+.cm-editor .cm-content {
+  color: rgb(68 64 60);
+}

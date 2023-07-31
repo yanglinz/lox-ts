@@ -1,20 +1,20 @@
+import { CodeEditorSingleton } from "./CodeEditorSingleton";
+import { Component, createRef } from "preact";
+
 interface CodeEditorProps {
-  id: string;
+  editorSingleton: CodeEditorSingleton;
 }
 
-export function CodeEditor(props: CodeEditorProps) {
-  return (
-    <div class="flex w-full">
-      <textarea
-        class="
-          w-full p-5
-          bg-yellow-50
-          font-mono text-sm
-        "
-        id={props.id}
-        cols={80}
-        rows={20}
-      ></textarea>
-    </div>
-  );
+export class CodeEditor extends Component<CodeEditorProps> {
+  ref = createRef();
+
+  componentDidMount() {
+    if (this.ref.current) {
+      this.props.editorSingleton.init(this.ref.current);
+    }
+  }
+
+  render() {
+    return <div class="overflow-scroll h-96 bg-amber-50" ref={this.ref}></div>;
+  }
 }

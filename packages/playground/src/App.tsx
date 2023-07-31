@@ -1,5 +1,6 @@
 import { CodeControls } from "./CodeControls";
 import { CodeEditor } from "./CodeEditor";
+import { CodeEditorSingleton } from "./CodeEditorSingleton";
 import { CodeOutput } from "./CodeOutput";
 import { Header } from "./Header";
 import { Lox } from "lox-ts-interpreter";
@@ -22,14 +23,10 @@ const appReducer = (state, action) => {
   }
 };
 
+const editorSingleton = new CodeEditorSingleton();
+
 function App() {
   const [appState, dispatch] = useReducer(appReducer, initialState);
-
-  const editorId = "mainEditor";
-  const getEditorEl = () => {
-    const textArea = document.getElementById(editorId) as HTMLTextAreaElement;
-    return textArea;
-  };
 
   const interpret = (source) => {
     const instance = new Lox().run(source);
@@ -46,7 +43,7 @@ function App() {
     fetch(url)
       .then((r) => r.text())
       .then((s) => {
-        getEditorEl().value = s;
+        editorSingleton.replaceText(s);
         interpret(s);
       })
       // TODO: Implement proper error handling
@@ -54,7 +51,7 @@ function App() {
   };
 
   const onClickRun = () => {
-    const source = getEditorEl().value;
+    const source = editorSingleton.currentText;
     interpret(source);
   };
 
@@ -80,7 +77,7 @@ function App() {
       </div>
       <div class="m-5 border border-solid border-stone-200 rounded-sm">
         <div>
-          <CodeEditor id={editorId} />
+          <CodeEditor editorSingleton={editorSingleton} />
         </div>
         <div class="border-t border-solid border-stone-200">
           <CodeOutput stream={appState.stream} />
