@@ -1,9 +1,8 @@
+import { CodeEditorSingleton } from "./CodeEditorSingleton";
 import { Component, createRef } from "preact";
 
-type TODO = any;
-
 interface CodeEditorProps {
-  editorSingleton: TODO;
+  editorSingleton: CodeEditorSingleton;
 }
 
 export class CodeEditor extends Component<CodeEditorProps> {

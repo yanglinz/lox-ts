@@ -24,7 +24,6 @@ const appReducer = (state, action) => {
 };
 
 const editorSingleton = new CodeEditorSingleton();
-window["editorSingleton"] = editorSingleton;
 
 function App() {
   const [appState, dispatch] = useReducer(appReducer, initialState);
