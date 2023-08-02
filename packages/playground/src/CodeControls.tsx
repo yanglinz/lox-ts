@@ -6,7 +6,12 @@ interface CodeControlsProps {
 
 const examples = [
   ["HelloWorld.lox", "Hello World"],
-  ["Addition.lox", "Simple Addition"],
+  ["Expressions.lox", "Simple Expressions"],
+  ["Fibonacci.lox", "Recursive Fibonacci"],
+  ["FibonacciClosure.lox", "Closure Fibonacci"],
+  ["GlobalFunc.lox", "Global Function"],
+  ["Class.lox", "Class"],
+  ["Inheritance.lox", "Class Inheritance"],
 ];
 
 export function CodeControls(props: CodeControlsProps) {

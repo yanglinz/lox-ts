@@ -1,0 +1,8 @@
+class Sandwich {
+  eat() {
+    print "Om nom nom!";
+  }
+}
+
+var s = Sandwich();
+s.eat();

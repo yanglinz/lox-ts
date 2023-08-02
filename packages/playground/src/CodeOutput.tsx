@@ -32,10 +32,10 @@ export function CodeOutput(props: CodeOutputProps) {
           {props.stream.map((s, i) => {
             if (s.type === "print") {
               return (
-                <li key={i + s.message}>
+                <li key={i}>
                   <span class="font-mono text-sm text-stone-400">{"> "}</span>
                   <span class="font-mono text-sm text-stone-800">
-                    {s.message}
+                    {`${s.message}`}
                   </span>
                 </li>
               );
