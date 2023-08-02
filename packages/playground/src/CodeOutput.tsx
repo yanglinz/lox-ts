@@ -35,7 +35,7 @@ export function CodeOutput(props: CodeOutputProps) {
                 <li key={i}>
                   <span class="font-mono text-sm text-stone-400">{"> "}</span>
                   <span class="font-mono text-sm text-stone-800">
-                    {s.message}
+                    {`${s.message}`}
                   </span>
                 </li>
               );
