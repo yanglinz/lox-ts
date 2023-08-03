@@ -44,7 +44,7 @@ export function CodeOutput(props: CodeOutputProps) {
               return (
                 <li key={i + s.error.message}>
                   <span class="font-mono text-sm text-stone-400">{"> "}</span>
-                  <span class="font-mono text-sm text-stone-800">
+                  <span class="font-mono text-sm text-red-600">
                     {getErrorMessage(s)}
                   </span>
                 </li>
