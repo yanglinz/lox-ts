@@ -4,7 +4,7 @@
 
 ---
 
-`lox-ts` is my implementation of [Lox](https://craftinginterpreters.com/the-lox-language.html) from [Crafting Interpreters](https://craftinginterpreters.com/) in Typescript.
+`lox-ts` is an implementation of the _Lox_ programming language from the book [Crafting Interpreters](https://craftinginterpreters.com/), written in Typescript.
 
 ## Running locally
 
