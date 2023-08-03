@@ -1,15 +1,17 @@
 # lox-ts
 
-`lox-ts` is my implementation of [Lox](https://craftinginterpreters.com/the-lox-language.html) from [Crafting Interpreters](https://craftinginterpreters.com/) in Typescript.
-
 ![build](https://github.com/yanglinz/lox-ts/actions/workflows/main.yml/badge.svg)
 
-## Running Locally
+---
+
+`lox-ts` is my implementation of [Lox](https://craftinginterpreters.com/the-lox-language.html) from [Crafting Interpreters](https://craftinginterpreters.com/) in Typescript.
+
+## Running locally
 
 The project should run on most versions of `node`, but it's tested specifically against the following combination:
 
-- `node` - `18.15.0`
-- `yarn` - `1.22.19`
+- `node v18.15.0`
+- `yarn v1.22.19`
 
 To run the interpreter locally:
 
