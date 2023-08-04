@@ -1,9 +1,18 @@
-fun fib(n) {
-  if (n <= 1) {
-    return n;
+fun fibgen() {
+  var first = 0;
+  var second = 1;
+
+  fun fib() {
+    var ret = first;
+    first = second;
+    second = second + ret;
+    return ret;
   }
 
-  return fib(n - 1) + fib(n - 2);
+  return fib;
 }
 
-print fib(6);
+var fib = fibgen();
+for (var i = 0; i < 10; i = i + 1) {
+  print fib();
+}

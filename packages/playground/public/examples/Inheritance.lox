@@ -1,6 +1,14 @@
-class Sandwich {
+class Food {
+  eat() {
+    print "This is delicious!";
+  }
+}
+
+
+class Sandwich < Food {
   eat() {
     print "Om nom nom!";
+    super.eat();
   }
 }
 
