@@ -7,6 +7,7 @@ interface CodeControlsProps {
 const examples = [
   ["HelloWorld.lox", "Hello World"],
   ["Expressions.lox", "Simple Expressions"],
+  ["ControlFlow.lox", "Control Flow"],
   ["Fibonacci.lox", "Recursive Fibonacci"],
   ["FibonacciClosure.lox", "Closure Fibonacci"],
   ["GlobalFunc.lox", "Global Function"],
