@@ -28,6 +28,9 @@ const editorSingleton = new CodeEditorSingleton();
 function App() {
   const [appState, dispatch] = useReducer(appReducer, initialState);
 
+  const qs = new URLSearchParams(window.location.search);
+  const hideHeader = qs.get("hideheader") === "true";
+
   const interpret = (source) => {
     const instance = new Lox().run(source);
     dispatch({
@@ -67,8 +70,8 @@ function App() {
 
   return (
     <div>
-      <Header />
-      <div class="mt-5 mx-5">
+      {hideHeader ? null : <Header />}
+      <div class={hideHeader ? "mx-5" : "mt-7 mx-5"}>
         <CodeControls
           defaultExampleId={defaultExampleId}
           onChangeExample={onChangeExample}
