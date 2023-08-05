@@ -68,7 +68,7 @@ function App() {
   return (
     <div>
       <Header />
-      <div class="mt-5 mx-5">
+      <div class="mt-7 mx-5">
         <CodeControls
           defaultExampleId={defaultExampleId}
           onChangeExample={onChangeExample}

@@ -1,8 +1,8 @@
 export function Header() {
   return (
-    <div class="bg-stone-700 p-5">
+    <div class="px-5 py-6 border-stone-200 border-b">
       <h1>
-        <a class="text-stone-50 font-bold" href="/">
+        <a class="text-lg" href="/">
           Lox Playground
         </a>
       </h1>
