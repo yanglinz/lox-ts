@@ -17,6 +17,7 @@ To run the interpreter locally:
 
 ```
 yarn install
+cd packages/lox-interpreter
 yarn interpreter path/to/some/file.lox
 ```
 

@@ -5,8 +5,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "run": "ts-node tools/run.ts",
-    "run:debug": "node --inspect-brk node_modules/.bin/ts-node tools/run.ts",
+    "interpreter": "ts-node tools/run.ts",
+    "interpreter:debug": "node --inspect-brk node_modules/.bin/ts-node tools/run.ts",
     "lint": "eslint .",
     "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles"
